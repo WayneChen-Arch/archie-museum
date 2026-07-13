@@ -2,12 +2,23 @@
 
 A minimalist online art gallery for Archie's drawings.
 
-## Live site
+## Deploy to GitHub Pages
 
-After GitHub Pages is enabled, visit:
+1. Open PowerShell in this folder.
+2. Run:
 
-`https://<your-github-username>.github.io/archie-museum/`
+```powershell
+.\deploy.ps1
+```
 
-## Local preview
+3. Sign in to GitHub when prompted.
+4. Open the printed URL on your phone after 1-3 minutes.
 
-Open `index.html` in a browser.
+If the repository already exists, push manually:
+
+```powershell
+git remote add origin https://github.com/<your-username>/archie-museum.git
+git push -u origin master
+```
+
+Then enable **GitHub Pages** in repository settings: branch `master`, folder `/ (root)`.
