@@ -633,6 +633,11 @@
           margin-inline: auto;
         }
 
+        .track,
+        .reflection-track {
+          transition-duration: 380ms;
+        }
+
         .intro-screen {
           padding: 4rem 1rem 20vh;
           align-items: flex-start;
@@ -1150,6 +1155,9 @@
 
       let current = 0;
       let touchStartX = 0;
+      let touchStartY = 0;
+      let suppressClickUntil = 0;
+      let pagingLockedUntil = 0;
       let previewIndex = null;
 
       function commentKey(index) {
@@ -1220,7 +1228,10 @@
         renderComments(index);
         museum.classList.add("is-preview");
         previewLayer.setAttribute("aria-hidden", "false");
-        commentText.focus();
+        // Avoid auto-focus on touch phones — keyboard covers the page and traps paging.
+        if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+          commentText.focus();
+        }
       }
 
       function closePreview() {
@@ -1315,20 +1326,62 @@
 
         if (unit.type === "series") {
           unit.seriesWorks.forEach(({ index }) => indexToUnit.set(index, mainItem));
-          mainItem.querySelectorAll("img").forEach((img) => img.addEventListener("load", updateView));
+          mainItem.querySelectorAll("img").forEach((img) => img.addEventListener("load", scheduleViewRefresh));
           mainItem.querySelectorAll("[data-preview-index]").forEach((frame) => {
-            frame.addEventListener("click", () => openPreview(Number(frame.dataset.previewIndex)));
+            frame.addEventListener("click", (event) => {
+              if (Date.now() < suppressClickUntil) {
+                event.preventDefault();
+                event.stopPropagation();
+                return;
+              }
+              openPreview(Number(frame.dataset.previewIndex));
+            });
           });
         } else {
           indexToUnit.set(unit.index, mainItem);
-          mainItem.querySelector("img").addEventListener("load", updateView);
-          mainItem.querySelector(".frame").addEventListener("click", () => openPreview(unit.index));
+          mainItem.querySelector("img").addEventListener("load", scheduleViewRefresh);
+          mainItem.querySelector(".frame").addEventListener("click", (event) => {
+            if (Date.now() < suppressClickUntil) {
+              event.preventDefault();
+              event.stopPropagation();
+              return;
+            }
+            openPreview(unit.index);
+          });
         }
       });
 
-      function getCenterOffset(item) {
+      function getFocusFrame(workIndex) {
+        const item = indexToUnit.get(workIndex);
+        if (!item) return null;
+        return (
+          item.querySelector(`.frame[data-work-index="${workIndex}"]`) ||
+          item.querySelector(".frame")
+        );
+      }
+
+      function readTranslateX(el) {
+        const match = /translateX\((-?[\d.]+)px\)/.exec(el.style.transform || "");
+        return match ? Number(match[1]) : 0;
+      }
+
+      function getCenterOffset(workIndex) {
         const stage = mainTrack.parentElement;
-        return stage.clientWidth / 2 - item.offsetLeft - item.offsetWidth / 2;
+        const focus = getFocusFrame(workIndex);
+        if (!focus) return 0;
+
+        const stageRect = stage.getBoundingClientRect();
+        const focusRect = focus.getBoundingClientRect();
+        const currentT = readTranslateX(mainTrack);
+        const naturalLeft = focusRect.left - stageRect.left - currentT;
+        return stageRect.width / 2 - naturalLeft - focusRect.width / 2;
+      }
+
+      let refreshTimer = 0;
+      function scheduleViewRefresh() {
+        if (museum.classList.contains("is-intro")) return;
+        window.clearTimeout(refreshTimer);
+        refreshTimer = window.setTimeout(() => updateView(), 48);
       }
 
       function updateView() {
@@ -1338,7 +1391,7 @@
         const item = indexToUnit.get(current);
         if (!item || !work) return;
 
-        const offset = getCenterOffset(item);
+        const offset = getCenterOffset(current);
         mainTrack.style.transform = `translateX(${offset}px)`;
         reflectionTrack.style.transform = `scaleY(-1) translate(${offset}px, 6%)`;
         pageInfo.textContent = `${current + 1}/${works.length}`;
@@ -1371,26 +1424,33 @@
         updateView();
       }
 
-      prevBtn.addEventListener("click", () => {
+      function goPrev() {
         if (museum.classList.contains("is-preview")) return;
         if (museum.classList.contains("is-intro")) return;
+        if (Date.now() < pagingLockedUntil) return;
         if (current === 0) {
           showIntroduction();
           return;
         }
         current -= 1;
+        pagingLockedUntil = Date.now() + 320;
         updateView();
-      });
+      }
 
-      nextBtn.addEventListener("click", () => {
+      function goNext() {
         if (museum.classList.contains("is-preview")) return;
         if (museum.classList.contains("is-intro")) {
           showExhibition();
           return;
         }
+        if (Date.now() < pagingLockedUntil) return;
         current = (current + 1) % works.length;
+        pagingLockedUntil = Date.now() + 320;
         updateView();
-      });
+      }
+
+      prevBtn.addEventListener("click", goPrev);
+      nextBtn.addEventListener("click", goNext);
 
       homeBtn.addEventListener("click", showIntroduction);
       enterBtn.addEventListener("click", showExhibition);
@@ -1418,24 +1478,30 @@
 
       window.addEventListener("resize", () => {
         if (!museum.classList.contains("is-intro") && !museum.classList.contains("is-preview")) {
-          updateView();
+          scheduleViewRefresh();
         }
       });
-      mainTrack.addEventListener(
+
+      const mainStage = document.querySelector(".main-stage");
+      mainStage.addEventListener(
         "touchstart",
         (event) => {
           touchStartX = event.changedTouches[0].clientX;
+          touchStartY = event.changedTouches[0].clientY;
         },
         { passive: true }
       );
-      mainTrack.addEventListener(
+      mainStage.addEventListener(
         "touchend",
         (event) => {
           if (museum.classList.contains("is-intro") || museum.classList.contains("is-preview")) return;
-          const deltaX = event.changedTouches[0].clientX - touchStartX;
-          if (Math.abs(deltaX) < 40) return;
-          if (deltaX < 0) nextBtn.click();
-          else prevBtn.click();
+          const touch = event.changedTouches[0];
+          const deltaX = touch.clientX - touchStartX;
+          const deltaY = touch.clientY - touchStartY;
+          if (Math.abs(deltaX) < 40 || Math.abs(deltaX) < Math.abs(deltaY)) return;
+          suppressClickUntil = Date.now() + 450;
+          if (deltaX < 0) goNext();
+          else goPrev();
         },
         { passive: true }
       );
@@ -1445,8 +1511,8 @@
           return;
         }
         if (museum.classList.contains("is-preview")) return;
-        if (event.key === "ArrowLeft") prevBtn.click();
-        if (event.key === "ArrowRight") nextBtn.click();
+        if (event.key === "ArrowLeft") goPrev();
+        if (event.key === "ArrowRight") goNext();
       });
       showIntroduction();
     </script>
