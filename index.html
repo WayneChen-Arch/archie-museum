@@ -321,7 +321,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 4.5rem 1.5rem 16vh;
+        padding: 12vh 12vw 14vh;
         background: transparent;
         opacity: 0;
         visibility: hidden;
@@ -339,17 +339,20 @@
 
       .museum.is-intro .main-stage,
       .museum.is-intro .reflection-zone,
-      .museum.is-intro .art-label {
+      .museum.is-intro .art-label,
+      .museum.is-intro .controls {
         opacity: 0;
         visibility: hidden;
+        pointer-events: none;
       }
 
       .cover-stage {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 2rem;
-        width: min(640px, 100%);
+        gap: 2.4rem;
+        width: min(46vw, 420px);
+        max-width: 50%;
         text-align: left;
         margin: auto;
       }
@@ -366,9 +369,9 @@
 
       .cover-preface .zh p,
       .cover-preface .en p {
-        margin: 0 0 0.85em;
-        font-size: 14px;
-        line-height: 1.9;
+        margin: 0 0 0.7em;
+        font-size: 11px;
+        line-height: 1.8;
       }
 
       .cover-preface .zh p:last-child,
@@ -381,36 +384,36 @@
       }
 
       .cover-preface .en {
-        margin-top: 1.4rem;
-        padding-top: 1.25rem;
+        margin-top: 1.1rem;
+        padding-top: 1rem;
         border-top: 1px solid var(--ui-line);
         color: var(--text);
       }
 
       .cover-preface .en p {
-        font-size: 12px;
-        line-height: 1.75;
+        font-size: 10px;
+        line-height: 1.7;
         letter-spacing: 0.01em;
       }
 
       .cover-logo {
         display: block;
-        width: min(220px, 48vw);
+        width: min(132px, 28vw);
         height: auto;
-        margin-top: 0.4rem;
+        margin-top: 0.2rem;
       }
 
       .enter-exhibition {
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
-        margin-top: 0.3rem;
+        margin-top: 0.15rem;
         padding: 0;
         border: 0;
         background: transparent;
         color: var(--text-strong);
         font: inherit;
-        font-size: 12px;
+        font-size: 11px;
         letter-spacing: 0.08em;
         cursor: pointer;
       }
@@ -661,30 +664,34 @@
         }
 
         .intro-screen {
-          padding: 4rem 1rem 20vh;
-          align-items: flex-start;
+          padding: 10vh 10vw 12vh;
+          align-items: center;
           overflow-y: auto;
         }
 
         .cover-stage {
-          gap: 1.5rem;
-          margin-top: 0.5rem;
-          width: min(520px, 100%);
+          gap: 1.8rem;
+          width: min(72vw, 320px);
+          max-width: 78%;
         }
 
         .cover-preface .zh p,
         .cover-preface .en p {
-          font-size: 12px;
-          line-height: 1.8;
+          font-size: 10.5px;
+          line-height: 1.75;
         }
 
         .cover-preface .en {
-          margin-top: 1.15rem;
-          padding-top: 1.05rem;
+          margin-top: 0.95rem;
+          padding-top: 0.85rem;
+        }
+
+        .cover-preface .en p {
+          font-size: 9.5px;
         }
 
         .cover-logo {
-          width: min(180px, 42vw);
+          width: min(110px, 30vw);
         }
       }
 
@@ -1529,7 +1536,7 @@
       function showIntroduction() {
         closePreview();
         museum.classList.add("is-intro");
-        pageInfo.textContent = "Introduction";
+        pageInfo.textContent = "";
         artLabel.textContent = galleryTitle;
       }
 
