@@ -7,16 +7,25 @@
     <style>
       :root {
         --bg: #e9e9e7;
-        --bg-deep: #e9e9e7;
+        --bg-deep: #e6e4e0;
         --wall: #e9e9e7;
-        --floor: #e9e9e7;
+        --floor: #e6e4e0;
+        --wall-lit: #f6e7c4;
+        --spotlight:
+          radial-gradient(
+            ellipse 92% 78% at 50% 6%,
+            rgba(255, 236, 190, 0.98) 0%,
+            rgba(248, 224, 168, 0.72) 22%,
+            rgba(240, 214, 160, 0.28) 42%,
+            rgba(233, 233, 231, 0) 68%
+          );
         --text: #6f675f;
         --text-strong: #2c2621;
         --shadow: rgba(74, 48, 28, 0.18);
         --frame-rail: 3px;
-        --frame-bg: #ffffff;
-        --frame-border: #d5d3cf;
-        --mat-color: #f4f2ec;
+        --frame-bg: #5c4030;
+        --frame-border: #3d291c;
+        --mat-color: #f7f4ee;
         --box-pad: clamp(28px, 14%, 64px);
         --ui-muted: #8a8178;
         --ui-line: rgba(70, 52, 36, 0.16);
@@ -72,7 +81,9 @@
         position: relative;
         height: 100vh;
         padding: 1.3rem 1.6rem 0;
-        background: var(--wall);
+        background:
+          var(--spotlight),
+          linear-gradient(180deg, #efe8d8 0%, var(--wall) 48%, var(--floor) 100%);
       }
 
       .icon-btn {
@@ -163,12 +174,14 @@
         --local-rail: var(--frame-rail);
         display: inline-block;
         padding: var(--local-rail);
-        background: var(--frame-bg);
+        background: linear-gradient(145deg, #6d4b38 0%, var(--frame-bg) 46%, #473020 100%);
         border: 1px solid var(--frame-border);
         box-shadow:
-          0 18px 40px rgba(40, 38, 34, 0.22),
-          0 8px 18px rgba(40, 38, 34, 0.14),
-          0 2px 6px rgba(40, 38, 34, 0.1);
+          inset 0 1px 0 rgba(255, 228, 196, 0.14),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.28),
+          0 18px 40px rgba(40, 28, 18, 0.24),
+          0 8px 18px rgba(40, 28, 18, 0.16),
+          0 2px 6px rgba(40, 28, 18, 0.12);
         transform: none;
         transition: transform 580ms cubic-bezier(0.2, 0.74, 0.23, 1), box-shadow 580ms ease, opacity 320ms ease;
         cursor: zoom-in;
@@ -299,7 +312,7 @@
         right: 0;
         bottom: 0;
         height: 31%;
-        background: linear-gradient(180deg, rgba(233, 233, 231, 0.55) 0%, rgba(226, 226, 224, 0.95) 40%, var(--floor) 100%);
+        background: linear-gradient(180deg, rgba(239, 232, 216, 0.55) 0%, rgba(230, 228, 224, 0.95) 40%, var(--floor) 100%);
         overflow: hidden;
         transition: opacity 420ms ease, visibility 420ms ease;
       }
@@ -325,7 +338,9 @@
         align-items: center;
         justify-content: center;
         padding: 4.5rem 1.6rem 18vh;
-        background: var(--wall);
+        background:
+          var(--spotlight),
+          linear-gradient(180deg, #efe8d8 0%, var(--wall) 48%, var(--floor) 100%);
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
@@ -504,7 +519,7 @@
       .reflection-fade {
         position: absolute;
         inset: 0;
-        background: linear-gradient(180deg, rgba(233, 233, 231, 0.15), rgba(226, 226, 224, 0.72) 52%, var(--floor) 100%);
+        background: linear-gradient(180deg, rgba(239, 232, 216, 0.18), rgba(230, 228, 224, 0.74) 52%, var(--floor) 100%);
         pointer-events: none;
       }
 
