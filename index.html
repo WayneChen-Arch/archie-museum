@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-Hant">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>安迟美术馆 · Anchi Art Museum</title>
+    <title>安遲美術館 · Anchi Art Museum</title>
     <style>
       :root {
         --bg: #ffffff;
@@ -970,14 +970,14 @@
     </style>
   </head>
   <body>
-    <main class="museum is-intro" aria-label="线上美术馆展厅">
-      <button class="icon-btn" id="homeBtn" aria-label="返回展览首页">
+    <main class="museum is-intro" aria-label="線上美術館展廳">
+      <button class="icon-btn" id="homeBtn" aria-label="返回展覽首頁">
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M3.5 10.5L12 4l8.5 6.5"></path>
           <path d="M6.6 9.4V20h10.8V9.4"></path>
         </svg>
       </button>
-      <div class="art-label" id="artLabel">安迟美术馆，ARCHIE ART MUSEUM</div>
+      <div class="art-label" id="artLabel">安遲美術館，ARCHIE ART MUSEUM</div>
 
       <section class="intro-screen" id="introScreen" aria-labelledby="introTitle">
         <div class="cover-stage">
@@ -1009,7 +1009,7 @@
         </div>
       </section>
 
-      <section class="main-stage" aria-label="展品陈列">
+      <section class="main-stage" aria-label="展品陳列">
         <div class="track" id="mainTrack"></div>
       </section>
 
@@ -1050,15 +1050,15 @@
       </footer>
 
       <section class="preview-layer" id="previewLayer" aria-hidden="true">
-        <button class="preview-close" id="previewClose" type="button" aria-label="关闭预览">×</button>
+        <button class="preview-close" id="previewClose" type="button" aria-label="關閉預覽">×</button>
         <aside class="preview-side">
           <div class="preview-meta" id="previewMeta"></div>
           <div class="comment-panel">
-            <h2>参观评价</h2>
+            <h2>參觀評價</h2>
             <div class="comment-list" id="commentList"></div>
             <form class="comment-form" id="commentForm">
-              <input id="commentName" type="text" maxlength="24" placeholder="名字（可选）" autocomplete="nickname" />
-              <textarea id="commentText" maxlength="180" placeholder="写下感受…" rows="1" required></textarea>
+              <input id="commentName" type="text" maxlength="24" placeholder="名字（可選）" autocomplete="nickname" />
+              <textarea id="commentText" maxlength="180" placeholder="寫下感受…" rows="1" required></textarea>
               <button type="submit">留下 →</button>
             </form>
           </div>
@@ -1075,11 +1075,11 @@
 
     <script>
       const works = [
-        { artist: "Archie", years: "", title: "Composition on Grid", year: "2024", material: "Colored pencil on A4 paper", image: "drawings/01-A4.jpg", size: "a4", note: "方格纸上交织的彩色线条，像是一场尚未落地的梦。" },
-        { artist: "Archie", years: "", title: "Loop Study", year: "2024", material: "Crayon on A4 paper", image: "drawings/02-A4.jpg", size: "a4", note: "层层叠叠的环状笔触，把玩耍的节奏留在了纸面。" },
-        { artist: "Archie", years: "", title: "Scattered Forms", year: "2024", material: "Mixed media on A5 paper", image: "drawings/03-A5.jpg", size: "a5", note: "少数几个色点就撑开了整张纸的空气。" },
-        { artist: "Archie", years: "", title: "Green Column", year: "2024", material: "Watercolor on A5 paper", image: "drawings/04-A5.jpg", size: "a5", note: "绿与黄叠印成一条竖直的路径，安静却有力。" },
-        { artist: "Archie", years: "", title: "Candle Collage", year: "2024", material: "Clay, foil and paint on A3 paper", image: "drawings/05-A3.jpg", size: "a3", note: "黏土、箔片与颜料堆叠出烛火般的温度。" },
+        { artist: "Archie", years: "", title: "Composition on Grid", year: "2024", material: "Colored pencil on A4 paper", image: "drawings/01-A4.jpg", size: "a4", note: "方格紙上交織的彩色線條，像是一場尚未落地的夢。" },
+        { artist: "Archie", years: "", title: "Loop Study", year: "2024", material: "Crayon on A4 paper", image: "drawings/02-A4.jpg", size: "a4", note: "層層疊疊的環狀筆觸，把玩耍的節奏留在了紙面。" },
+        { artist: "Archie", years: "", title: "Scattered Forms", year: "2024", material: "Mixed media on A5 paper", image: "drawings/03-A5.jpg", size: "a5", note: "少數幾個色點就撐開了整張紙的空氣。" },
+        { artist: "Archie", years: "", title: "Green Column", year: "2024", material: "Watercolor on A5 paper", image: "drawings/04-A5.jpg", size: "a5", note: "綠與黃疊印成一條豎直的路徑，安靜卻有力。" },
+        { artist: "Archie", years: "", title: "Candle Collage", year: "2024", material: "Clay, foil and paint on A3 paper", image: "drawings/05-A3.jpg", size: "a3", note: "黏土、箔片與顏料堆疊出燭火般的溫度。" },
         {
           artist: "Archie",
           years: "(2y9m)",
@@ -1092,7 +1092,7 @@
           seriesTitle: "Thank You Letters",
           seriesLabel: "Kindergarten N · Graduation",
           panel: "I / III",
-          note: "幼儿园 N 班毕业送给三位老师的感谢信之一。画面中的大字由 2 岁 9 个月的安迟 Archie 亲手写下，拼成一封写给老师的 thank you letter。"
+          note: "幼兒園 N 班畢業送給三位老師的感謝信之一。畫面中的大字由 2 歲 9 個月的安遲 Archie 親手寫下，拼成一封寫給老師的 thank you letter。"
         },
         {
           artist: "Archie",
@@ -1106,7 +1106,7 @@
           seriesTitle: "Thank You Letters",
           seriesLabel: "Kindergarten N · Graduation",
           panel: "II / III",
-          note: "同组三联画的第二幅。天蓝与柠檬黄呼应学期里明朗的日子，字母旁印着 A for Archie、U for YOU。"
+          note: "同組三聯畫的第二幅。天藍與檸檬黃呼應學期裡明朗的日子，字母旁印著 A for Archie、U for YOU。"
         },
         {
           artist: "Archie",
@@ -1120,7 +1120,7 @@
           seriesLabel: "Kindergarten N · Graduation",
           seriesTitle: "Thank You Letters",
           panel: "III / III",
-          note: "三联感谢信的收束。玫红与荧光绿撞色，把毕业这一天的温度和孩子对三位老师的谢谢留在墙上。"
+          note: "三聯感謝信的收束。玫紅與熒光綠撞色，把畢業這一天的溫度和孩子對三位老師的謝謝留在牆上。"
         }
       ];
 
@@ -1133,7 +1133,7 @@
       const homeBtn = document.getElementById("homeBtn");
       const enterBtn = document.getElementById("enterBtn");
       const artLabel = document.getElementById("artLabel");
-      const galleryTitle = "安迟美术馆，ARCHIE ART MUSEUM";
+      const galleryTitle = "安遲美術館，ARCHIE ART MUSEUM";
       const previewLayer = document.getElementById("previewLayer");
       const previewClose = document.getElementById("previewClose");
       const previewMeta = document.getElementById("previewMeta");
@@ -1179,7 +1179,7 @@
       function renderComments(index) {
         const comments = loadComments(index);
         if (!comments.length) {
-          commentList.innerHTML = `<p class="comment-empty">还没有评价</p>`;
+          commentList.innerHTML = `<p class="comment-empty">還沒有評價</p>`;
           return;
         }
 
@@ -1187,7 +1187,7 @@
           .map(
             (item) => `
               <article class="comment-item">
-                <div class="who">${escapeHtml(item.name || "一位参观者")}</div>
+                <div class="who">${escapeHtml(item.name || "一位參觀者")}</div>
                 <p class="body">${escapeHtml(item.text)}</p>
               </article>
             `
