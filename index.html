@@ -108,7 +108,8 @@
         align-items: center;
         gap: var(--track-gap);
         height: 100%;
-        padding: 0 var(--track-pad);
+        padding: 14px var(--track-pad);
+        box-sizing: border-box;
         will-change: transform;
         transition: transform 660ms cubic-bezier(0.2, 0.74, 0.23, 1);
       }
@@ -129,7 +130,7 @@
           0 14px 28px rgba(0, 0, 0, 0.28),
           0 4px 10px rgba(0, 0, 0, 0.18),
           inset 0 1px 0 rgba(255, 255, 255, 0.05);
-        transform: translateY(-1px);
+        transform: none;
         transition: transform 580ms cubic-bezier(0.2, 0.74, 0.23, 1), box-shadow 580ms ease;
         cursor: zoom-in;
       }
@@ -506,14 +507,15 @@
 
       @media (max-width: 700px) {
         :root {
-          --art-h-a3: min(44vh, 360px);
-          --art-h-a4: min(38vh, 300px);
-          --art-h-a5: min(28vh, 220px);
+          /* Keep frame + meta inside the stage so overflow:hidden won't clip the top border */
+          --art-h-a3: min(34vh, 280px);
+          --art-h-a4: min(30vh, 240px);
+          --art-h-a5: min(22vh, 180px);
           --art-w-a3: min(82vw, 340px);
           --art-w-a4: min(78vw, 280px);
           --art-w-a5: min(62vw, 200px);
-          --stage-top: 7%;
-          --stage-bottom: 38%;
+          --stage-top: 10%;
+          --stage-bottom: 36%;
           --track-gap: 14vw;
           --track-pad: 50vw;
         }
@@ -522,11 +524,21 @@
           padding: 1rem 1rem 0;
         }
 
+        .track {
+          padding-top: 12px;
+          padding-bottom: 12px;
+        }
+
         .work-item {
           flex-direction: column;
           align-items: center;
           gap: 0.85rem;
           text-align: center;
+          max-height: 100%;
+        }
+
+        .work-item:hover .frame {
+          transform: none;
         }
 
         .meta {
@@ -845,7 +857,30 @@
 
       @media (max-width: 700px) {
         .preview-layer {
+          display: flex;
+          flex-direction: column;
+          overflow-x: hidden;
           overflow-y: auto;
+          -webkit-overflow-scrolling: touch;
+          padding: max(3.2rem, calc(env(safe-area-inset-top, 0px) + 2.4rem)) 0 2rem;
+          box-sizing: border-box;
+        }
+
+        .preview-close {
+          top: max(0.85rem, env(safe-area-inset-top, 0px));
+          right: 1rem;
+        }
+
+        .preview-art {
+          position: relative;
+          left: auto;
+          top: auto;
+          transform: none;
+          order: 1;
+          width: 100%;
+          margin: 0 auto 1.4rem;
+          padding: 8px 1rem 0;
+          box-sizing: border-box;
         }
 
         .preview-side {
@@ -853,21 +888,24 @@
           left: auto;
           top: auto;
           transform: none;
+          order: 2;
           width: auto;
           max-height: none;
-          margin: min(48vh, 380px) 1.2rem 2rem;
+          margin: 0 1.2rem;
+          padding-top: 0.5rem;
         }
 
-        .preview-art {
-          position: absolute;
-          top: 42%;
+        .preview-art .frame {
+          max-width: 100%;
         }
 
         .preview-art .frame img,
         .preview-art .frame.size-a3 img,
         .preview-art .frame.size-a5 img {
-          max-height: min(40vh, 340px);
+          max-height: min(42vh, 340px);
           max-width: min(78vw, 320px);
+          width: auto;
+          height: auto;
         }
 
         .comment-list {
