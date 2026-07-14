@@ -469,14 +469,15 @@
         top: 1.5rem;
         left: 50%;
         transform: translateX(-50%);
-        max-width: min(72vw, 520px);
+        max-width: min(90vw, 640px);
         overflow: hidden;
         text-overflow: ellipsis;
         color: #b8b8b5;
         font-size: 9px;
-        letter-spacing: 0.17em;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
         white-space: nowrap;
+        text-align: center;
       }
 
       .pager {
@@ -612,7 +613,8 @@
         .art-label {
           top: 1.1rem;
           font-size: 8px;
-          max-width: 62vw;
+          max-width: 92vw;
+          letter-spacing: 0.06em;
         }
 
         .controls {
@@ -1005,7 +1007,7 @@
           <path d="M6.6 9.4V20h10.8V9.4"></path>
         </svg>
       </button>
-      <div class="art-label" id="artLabel">安迟美术馆</div>
+      <div class="art-label" id="artLabel">安迟美术馆，ARCHIE ART MUSEUM</div>
 
       <section class="intro-screen" id="introScreen" aria-labelledby="introTitle">
         <div class="cover-stage">
@@ -1157,6 +1159,7 @@
       const homeBtn = document.getElementById("homeBtn");
       const enterBtn = document.getElementById("enterBtn");
       const artLabel = document.getElementById("artLabel");
+      const galleryTitle = "安迟美术馆，ARCHIE ART MUSEUM";
       const previewLayer = document.getElementById("previewLayer");
       const previewClose = document.getElementById("previewClose");
       const previewMeta = document.getElementById("previewMeta");
@@ -1409,7 +1412,7 @@
         mainTrack.style.transform = `translateX(${offset}px)`;
         reflectionTrack.style.transform = `scaleY(-1) translate(${offset}px, 6%)`;
         pageInfo.textContent = `${current + 1}/${works.length}`;
-        artLabel.textContent = `安迟美术馆 — ${work.seriesTitle || work.title}`;
+        artLabel.textContent = galleryTitle;
 
         mainTrack.querySelectorAll(".series-frames .frame").forEach((frame) => {
           frame.classList.toggle("is-active", Number(frame.dataset.workIndex) === current);
@@ -1430,7 +1433,7 @@
         closePreview();
         museum.classList.add("is-intro");
         pageInfo.textContent = "Introduction";
-        artLabel.textContent = "安迟美术馆";
+        artLabel.textContent = galleryTitle;
       }
 
       function showExhibition() {
