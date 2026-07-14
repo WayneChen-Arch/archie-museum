@@ -13,9 +13,9 @@
         --text: #6f675f;
         --text-strong: #2c2621;
         --shadow: rgba(74, 48, 28, 0.18);
-        --frame-pad: 8px;
+        --frame-rail: 3px;
         --frame-bg:
-          linear-gradient(155deg, rgba(255, 220, 180, 0.22) 0%, transparent 34%, rgba(20, 10, 4, 0.35) 100%),
+          linear-gradient(155deg, rgba(255, 220, 180, 0.2) 0%, transparent 38%, rgba(20, 10, 4, 0.32) 100%),
           repeating-linear-gradient(
             88deg,
             #3f2414 0px,
@@ -30,16 +30,21 @@
           linear-gradient(180deg, #7a4a2a 0%, #52301b 45%, #30180d 100%);
         --frame-border: #27150c;
         --frame-inset: rgba(255, 214, 170, 0.22);
+        --mat-color: #f7f4ef;
+        --mat-x: clamp(20px, 3.6vw, 40px);
+        --mat-y: clamp(20px, 3.4vw, 38px);
+        --mat-bottom: clamp(28px, 5vw, 52px);
+        --well-inset: 7px;
         --ui-muted: #8a8178;
         --ui-line: rgba(70, 52, 36, 0.16);
-        --art-h-a3: min(56vh, 540px);
-        --art-h-a4: min(48vh, 420px);
-        --art-h-a5: min(34vh, 300px);
-        --art-h-series: min(40vh, 340px);
-        --art-w-a3: min(78vw, 420px);
-        --art-w-a4: min(72vw, 340px);
-        --art-w-a5: min(58vw, 250px);
-        --art-w-series: min(28vw, 210px);
+        --art-h-a3: min(40vh, 400px);
+        --art-h-a4: min(34vh, 300px);
+        --art-h-a5: min(24vh, 210px);
+        --art-h-series: min(26vh, 220px);
+        --art-w-a3: min(58vw, 300px);
+        --art-w-a4: min(52vw, 240px);
+        --art-w-a5: min(42vw, 170px);
+        --art-w-series: min(20vw, 150px);
         --stage-top: 11%;
         --stage-bottom: 32%;
         --track-gap: 10vw;
@@ -152,42 +157,77 @@
       }
 
       .series-frames .frame {
-        opacity: 0.78;
+        opacity: 0.86;
         transform: translateY(0);
       }
 
       .series-frames .frame.is-active,
       .series-frames .frame:hover {
         opacity: 1;
-        transform: translateY(-4px);
+        transform: translateY(-3px);
         box-shadow:
-          0 16px 28px rgba(74, 48, 28, 0.2),
-          0 5px 12px rgba(74, 48, 28, 0.14),
-          inset 0 1px 0 var(--frame-inset),
-          inset 0 0 0 1px rgba(255, 220, 180, 0.08);
+          0 14px 28px rgba(60, 40, 24, 0.14),
+          0 4px 10px rgba(60, 40, 24, 0.1);
       }
 
       .frame {
+        --local-mat-x: var(--mat-x);
+        --local-mat-y: var(--mat-y);
+        --local-mat-bottom: var(--mat-bottom);
+        --local-well: var(--well-inset);
+        --local-rail: var(--frame-rail);
         display: inline-block;
-        padding: var(--frame-pad);
+        padding: var(--local-rail);
         background: var(--frame-bg);
         border: 1px solid var(--frame-border);
         box-shadow:
-          0 12px 24px rgba(74, 48, 28, 0.16),
-          0 3px 8px rgba(74, 48, 28, 0.12),
-          inset 0 1px 0 var(--frame-inset),
-          inset 0 0 0 1px rgba(255, 220, 180, 0.08);
+          0 10px 22px rgba(60, 40, 24, 0.12),
+          0 2px 6px rgba(60, 40, 24, 0.08);
         transform: none;
         transition: transform 580ms cubic-bezier(0.2, 0.74, 0.23, 1), box-shadow 580ms ease, opacity 320ms ease;
         cursor: zoom-in;
       }
 
-      .frame img {
+      .frame .mat {
+        background: var(--mat-color);
+        padding: var(--local-mat-y) var(--local-mat-x) var(--local-mat-bottom);
+        box-shadow: inset 0 0 0 1px rgba(80, 60, 40, 0.04);
+      }
+
+      .frame .mat-well {
+        position: relative;
+        background: linear-gradient(180deg, #ddd5c9 0%, #e9e3da 100%);
+        padding: var(--local-well);
+        box-shadow:
+          inset 0 2px 3px rgba(45, 30, 18, 0.22),
+          inset 0 10px 22px rgba(40, 28, 16, 0.16),
+          inset 0 -1px 0 rgba(255, 255, 255, 0.6);
+      }
+
+      .frame .mat-well img,
+      .frame .mat-well .blank-mat {
         display: block;
         width: auto;
         height: auto;
-        background: #fffdf9;
-        box-shadow: inset 0 0 0 1px rgba(74, 48, 28, 0.06);
+        background: #ffffff;
+        box-shadow:
+          0 1px 2px rgba(40, 28, 16, 0.1),
+          0 5px 12px rgba(40, 28, 16, 0.1);
+      }
+
+      .frame.size-a3 {
+        --local-mat-x: clamp(24px, 4vw, 46px);
+        --local-mat-y: clamp(22px, 3.6vw, 42px);
+        --local-mat-bottom: clamp(32px, 5.4vw, 58px);
+      }
+
+      .frame.size-a5,
+      .frame.size-series {
+        --local-mat-x: clamp(14px, 2.6vw, 26px);
+        --local-mat-y: clamp(14px, 2.4vw, 24px);
+        --local-mat-bottom: clamp(18px, 3.4vw, 34px);
+        --local-well: 5px;
+        --local-rail: 2px;
       }
 
       .frame.size-a3 img {
@@ -211,12 +251,10 @@
       }
 
       .work-item:hover .frame {
-        transform: translateY(-4px);
+        transform: translateY(-3px);
         box-shadow:
-          0 16px 28px rgba(74, 48, 28, 0.2),
-          0 5px 12px rgba(74, 48, 28, 0.14),
-          inset 0 1px 0 var(--frame-inset),
-          inset 0 0 0 1px rgba(255, 220, 180, 0.08);
+          0 14px 28px rgba(60, 40, 24, 0.14),
+          0 4px 10px rgba(60, 40, 24, 0.1);
       }
 
       .series-label {
@@ -327,14 +365,32 @@
       .cover-frame {
         position: relative;
         flex: 0 0 auto;
-        padding: 4px;
+        padding: 2px;
         background: var(--frame-bg);
         border: 1px solid var(--frame-border);
         box-shadow:
-          0 10px 20px rgba(74, 48, 28, 0.14),
-          0 3px 8px rgba(74, 48, 28, 0.1),
-          inset 0 1px 0 var(--frame-inset),
-          inset 0 0 0 1px rgba(255, 220, 180, 0.08);
+          0 8px 18px rgba(60, 40, 24, 0.12),
+          0 2px 6px rgba(60, 40, 24, 0.08);
+      }
+
+      .cover-frame .mat {
+        width: 100%;
+        height: 100%;
+        background: var(--mat-color);
+        padding: 11% 10% 15%;
+        box-sizing: border-box;
+      }
+
+      .cover-frame .mat-well {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(180deg, #e8e2d8 0%, #efeae3 100%);
+        padding: 5px;
+        box-sizing: border-box;
+        box-shadow:
+          inset 0 1px 2px rgba(50, 34, 20, 0.16),
+          inset 0 5px 12px rgba(40, 28, 16, 0.12),
+          inset 0 -1px 0 rgba(255, 255, 255, 0.55);
       }
 
       .cover-frame img,
@@ -343,13 +399,10 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        background: #f4f2ee;
-      }
-
-      .cover-frame .blank-mat {
-        background:
-          linear-gradient(180deg, rgba(255, 255, 255, 0.45), transparent 40%),
-          #f1eee8;
+        background: #ffffff;
+        box-shadow:
+          0 1px 2px rgba(40, 28, 16, 0.1),
+          0 4px 10px rgba(40, 28, 16, 0.1);
       }
 
       .cover-frame.f-a5 {
@@ -560,14 +613,17 @@
 
       @media (max-width: 980px) {
         :root {
-          --art-h-a3: min(52vh, 480px);
-          --art-h-a4: min(44vh, 380px);
-          --art-h-a5: min(32vh, 270px);
-          --art-h-series: min(36vh, 300px);
-          --art-w-a3: min(72vw, 380px);
-          --art-w-a4: min(68vw, 300px);
-          --art-w-a5: min(54vw, 220px);
-          --art-w-series: min(24vw, 180px);
+          --art-h-a3: min(36vh, 340px);
+          --art-h-a4: min(30vh, 260px);
+          --art-h-a5: min(22vh, 180px);
+          --art-h-series: min(24vh, 190px);
+          --art-w-a3: min(52vw, 260px);
+          --art-w-a4: min(48vw, 210px);
+          --art-w-a5: min(38vw, 150px);
+          --art-w-series: min(18vw, 120px);
+          --mat-x: clamp(16px, 3.2vw, 30px);
+          --mat-y: clamp(16px, 3vw, 28px);
+          --mat-bottom: clamp(22px, 4.4vw, 40px);
           --stage-top: 8%;
           --stage-bottom: 33%;
           --track-gap: 8vw;
@@ -583,14 +639,19 @@
       @media (max-width: 700px) {
         :root {
           /* Keep frame + meta inside the stage so overflow:hidden won't clip the top border */
-          --art-h-a3: min(34vh, 280px);
-          --art-h-a4: min(30vh, 240px);
-          --art-h-a5: min(22vh, 180px);
-          --art-h-series: min(24vh, 190px);
-          --art-w-a3: min(82vw, 340px);
-          --art-w-a4: min(78vw, 280px);
-          --art-w-a5: min(62vw, 200px);
-          --art-w-series: min(26vw, 118px);
+          --art-h-a3: min(24vh, 200px);
+          --art-h-a4: min(22vh, 175px);
+          --art-h-a5: min(16vh, 130px);
+          --art-h-series: min(16vh, 125px);
+          --art-w-a3: min(56vw, 220px);
+          --art-w-a4: min(52vw, 180px);
+          --art-w-a5: min(40vw, 130px);
+          --art-w-series: min(18vw, 90px);
+          --mat-x: 14px;
+          --mat-y: 14px;
+          --mat-bottom: 20px;
+          --well-inset: 5px;
+          --frame-rail: 2px;
           --stage-top: 10%;
           --stage-bottom: 36%;
           --track-gap: 24vw;
@@ -921,10 +982,8 @@
         cursor: default;
         transform: none;
         box-shadow:
-          0 22px 48px rgba(74, 48, 28, 0.18),
-          0 8px 18px rgba(74, 48, 28, 0.12),
-          inset 0 1px 0 var(--frame-inset),
-          inset 0 0 0 1px rgba(255, 220, 180, 0.08);
+          0 18px 40px rgba(60, 40, 24, 0.14),
+          0 6px 14px rgba(60, 40, 24, 0.1);
       }
 
       .preview-art .frame img {
@@ -1036,19 +1095,19 @@
         <div class="cover-stage">
           <div class="cover-wall" aria-hidden="true">
             <div class="cover-frame f-a5">
-              <img src="drawings/03-A5.jpg" alt="" />
+              <div class="mat"><div class="mat-well"><img src="drawings/03-A5.jpg" alt="" /></div></div>
             </div>
             <div class="cover-frame f-a3">
-              <img src="drawings/05-A3.jpg" alt="" />
+              <div class="mat"><div class="mat-well"><img src="drawings/05-A3.jpg" alt="" /></div></div>
             </div>
             <div class="cover-frame f-tall">
-              <div class="blank-mat"></div>
+              <div class="mat"><div class="mat-well"><div class="blank-mat"></div></div></div>
             </div>
             <div class="cover-frame f-a4">
-              <img src="drawings/01-A4.jpg" alt="" />
+              <div class="mat"><div class="mat-well"><img src="drawings/01-A4.jpg" alt="" /></div></div>
             </div>
             <div class="cover-frame f-a5">
-              <img src="drawings/06-thank-you-apricot.jpg" alt="" />
+              <div class="mat"><div class="mat-well"><img src="drawings/06-thank-you-apricot.jpg" alt="" /></div></div>
             </div>
           </div>
           <h1 id="introTitle" class="visually-hidden">安迟美术馆</h1>
@@ -1116,7 +1175,11 @@
         </aside>
         <div class="preview-art">
           <div class="frame" id="previewFrame">
-            <img id="previewImage" src="" alt="" />
+            <div class="mat">
+              <div class="mat-well">
+                <img id="previewImage" src="" alt="" />
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -1280,14 +1343,30 @@
         previewIndex = null;
       }
 
+      function frameMarkup({ size, image, alt, attrs = "", workIndex = "" }) {
+        const workAttr = workIndex === "" ? "" : `data-work-index="${workIndex}"`;
+        return `
+          <div class="frame size-${size}" ${workAttr} ${attrs}>
+            <div class="mat">
+              <div class="mat-well">
+                <img src="${image}" alt="${alt}" loading="lazy" />
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
       function createSoloItem(work, index, clickable) {
         const item = document.createElement("article");
         item.className = "work-item";
         item.dataset.workIndex = String(index);
         item.innerHTML = `
-          <div class="frame size-${work.size}" ${clickable ? `data-preview-index="${index}"` : ""}>
-            <img src="${work.image}" alt="${work.title}, ${work.year}" loading="lazy" />
-          </div>
+          ${frameMarkup({
+            size: work.size,
+            image: work.image,
+            alt: `${work.title}, ${work.year}`,
+            attrs: clickable ? `data-preview-index="${index}"` : ""
+          })}
           <div class="meta">
             <div class="fav">&#9825;</div>
             <div class="artist">${work.artist}${work.years ? ` ${work.years}` : ""}</div>
@@ -1304,12 +1383,14 @@
         item.dataset.series = seriesWorks[0].work.series;
         const first = seriesWorks[0].work;
         const frames = seriesWorks
-          .map(
-            ({ work, index }) => `
-              <div class="frame size-${work.size}" data-work-index="${index}" ${clickable ? `data-preview-index="${index}"` : ""}>
-                <img src="${work.image}" alt="${work.title}, ${work.year}" loading="lazy" />
-              </div>
-            `
+          .map(({ work, index }) =>
+            frameMarkup({
+              size: work.size,
+              image: work.image,
+              alt: `${work.title}, ${work.year}`,
+              workIndex: String(index),
+              attrs: clickable ? `data-preview-index="${index}"` : ""
+            })
           )
           .join("");
 
