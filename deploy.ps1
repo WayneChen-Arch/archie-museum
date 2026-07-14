@@ -15,8 +15,8 @@ if ($LASTEXITCODE -ne 0) {
 $branch = (& $git rev-parse --abbrev-ref HEAD).Trim()
 $owner = (& $gh api user --jq .login).Trim()
 
-$remoteExists = & $git remote get-url origin 2>$null
-if (-not $remoteExists) {
+$remoteUrl = & $git remote get-url origin 2>$null
+if (-not $remoteUrl) {
   Write-Host "Creating repository $repoName ..."
   & $gh repo create $repoName --public --source . --remote origin --push
 } else {

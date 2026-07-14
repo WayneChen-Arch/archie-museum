@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Archie Museum</title>
+    <title>安迟美术馆 · Anchi Art Museum</title>
     <style>
       :root {
         --bg: #8f8f8d;
@@ -16,7 +16,12 @@
         --frame-pad: 4px;
         --frame-bg: linear-gradient(145deg, #424240 0%, #363634 100%);
         --frame-border: #2e2e2c;
-        --art-max-h: min(48vh, 460px);
+        --art-h-a3: min(56vh, 540px);
+        --art-h-a4: min(48vh, 420px);
+        --art-h-a5: min(34vh, 300px);
+        --art-w-a3: min(78vw, 420px);
+        --art-w-a4: min(72vw, 340px);
+        --art-w-a5: min(58vw, 250px);
         --stage-top: 11%;
         --stage-bottom: 32%;
         --track-gap: 10vw;
@@ -25,6 +30,18 @@
 
       * {
         box-sizing: border-box;
+      }
+
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
       }
 
       html,
@@ -114,14 +131,28 @@
           inset 0 1px 0 rgba(255, 255, 255, 0.05);
         transform: translateY(-1px);
         transition: transform 580ms cubic-bezier(0.2, 0.74, 0.23, 1), box-shadow 580ms ease;
+        cursor: zoom-in;
       }
 
       .frame img {
         display: block;
-        max-height: var(--art-max-h);
-        max-width: min(72vw, 520px);
         width: auto;
         height: auto;
+      }
+
+      .frame.size-a3 img {
+        max-height: var(--art-h-a3);
+        max-width: var(--art-w-a3);
+      }
+
+      .frame.size-a4 img {
+        max-height: var(--art-h-a4);
+        max-width: var(--art-w-a4);
+      }
+
+      .frame.size-a5 img {
+        max-height: var(--art-h-a5);
+        max-width: var(--art-w-a5);
       }
 
       .work-item:hover .frame {
@@ -186,12 +217,10 @@
         position: absolute;
         z-index: 2;
         inset: 0;
-        display: grid;
-        grid-template-columns: minmax(260px, 360px) minmax(180px, 250px);
-        align-content: center;
+        display: flex;
+        align-items: center;
         justify-content: center;
-        gap: clamp(3rem, 10vw, 11rem);
-        padding: 4rem 9vw 34vh;
+        padding: 4.5rem 1.5rem 18vh;
         background: transparent;
         opacity: 0;
         visibility: hidden;
@@ -211,52 +240,126 @@
         visibility: hidden;
       }
 
-      .intro-copy {
-        align-self: center;
-        max-width: 350px;
+      .cover-stage {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.6rem;
+        width: min(920px, 100%);
+        text-align: center;
       }
 
-      .intro-kicker {
-        margin: 0 0 1rem;
-        color: #a8a8a5;
-        font-size: 9px;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
+      .cover-wall {
+        position: relative;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        gap: clamp(0.55rem, 1.4vw, 1rem);
+        height: min(44vh, 400px);
+        width: 100%;
+        padding: 0 0.5rem;
       }
 
-      .intro-copy h1 {
-        margin: 0 0 0.5rem;
-        color: #ececea;
-        font-weight: 400;
-        font-size: clamp(25px, 2.5vw, 38px);
-        letter-spacing: -0.045em;
+      .cover-frame {
+        position: relative;
+        flex: 0 0 auto;
+        padding: 3px;
+        background: linear-gradient(145deg, #4a4a48 0%, #2f2f2d 100%);
+        border: 1px solid #232321;
+        box-shadow:
+          0 12px 24px rgba(0, 0, 0, 0.22),
+          0 3px 8px rgba(0, 0, 0, 0.16),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05);
       }
 
-      .intro-dates {
-        margin: 0 0 1.25rem;
-        font-size: 10px;
-        color: #b8b8b5;
+      .cover-frame img,
+      .cover-frame .blank-mat {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        background: #f4f2ee;
       }
 
-      .intro-copy p:not(.intro-kicker):not(.intro-dates) {
-        max-width: 310px;
+      .cover-frame .blank-mat {
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.45), transparent 40%),
+          #f1eee8;
+      }
+
+      .cover-frame.f-a5 {
+        width: min(11vw, 92px);
+        height: min(15.5vw, 130px);
+        align-self: flex-end;
+        margin-bottom: 8%;
+      }
+
+      .cover-frame.f-a4 {
+        width: min(14vw, 118px);
+        height: min(19.8vw, 167px);
+      }
+
+      .cover-frame.f-a3 {
+        width: min(18vw, 156px);
+        height: min(25.4vw, 220px);
+      }
+
+      .cover-frame.f-tall {
+        width: min(12.5vw, 104px);
+        height: min(20vw, 168px);
+      }
+
+      .cover-frame:nth-child(1) {
+        margin-bottom: 4%;
+      }
+
+      .cover-frame:nth-child(2) {
+        margin-bottom: 0;
+        transform: translateY(-6%);
+      }
+
+      .cover-frame:nth-child(3) {
+        margin-bottom: 14%;
+        transform: translateY(-18%);
+      }
+
+      .cover-frame:nth-child(4) {
+        margin-bottom: 2%;
+      }
+
+      .cover-frame:nth-child(5) {
+        margin-bottom: 7%;
+        transform: translateY(-4%);
+      }
+
+      .cover-caption {
         margin: 0;
-        color: #b0b0ad;
+        max-width: 420px;
+        color: #d0d0cd;
         font-size: 11px;
-        line-height: 1.55;
+        line-height: 1.7;
+      }
+
+      .cover-caption .en {
+        display: block;
+        margin-top: 0.35rem;
+        color: #b4b4b1;
+        font-size: 10px;
+        letter-spacing: 0.01em;
       }
 
       .enter-exhibition {
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
-        margin-top: 1.5rem;
+        margin-top: 0.2rem;
         padding: 0;
         border: 0;
         background: transparent;
-        color: #c8c8c5;
+        color: #e8e8e5;
         font: inherit;
-        font-size: 10px;
+        font-size: 11px;
+        letter-spacing: 0.04em;
         cursor: pointer;
       }
 
@@ -268,46 +371,6 @@
 
       .enter-exhibition:hover::after {
         transform: translateX(3px);
-      }
-
-      .intro-work {
-        display: flex;
-        align-items: center;
-        gap: 0.9rem;
-      }
-
-      .intro-work .frame img,
-      .intro-reflection .frame img {
-        max-height: min(42vh, 380px);
-        max-width: min(42vw, 320px);
-      }
-      .intro-work .meta {
-        width: 115px;
-      }
-
-      .intro-reflection {
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: 32%;
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        padding-top: 1.2rem;
-        overflow: hidden;
-        opacity: 0.2;
-        filter: blur(8px) saturate(0.6);
-        transform: scaleY(-1);
-        transform-origin: top;
-        pointer-events: none;
-      }
-
-      .intro-reflection::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(180deg, rgba(114, 114, 112, 0.08), var(--floor) 80%);
       }
 
       .reflection-track {
@@ -424,7 +487,12 @@
 
       @media (max-width: 980px) {
         :root {
-          --art-max-h: min(44vh, 400px);
+          --art-h-a3: min(52vh, 480px);
+          --art-h-a4: min(44vh, 380px);
+          --art-h-a5: min(32vh, 270px);
+          --art-w-a3: min(72vw, 380px);
+          --art-w-a4: min(68vw, 300px);
+          --art-w-a5: min(54vw, 220px);
           --stage-top: 8%;
           --stage-bottom: 33%;
           --track-gap: 8vw;
@@ -438,7 +506,12 @@
 
       @media (max-width: 700px) {
         :root {
-          --art-max-h: min(38vh, 300px);
+          --art-h-a3: min(44vh, 360px);
+          --art-h-a4: min(38vh, 300px);
+          --art-h-a5: min(28vh, 220px);
+          --art-w-a3: min(82vw, 340px);
+          --art-w-a4: min(78vw, 280px);
+          --art-w-a5: min(62vw, 200px);
           --stage-top: 7%;
           --stage-bottom: 38%;
           --track-gap: 14vw;
@@ -454,10 +527,6 @@
           align-items: center;
           gap: 0.85rem;
           text-align: center;
-        }
-
-        .frame img {
-          max-width: min(78vw, 320px);
         }
 
         .meta {
@@ -495,34 +564,314 @@
         }
 
         .intro-screen {
-          grid-template-columns: 1fr;
-          gap: 1.6rem;
-          justify-items: center;
-          padding: 4.4rem 1.25rem 36vh;
+          padding: 4rem 1rem 20vh;
+          align-items: flex-start;
           overflow-y: auto;
         }
 
-        .intro-copy {
-          text-align: center;
+        .cover-stage {
+          gap: 1.25rem;
+          margin-top: 1.5rem;
         }
 
-        .intro-copy p:not(.intro-kicker):not(.intro-dates) {
-          margin-inline: auto;
+        .cover-wall {
+          height: min(36vh, 280px);
+          gap: 0.45rem;
         }
 
-        .intro-work {
-          flex-direction: column;
-          text-align: center;
+        .cover-frame.f-a5 {
+          width: min(16vw, 72px);
+          height: min(22.5vw, 102px);
         }
 
-        .intro-work .frame img,
-        .intro-reflection .frame img {
-          max-height: min(34vh, 260px);
-          max-width: min(72vw, 240px);
+        .cover-frame.f-a4 {
+          width: min(20vw, 92px);
+          height: min(28vw, 130px);
         }
 
-        .intro-work .meta {
+        .cover-frame.f-a3 {
+          width: min(26vw, 118px);
+          height: min(36vw, 166px);
+        }
+
+        .cover-frame.f-tall {
+          width: min(18vw, 82px);
+          height: min(28vw, 128px);
+        }
+
+        .cover-caption {
+          max-width: 300px;
+          font-size: 10px;
+        }
+
+        .cover-caption .en {
+          font-size: 9px;
+        }
+      }
+
+      .preview-layer {
+        position: absolute;
+        inset: 0;
+        z-index: 8;
+        padding: 0;
+        background: rgba(70, 70, 68, 0.88);
+        backdrop-filter: blur(8px);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 320ms ease, visibility 320ms ease;
+      }
+
+      .museum.is-preview .preview-layer {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+
+      .museum.is-preview .main-stage,
+      .museum.is-preview .reflection-zone,
+      .museum.is-preview .intro-screen,
+      .museum.is-preview .art-label {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+
+      .preview-close {
+        position: absolute;
+        top: 1.4rem;
+        right: 1.5rem;
+        z-index: 3;
+        width: 32px;
+        height: 32px;
+        border: 0;
+        background: transparent;
+        color: #d4d4d1;
+        font-size: 22px;
+        line-height: 1;
+        cursor: pointer;
+        opacity: 0.75;
+      }
+
+      .preview-close:hover {
+        opacity: 1;
+      }
+
+      .preview-side {
+        position: absolute;
+        z-index: 2;
+        left: clamp(1.2rem, 4vw, 3.2rem);
+        top: 50%;
+        transform: translateY(-50%);
+        width: min(280px, 28vw);
+        display: flex;
+        flex-direction: column;
+        gap: 1.1rem;
+        max-height: min(68vh, 560px);
+        min-width: 0;
+      }
+
+      .preview-meta {
+        font-size: 11px;
+        line-height: 1.5;
+        color: #c8c8c5;
+      }
+
+      .preview-meta .artist {
+        color: #f0f0ed;
+        font-size: 13px;
+        margin-bottom: 0.2rem;
+      }
+
+      .preview-meta .note {
+        margin: 0.7rem 0 0;
+        color: #b4b4b1;
+        font-size: 11px;
+        line-height: 1.55;
+      }
+
+      .comment-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 0.7rem;
+        min-height: 0;
+        flex: 1;
+        padding-top: 0.4rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .comment-panel h2 {
+        margin: 0;
+        color: #d8d8d5;
+        font-size: 11px;
+        font-weight: 400;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .comment-list {
+        flex: 1;
+        min-height: 80px;
+        max-height: 180px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 0.55rem;
+        padding-right: 0.2rem;
+      }
+
+      .comment-item {
+        padding: 0.45rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .comment-item .who {
+        color: #ececea;
+        font-size: 10px;
+        margin-bottom: 0.15rem;
+      }
+
+      .comment-item .body {
+        margin: 0;
+        color: #b8b8b5;
+        font-size: 11px;
+        line-height: 1.45;
+        word-break: break-word;
+      }
+
+      .comment-empty {
+        margin: 0;
+        color: #9d9d9a;
+        font-size: 10px;
+      }
+
+      .comment-form {
+        display: grid;
+        gap: 0.45rem;
+      }
+
+      .comment-form input,
+      .comment-form textarea {
+        width: 100%;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 2px;
+        background: rgba(255, 255, 255, 0.06);
+        color: #efefec;
+        font: inherit;
+        font-size: 11px;
+        padding: 0.45rem 0.55rem;
+        outline: none;
+        resize: none;
+      }
+
+      .comment-form input::placeholder,
+      .comment-form textarea::placeholder {
+        color: #9a9a97;
+      }
+
+      .comment-form input:focus,
+      .comment-form textarea:focus {
+        border-color: rgba(255, 255, 255, 0.28);
+      }
+
+      .comment-form textarea {
+        min-height: 58px;
+      }
+
+      .comment-form button {
+        justify-self: start;
+        border: 0;
+        background: transparent;
+        color: #e4e4e1;
+        font: inherit;
+        font-size: 10px;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        padding: 0.2rem 0;
+        opacity: 0.85;
+      }
+
+      .comment-form button:hover {
+        opacity: 1;
+      }
+
+      .preview-art {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        pointer-events: none;
+      }
+
+      .preview-art .frame {
+        pointer-events: auto;
+        cursor: default;
+        transform: none;
+        box-shadow:
+          0 28px 60px rgba(0, 0, 0, 0.42),
+          0 10px 24px rgba(0, 0, 0, 0.28),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      }
+
+      .preview-art .frame img {
+        max-height: min(72vh, 680px);
+        max-width: min(56vw, 540px);
+      }
+
+      .preview-art .frame.size-a5 img {
+        max-height: min(56vh, 480px);
+        max-width: min(42vw, 380px);
+      }
+
+      .preview-art .frame.size-a3 img {
+        max-height: min(76vh, 720px);
+        max-width: min(60vw, 580px);
+      }
+
+      @media (max-width: 900px) {
+        .preview-side {
+          width: min(240px, 30vw);
+        }
+
+        .preview-art .frame img,
+        .preview-art .frame.size-a3 img {
+          max-width: min(48vw, 420px);
+        }
+      }
+
+      @media (max-width: 700px) {
+        .preview-layer {
+          overflow-y: auto;
+        }
+
+        .preview-side {
+          position: relative;
+          left: auto;
+          top: auto;
+          transform: none;
           width: auto;
+          max-height: none;
+          margin: min(48vh, 380px) 1.2rem 2rem;
+        }
+
+        .preview-art {
+          position: absolute;
+          top: 42%;
+        }
+
+        .preview-art .frame img,
+        .preview-art .frame.size-a3 img,
+        .preview-art .frame.size-a5 img {
+          max-height: min(40vh, 340px);
+          max-width: min(78vw, 320px);
+        }
+
+        .comment-list {
+          max-height: 140px;
         }
       }
     </style>
@@ -535,33 +884,33 @@
           <path d="M6.6 9.4V20h10.8V9.4"></path>
         </svg>
       </button>
-      <div class="art-label" id="artLabel">Archie Museum</div>
+      <div class="art-label" id="artLabel">安迟美术馆</div>
 
       <section class="intro-screen" id="introScreen" aria-labelledby="introTitle">
-        <div class="intro-copy">
-          <p class="intro-kicker">Digital exhibition · 01</p>
-          <h1 id="introTitle">Archie Museum</h1>
-          <p class="intro-dates">A digital exhibition of drawings</p>
-          <p>
-            这是一座为儿童绘画而建的线上美术馆。作品保留纸张的留白、笔触的即兴与材料的触感，在安静的数字展厅中，让观看回到最初的好奇与想象。
+        <div class="cover-stage">
+          <div class="cover-wall" aria-hidden="true">
+            <div class="cover-frame f-a5">
+              <img src="drawings/03-A5.jpg" alt="" />
+            </div>
+            <div class="cover-frame f-a3">
+              <img src="drawings/05-A3.jpg" alt="" />
+            </div>
+            <div class="cover-frame f-tall">
+              <div class="blank-mat"></div>
+            </div>
+            <div class="cover-frame f-a4">
+              <img src="drawings/01-A4.jpg" alt="" />
+            </div>
+            <div class="cover-frame f-a5">
+              <div class="blank-mat"></div>
+            </div>
+          </div>
+          <h1 id="introTitle" class="visually-hidden">安迟美术馆</h1>
+          <p class="cover-caption">
+            这里是安迟美术馆，记录了安迟从第一幅画开始的创作。
+            <span class="en">This is Anchi Art Museum, recording Anchi’s creation from the first painting.</span>
           </p>
           <button class="enter-exhibition" id="enterBtn" type="button">进入展览</button>
-        </div>
-        <div class="intro-work" aria-label="精选作品">
-          <div class="frame">
-            <img src="drawings/cover.jpg" alt="Archie, Cover Study, 2024" loading="lazy" />
-          </div>
-          <div class="meta">
-            <div class="fav">&#9825;</div>
-            <div class="artist">Archie</div>
-            <div class="title">Cover Study, 2024</div>
-            <div class="material">Colored pencil on graph paper</div>
-          </div>
-        </div>
-        <div class="intro-reflection" aria-hidden="true">
-          <div class="frame">
-            <img src="drawings/cover.jpg" alt="" loading="lazy" />
-          </div>
         </div>
       </section>
 
@@ -604,15 +953,36 @@
 
         <div class="controls-spacer" aria-hidden="true"></div>
       </footer>
+
+      <section class="preview-layer" id="previewLayer" aria-hidden="true">
+        <button class="preview-close" id="previewClose" type="button" aria-label="关闭预览">×</button>
+        <aside class="preview-side">
+          <div class="preview-meta" id="previewMeta"></div>
+          <div class="comment-panel">
+            <h2>参观评价</h2>
+            <div class="comment-list" id="commentList"></div>
+            <form class="comment-form" id="commentForm">
+              <input id="commentName" type="text" maxlength="24" placeholder="你的名字（可选）" autocomplete="nickname" />
+              <textarea id="commentText" maxlength="180" placeholder="留下对这幅画的感受…" required></textarea>
+              <button type="submit">写下评价 →</button>
+            </form>
+          </div>
+        </aside>
+        <div class="preview-art">
+          <div class="frame" id="previewFrame">
+            <img id="previewImage" src="" alt="" />
+          </div>
+        </div>
+      </section>
     </main>
 
     <script>
       const works = [
-        { artist: "Archie", years: "", title: "Composition on Grid", year: "2024", material: "Colored pencil on graph paper", image: "drawings/01.jpg" },
-        { artist: "Archie", years: "", title: "Loop Study", year: "2024", material: "Crayon on paper", image: "drawings/02.jpg" },
-        { artist: "Archie", years: "", title: "Scattered Forms", year: "2024", material: "Mixed media on paper", image: "drawings/03.jpg" },
-        { artist: "Archie", years: "", title: "Green Column", year: "2024", material: "Watercolor on paper", image: "drawings/04.jpg" },
-        { artist: "Archie", years: "", title: "Candle Collage", year: "2024", material: "Clay, foil and paint on paper", image: "drawings/05.jpg" }
+        { artist: "Archie", years: "", title: "Composition on Grid", year: "2024", material: "Colored pencil on A4 paper", image: "drawings/01-A4.jpg", size: "a4", note: "方格纸上交织的彩色线条，像是一场尚未落地的梦。" },
+        { artist: "Archie", years: "", title: "Loop Study", year: "2024", material: "Crayon on A4 paper", image: "drawings/02-A4.jpg", size: "a4", note: "层层叠叠的环状笔触，把玩耍的节奏留在了纸面。" },
+        { artist: "Archie", years: "", title: "Scattered Forms", year: "2024", material: "Mixed media on A5 paper", image: "drawings/03-A5.jpg", size: "a5", note: "少数几个色点就撑开了整张纸的空气。" },
+        { artist: "Archie", years: "", title: "Green Column", year: "2024", material: "Watercolor on A5 paper", image: "drawings/04-A5.jpg", size: "a5", note: "绿与黄叠印成一条竖直的路径，安静却有力。" },
+        { artist: "Archie", years: "", title: "Candle Collage", year: "2024", material: "Clay, foil and paint on A3 paper", image: "drawings/05-A3.jpg", size: "a3", note: "黏土、箔片与颜料堆叠出烛火般的温度。" }
       ];
 
       const mainTrack = document.getElementById("mainTrack");
@@ -624,15 +994,98 @@
       const homeBtn = document.getElementById("homeBtn");
       const enterBtn = document.getElementById("enterBtn");
       const artLabel = document.getElementById("artLabel");
+      const previewLayer = document.getElementById("previewLayer");
+      const previewClose = document.getElementById("previewClose");
+      const previewMeta = document.getElementById("previewMeta");
+      const previewFrame = document.getElementById("previewFrame");
+      const previewImage = document.getElementById("previewImage");
+      const commentList = document.getElementById("commentList");
+      const commentForm = document.getElementById("commentForm");
+      const commentName = document.getElementById("commentName");
+      const commentText = document.getElementById("commentText");
 
       let current = 0;
       let touchStartX = 0;
+      let previewIndex = null;
 
-      function createItem(work) {
+      function commentKey(index) {
+        return `archie-museum-comments-${works[index].image}`;
+      }
+
+      function loadComments(index) {
+        try {
+          return JSON.parse(localStorage.getItem(commentKey(index))) || [];
+        } catch (error) {
+          return [];
+        }
+      }
+
+      function saveComments(index, comments) {
+        localStorage.setItem(commentKey(index), JSON.stringify(comments));
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#39;");
+      }
+
+      function renderComments(index) {
+        const comments = loadComments(index);
+        if (!comments.length) {
+          commentList.innerHTML = `<p class="comment-empty">还没有评价，成为第一位留下感受的人吧。</p>`;
+          return;
+        }
+
+        commentList.innerHTML = comments
+          .map(
+            (item) => `
+              <article class="comment-item">
+                <div class="who">${escapeHtml(item.name || "一位参观者")}</div>
+                <p class="body">${escapeHtml(item.text)}</p>
+              </article>
+            `
+          )
+          .join("");
+      }
+
+      function openPreview(index) {
+        if (museum.classList.contains("is-intro")) return;
+        const work = works[index];
+        previewIndex = index;
+        current = index;
+        updateView();
+
+        previewMeta.innerHTML = `
+          <div class="fav">&#9825;</div>
+          <div class="artist">${work.artist}${work.years ? ` ${work.years}` : ""}</div>
+          <div class="title">${work.title}, ${work.year}</div>
+          <div class="material">${work.material}</div>
+          <p class="note">${work.note || ""}</p>
+        `;
+        previewFrame.className = `frame size-${work.size}`;
+        previewImage.src = work.image;
+        previewImage.alt = `${work.title}, ${work.year}`;
+        renderComments(index);
+        museum.classList.add("is-preview");
+        previewLayer.setAttribute("aria-hidden", "false");
+        commentText.focus();
+      }
+
+      function closePreview() {
+        museum.classList.remove("is-preview");
+        previewLayer.setAttribute("aria-hidden", "true");
+        previewIndex = null;
+      }
+
+      function createItem(work, index, clickable) {
         const item = document.createElement("article");
         item.className = "work-item";
         item.innerHTML = `
-          <div class="frame">
+          <div class="frame size-${work.size}" ${clickable ? `data-preview-index="${index}"` : ""}>
             <img src="${work.image}" alt="${work.title}, ${work.year}" loading="lazy" />
           </div>
           <div class="meta">
@@ -645,12 +1098,13 @@
         return item;
       }
 
-      works.forEach((work) => {
-        const mainItem = createItem(work);
-        const reflectionItem = createItem(work);
+      works.forEach((work, index) => {
+        const mainItem = createItem(work, index, true);
+        const reflectionItem = createItem(work, index, false);
         mainTrack.appendChild(mainItem);
         reflectionTrack.appendChild(reflectionItem);
         mainItem.querySelector("img").addEventListener("load", updateView);
+        mainItem.querySelector(".frame").addEventListener("click", () => openPreview(index));
       });
 
       function getCenterOffset(item) {
@@ -667,13 +1121,14 @@
         mainTrack.style.transform = `translateX(${offset}px)`;
         reflectionTrack.style.transform = `scaleY(-1) translate(${offset}px, 6%)`;
         pageInfo.textContent = `${current + 1}/${works.length}`;
-        artLabel.textContent = `Archie Museum — ${works[current].title}`;
+        artLabel.textContent = `安迟美术馆 — ${works[current].title}`;
       }
 
       function showIntroduction() {
+        closePreview();
         museum.classList.add("is-intro");
         pageInfo.textContent = "Introduction";
-        artLabel.textContent = "Archie Museum";
+        artLabel.textContent = "安迟美术馆";
       }
 
       function showExhibition() {
@@ -682,6 +1137,7 @@
       }
 
       prevBtn.addEventListener("click", () => {
+        if (museum.classList.contains("is-preview")) return;
         if (museum.classList.contains("is-intro")) return;
         if (current === 0) {
           showIntroduction();
@@ -692,6 +1148,7 @@
       });
 
       nextBtn.addEventListener("click", () => {
+        if (museum.classList.contains("is-preview")) return;
         if (museum.classList.contains("is-intro")) {
           showExhibition();
           return;
@@ -702,7 +1159,33 @@
 
       homeBtn.addEventListener("click", showIntroduction);
       enterBtn.addEventListener("click", showExhibition);
-      window.addEventListener("resize", updateView);
+      previewClose.addEventListener("click", closePreview);
+      previewLayer.addEventListener("click", (event) => {
+        if (event.target === previewLayer) closePreview();
+      });
+
+      commentForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        if (previewIndex === null) return;
+        const text = commentText.value.trim();
+        if (!text) return;
+
+        const comments = loadComments(previewIndex);
+        comments.unshift({
+          name: commentName.value.trim(),
+          text,
+          at: Date.now()
+        });
+        saveComments(previewIndex, comments.slice(0, 40));
+        commentText.value = "";
+        renderComments(previewIndex);
+      });
+
+      window.addEventListener("resize", () => {
+        if (!museum.classList.contains("is-intro") && !museum.classList.contains("is-preview")) {
+          updateView();
+        }
+      });
       mainTrack.addEventListener(
         "touchstart",
         (event) => {
@@ -713,7 +1196,7 @@
       mainTrack.addEventListener(
         "touchend",
         (event) => {
-          if (museum.classList.contains("is-intro")) return;
+          if (museum.classList.contains("is-intro") || museum.classList.contains("is-preview")) return;
           const deltaX = event.changedTouches[0].clientX - touchStartX;
           if (Math.abs(deltaX) < 40) return;
           if (deltaX < 0) nextBtn.click();
@@ -722,6 +1205,11 @@
         { passive: true }
       );
       window.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && museum.classList.contains("is-preview")) {
+          closePreview();
+          return;
+        }
+        if (museum.classList.contains("is-preview")) return;
         if (event.key === "ArrowLeft") prevBtn.click();
         if (event.key === "ArrowRight") nextBtn.click();
       });
