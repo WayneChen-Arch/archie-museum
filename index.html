@@ -1332,6 +1332,8 @@
       }
 
       function updateView() {
+        if (museum.classList.contains("is-intro")) return;
+
         const work = works[current];
         const item = indexToUnit.get(current);
         if (!item || !work) return;
