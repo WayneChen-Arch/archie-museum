@@ -391,15 +391,13 @@
         text-align: left;
         margin: auto;
         background: transparent;
-      }
-
-      .cover-preface,
-      .enter-exhibition {
-        position: relative;
-        z-index: 3;
+        /* keep blend with bg/frost: do not isolate this group */
+        isolation: auto;
       }
 
       .cover-preface {
+        position: relative;
+        z-index: 3;
         width: 100%;
         color: var(--text-strong);
       }
@@ -440,15 +438,18 @@
 
       .cover-logo {
         position: relative;
-        z-index: 6;
+        z-index: 4;
         display: block;
         width: min(132px, 28vw);
         height: auto;
         margin-top: 0.2rem;
+        background: transparent;
         mix-blend-mode: multiply;
       }
 
       .enter-exhibition {
+        position: relative;
+        z-index: 3;
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
@@ -1099,10 +1100,10 @@
           </div>
           <img
             class="cover-logo"
-            src="assets/4360.png"
+            src="assets/4360.png?v=2"
             alt="安遲美術館 Archie Art Museum"
-            width="1024"
-            height="1024"
+            width="664"
+            height="487"
           />
           <button class="enter-exhibition" id="enterBtn" type="button">進入展覽</button>
         </div>
