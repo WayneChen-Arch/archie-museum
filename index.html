@@ -13,9 +13,9 @@
         --text: #6f675f;
         --text-strong: #2c2621;
         --shadow: rgba(74, 48, 28, 0.18);
-        --frame-rail: 3px;
+        --frame-rail: 2px;
         --frame-bg:
-          linear-gradient(155deg, rgba(255, 220, 180, 0.2) 0%, transparent 38%, rgba(20, 10, 4, 0.32) 100%),
+          linear-gradient(155deg, rgba(255, 220, 180, 0.18) 0%, transparent 40%, rgba(20, 10, 4, 0.3) 100%),
           repeating-linear-gradient(
             88deg,
             #3f2414 0px,
@@ -29,21 +29,16 @@
           ),
           linear-gradient(180deg, #7a4a2a 0%, #52301b 45%, #30180d 100%);
         --frame-border: #27150c;
-        --frame-inset: rgba(255, 214, 170, 0.22);
-        --mat-color: #f7f4ef;
-        --mat-x: clamp(20px, 3.6vw, 40px);
-        --mat-y: clamp(20px, 3.4vw, 38px);
-        --mat-bottom: clamp(28px, 5vw, 52px);
-        --well-inset: 7px;
+        --box-pad: clamp(28px, 14%, 64px);
         --ui-muted: #8a8178;
         --ui-line: rgba(70, 52, 36, 0.16);
-        --art-h-a3: min(40vh, 400px);
-        --art-h-a4: min(34vh, 300px);
-        --art-h-a5: min(24vh, 210px);
+        --art-h-a3: min(42vh, 420px);
+        --art-h-a4: min(36vh, 310px);
+        --art-h-a5: min(26vh, 220px);
         --art-h-series: min(26vh, 220px);
-        --art-w-a3: min(58vw, 300px);
-        --art-w-a4: min(52vw, 240px);
-        --art-w-a5: min(42vw, 170px);
+        --art-w-a3: min(58vw, 310px);
+        --art-w-a4: min(52vw, 245px);
+        --art-w-a5: min(42vw, 175px);
         --art-w-series: min(20vw, 150px);
         --stage-top: 11%;
         --stage-bottom: 32%;
@@ -157,7 +152,7 @@
       }
 
       .series-frames .frame {
-        opacity: 0.86;
+        opacity: 0.88;
         transform: translateY(0);
       }
 
@@ -171,10 +166,7 @@
       }
 
       .frame {
-        --local-mat-x: var(--mat-x);
-        --local-mat-y: var(--mat-y);
-        --local-mat-bottom: var(--mat-bottom);
-        --local-well: var(--well-inset);
+        --local-pad: var(--box-pad);
         --local-rail: var(--frame-rail);
         display: inline-block;
         padding: var(--local-rail);
@@ -188,45 +180,41 @@
         cursor: zoom-in;
       }
 
-      .frame .mat {
-        background: var(--mat-color);
-        padding: var(--local-mat-y) var(--local-mat-x) var(--local-mat-bottom);
-        box-shadow: inset 0 0 0 1px rgba(80, 60, 40, 0.04);
-      }
-
-      .frame .mat-well {
+      /* Deep white shadowbox cavity; margins keep art at ~60–70% of the opening. */
+      .frame .shadowbox {
         position: relative;
-        background: linear-gradient(180deg, #ddd5c9 0%, #e9e3da 100%);
-        padding: var(--local-well);
+        background: #ffffff;
+        padding: var(--local-pad);
         box-shadow:
-          inset 0 2px 3px rgba(45, 30, 18, 0.22),
-          inset 0 10px 22px rgba(40, 28, 16, 0.16),
-          inset 0 -1px 0 rgba(255, 255, 255, 0.6);
+          inset -18px 0 28px -12px rgba(35, 24, 14, 0.22),
+          inset 0 -20px 32px -12px rgba(35, 24, 14, 0.24),
+          inset 10px 0 18px -14px rgba(35, 24, 14, 0.07),
+          inset 0 10px 18px -14px rgba(35, 24, 14, 0.07);
       }
 
-      .frame .mat-well img,
-      .frame .mat-well .blank-mat {
+      .frame .shadowbox img,
+      .frame .shadowbox .blank-mat {
         display: block;
         width: auto;
         height: auto;
         background: #ffffff;
-        box-shadow:
-          0 1px 2px rgba(40, 28, 16, 0.1),
-          0 5px 12px rgba(40, 28, 16, 0.1);
+        box-shadow: 0 1px 3px rgba(40, 28, 16, 0.06);
+      }
+
+      .frame .shadowbox .blank-mat {
+        width: 100%;
+        height: 100%;
+        min-height: 40px;
+        background: #fafafa;
       }
 
       .frame.size-a3 {
-        --local-mat-x: clamp(24px, 4vw, 46px);
-        --local-mat-y: clamp(22px, 3.6vw, 42px);
-        --local-mat-bottom: clamp(32px, 5.4vw, 58px);
+        --local-pad: clamp(32px, 15%, 72px);
       }
 
       .frame.size-a5,
       .frame.size-series {
-        --local-mat-x: clamp(14px, 2.6vw, 26px);
-        --local-mat-y: clamp(14px, 2.4vw, 24px);
-        --local-mat-bottom: clamp(18px, 3.4vw, 34px);
-        --local-well: 5px;
+        --local-pad: clamp(16px, 12%, 36px);
         --local-rail: 2px;
       }
 
@@ -373,24 +361,17 @@
           0 2px 6px rgba(60, 40, 24, 0.08);
       }
 
-      .cover-frame .mat {
+      .cover-frame .shadowbox {
         width: 100%;
         height: 100%;
-        background: var(--mat-color);
-        padding: 11% 10% 15%;
-        box-sizing: border-box;
-      }
-
-      .cover-frame .mat-well {
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(180deg, #e8e2d8 0%, #efeae3 100%);
-        padding: 5px;
+        background: #ffffff;
+        padding: 14%;
         box-sizing: border-box;
         box-shadow:
-          inset 0 1px 2px rgba(50, 34, 20, 0.16),
-          inset 0 5px 12px rgba(40, 28, 16, 0.12),
-          inset 0 -1px 0 rgba(255, 255, 255, 0.55);
+          inset -10px 0 16px -8px rgba(40, 28, 18, 0.16),
+          inset 0 -12px 18px -8px rgba(40, 28, 18, 0.18),
+          inset 6px 0 12px -10px rgba(40, 28, 18, 0.05),
+          inset 0 6px 12px -10px rgba(40, 28, 18, 0.05);
       }
 
       .cover-frame img,
@@ -400,9 +381,6 @@
         height: 100%;
         object-fit: cover;
         background: #ffffff;
-        box-shadow:
-          0 1px 2px rgba(40, 28, 16, 0.1),
-          0 4px 10px rgba(40, 28, 16, 0.1);
       }
 
       .cover-frame.f-a5 {
@@ -621,9 +599,7 @@
           --art-w-a4: min(48vw, 210px);
           --art-w-a5: min(38vw, 150px);
           --art-w-series: min(18vw, 120px);
-          --mat-x: clamp(16px, 3.2vw, 30px);
-          --mat-y: clamp(16px, 3vw, 28px);
-          --mat-bottom: clamp(22px, 4.4vw, 40px);
+          --box-pad: clamp(22px, 12%, 48px);
           --stage-top: 8%;
           --stage-bottom: 33%;
           --track-gap: 8vw;
@@ -647,10 +623,7 @@
           --art-w-a4: min(52vw, 180px);
           --art-w-a5: min(40vw, 130px);
           --art-w-series: min(18vw, 90px);
-          --mat-x: 14px;
-          --mat-y: 14px;
-          --mat-bottom: 20px;
-          --well-inset: 5px;
+          --box-pad: 16px;
           --frame-rail: 2px;
           --stage-top: 10%;
           --stage-bottom: 36%;
@@ -1095,19 +1068,19 @@
         <div class="cover-stage">
           <div class="cover-wall" aria-hidden="true">
             <div class="cover-frame f-a5">
-              <div class="mat"><div class="mat-well"><img src="drawings/03-A5.jpg" alt="" /></div></div>
+              <div class="shadowbox"><img src="drawings/03-A5.jpg" alt="" /></div>
             </div>
             <div class="cover-frame f-a3">
-              <div class="mat"><div class="mat-well"><img src="drawings/05-A3.jpg" alt="" /></div></div>
+              <div class="shadowbox"><img src="drawings/05-A3.jpg" alt="" /></div>
             </div>
             <div class="cover-frame f-tall">
-              <div class="mat"><div class="mat-well"><div class="blank-mat"></div></div></div>
+              <div class="shadowbox"><div class="blank-mat"></div></div>
             </div>
             <div class="cover-frame f-a4">
-              <div class="mat"><div class="mat-well"><img src="drawings/01-A4.jpg" alt="" /></div></div>
+              <div class="shadowbox"><img src="drawings/01-A4.jpg" alt="" /></div>
             </div>
             <div class="cover-frame f-a5">
-              <div class="mat"><div class="mat-well"><img src="drawings/06-thank-you-apricot.jpg" alt="" /></div></div>
+              <div class="shadowbox"><img src="drawings/06-thank-you-apricot.jpg" alt="" /></div>
             </div>
           </div>
           <h1 id="introTitle" class="visually-hidden">安迟美术馆</h1>
@@ -1175,10 +1148,8 @@
         </aside>
         <div class="preview-art">
           <div class="frame" id="previewFrame">
-            <div class="mat">
-              <div class="mat-well">
-                <img id="previewImage" src="" alt="" />
-              </div>
+            <div class="shadowbox">
+              <img id="previewImage" src="" alt="" />
             </div>
           </div>
         </div>
@@ -1347,10 +1318,8 @@
         const workAttr = workIndex === "" ? "" : `data-work-index="${workIndex}"`;
         return `
           <div class="frame size-${size}" ${workAttr} ${attrs}>
-            <div class="mat">
-              <div class="mat-well">
-                <img src="${image}" alt="${alt}" loading="lazy" />
-              </div>
+            <div class="shadowbox">
+              <img src="${image}" alt="${alt}" loading="lazy" />
             </div>
           </div>
         `;
