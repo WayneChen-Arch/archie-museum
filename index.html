@@ -19,13 +19,16 @@
         --art-h-a3: min(56vh, 540px);
         --art-h-a4: min(48vh, 420px);
         --art-h-a5: min(34vh, 300px);
+        --art-h-series: min(40vh, 340px);
         --art-w-a3: min(78vw, 420px);
         --art-w-a4: min(72vw, 340px);
         --art-w-a5: min(58vw, 250px);
+        --art-w-series: min(28vw, 210px);
         --stage-top: 11%;
         --stage-bottom: 32%;
         --track-gap: 10vw;
         --track-pad: 11vw;
+        --series-gap: 0.55rem;
       }
 
       * {
@@ -114,11 +117,37 @@
         transition: transform 660ms cubic-bezier(0.2, 0.74, 0.23, 1);
       }
 
-      .work-item {
+      .work-item,
+      .work-series {
         display: flex;
         align-items: center;
         gap: 1.1rem;
         flex: 0 0 auto;
+      }
+
+      .work-series {
+        align-items: flex-end;
+      }
+
+      .series-frames {
+        display: flex;
+        align-items: flex-end;
+        gap: var(--series-gap);
+      }
+
+      .series-frames .frame {
+        opacity: 0.78;
+        transform: translateY(0);
+      }
+
+      .series-frames .frame.is-active,
+      .series-frames .frame:hover {
+        opacity: 1;
+        transform: translateY(-4px);
+        box-shadow:
+          0 18px 34px rgba(0, 0, 0, 0.32),
+          0 6px 14px rgba(0, 0, 0, 0.22),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05);
       }
 
       .frame {
@@ -131,7 +160,7 @@
           0 4px 10px rgba(0, 0, 0, 0.18),
           inset 0 1px 0 rgba(255, 255, 255, 0.05);
         transform: none;
-        transition: transform 580ms cubic-bezier(0.2, 0.74, 0.23, 1), box-shadow 580ms ease;
+        transition: transform 580ms cubic-bezier(0.2, 0.74, 0.23, 1), box-shadow 580ms ease, opacity 320ms ease;
         cursor: zoom-in;
       }
 
@@ -156,12 +185,25 @@
         max-width: var(--art-w-a5);
       }
 
+      .frame.size-series img {
+        max-height: var(--art-h-series);
+        max-width: var(--art-w-series);
+      }
+
       .work-item:hover .frame {
         transform: translateY(-4px);
         box-shadow:
           0 18px 34px rgba(0, 0, 0, 0.32),
           0 6px 14px rgba(0, 0, 0, 0.22),
           inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      }
+
+      .series-label {
+        margin-bottom: 0.35rem;
+        color: #b8b8b5;
+        font-size: 9px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
       }
 
       .meta {
@@ -389,12 +431,18 @@
         mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.82), transparent 88%);
       }
 
-      .reflection-track .work-item {
+      .reflection-track .work-item,
+      .reflection-track .work-series {
         opacity: 0.86;
       }
 
       .reflection-track .meta {
         opacity: 0;
+      }
+
+      .reflection-track .series-frames .frame {
+        opacity: 0.86;
+        transform: none;
       }
 
       .reflection-fade {
@@ -481,7 +529,8 @@
       }
 
       @media (min-width: 981px) {
-        .work-item {
+        .work-item,
+        .work-series {
           min-width: max-content;
         }
       }
@@ -491,13 +540,16 @@
           --art-h-a3: min(52vh, 480px);
           --art-h-a4: min(44vh, 380px);
           --art-h-a5: min(32vh, 270px);
+          --art-h-series: min(36vh, 300px);
           --art-w-a3: min(72vw, 380px);
           --art-w-a4: min(68vw, 300px);
           --art-w-a5: min(54vw, 220px);
+          --art-w-series: min(24vw, 180px);
           --stage-top: 8%;
           --stage-bottom: 33%;
           --track-gap: 8vw;
           --track-pad: 8.4vw;
+          --series-gap: 0.45rem;
         }
 
         .meta {
@@ -511,13 +563,16 @@
           --art-h-a3: min(34vh, 280px);
           --art-h-a4: min(30vh, 240px);
           --art-h-a5: min(22vh, 180px);
+          --art-h-series: min(24vh, 190px);
           --art-w-a3: min(82vw, 340px);
           --art-w-a4: min(78vw, 280px);
           --art-w-a5: min(62vw, 200px);
+          --art-w-series: min(26vw, 118px);
           --stage-top: 10%;
           --stage-bottom: 36%;
           --track-gap: 14vw;
           --track-pad: 50vw;
+          --series-gap: 0.35rem;
         }
 
         .museum {
@@ -529,7 +584,8 @@
           padding-bottom: 12px;
         }
 
-        .work-item {
+        .work-item,
+        .work-series {
           flex-direction: column;
           align-items: center;
           gap: 0.85rem;
@@ -537,7 +593,9 @@
           max-height: 100%;
         }
 
-        .work-item:hover .frame {
+        .work-item:hover .frame,
+        .series-frames .frame.is-active,
+        .series-frames .frame:hover {
           transform: none;
         }
 
@@ -844,6 +902,11 @@
         max-width: min(60vw, 580px);
       }
 
+      .preview-art .frame.size-series img {
+        max-height: min(74vh, 700px);
+        max-width: min(48vw, 460px);
+      }
+
       @media (max-width: 900px) {
         .preview-side {
           width: min(240px, 30vw);
@@ -901,7 +964,8 @@
 
         .preview-art .frame img,
         .preview-art .frame.size-a3 img,
-        .preview-art .frame.size-a5 img {
+        .preview-art .frame.size-a5 img,
+        .preview-art .frame.size-series img {
           max-height: min(42vh, 340px);
           max-width: min(78vw, 320px);
           width: auto;
@@ -940,7 +1004,7 @@
               <img src="drawings/01-A4.jpg" alt="" />
             </div>
             <div class="cover-frame f-a5">
-              <div class="blank-mat"></div>
+              <img src="drawings/06-thank-you-apricot.jpg" alt="" />
             </div>
           </div>
           <h1 id="introTitle" class="visually-hidden">安迟美术馆</h1>
@@ -1020,7 +1084,49 @@
         { artist: "Archie", years: "", title: "Loop Study", year: "2024", material: "Crayon on A4 paper", image: "drawings/02-A4.jpg", size: "a4", note: "层层叠叠的环状笔触，把玩耍的节奏留在了纸面。" },
         { artist: "Archie", years: "", title: "Scattered Forms", year: "2024", material: "Mixed media on A5 paper", image: "drawings/03-A5.jpg", size: "a5", note: "少数几个色点就撑开了整张纸的空气。" },
         { artist: "Archie", years: "", title: "Green Column", year: "2024", material: "Watercolor on A5 paper", image: "drawings/04-A5.jpg", size: "a5", note: "绿与黄叠印成一条竖直的路径，安静却有力。" },
-        { artist: "Archie", years: "", title: "Candle Collage", year: "2024", material: "Clay, foil and paint on A3 paper", image: "drawings/05-A3.jpg", size: "a3", note: "黏土、箔片与颜料堆叠出烛火般的温度。" }
+        { artist: "Archie", years: "", title: "Candle Collage", year: "2024", material: "Clay, foil and paint on A3 paper", image: "drawings/05-A3.jpg", size: "a3", note: "黏土、箔片与颜料堆叠出烛火般的温度。" },
+        {
+          artist: "Archie",
+          years: "(2y9m)",
+          title: "Thank You Letter I · Apricot",
+          year: "2026",
+          material: "Paint collage on paper",
+          image: "drawings/06-thank-you-apricot.jpg",
+          size: "series",
+          series: "thank-you-teachers",
+          seriesTitle: "Thank You Letters",
+          seriesLabel: "Kindergarten N · Graduation",
+          panel: "I / III",
+          note: "幼儿园 N 班毕业送给三位老师的感谢信之一。画面中的大字由 2 岁 9 个月的安迟 Archie 亲手写下，拼成一封写给老师的 thank you letter。"
+        },
+        {
+          artist: "Archie",
+          years: "(2y9m)",
+          title: "Thank You Letter II · Blue",
+          year: "2026",
+          material: "Paint collage on paper",
+          image: "drawings/07-thank-you-blue.jpg",
+          size: "series",
+          series: "thank-you-teachers",
+          seriesTitle: "Thank You Letters",
+          seriesLabel: "Kindergarten N · Graduation",
+          panel: "II / III",
+          note: "同组三联画的第二幅。天蓝与柠檬黄呼应学期里明朗的日子，字母旁印着 A for Archie、U for YOU。"
+        },
+        {
+          artist: "Archie",
+          years: "(2y9m)",
+          title: "Thank You Letter III · Magenta",
+          year: "2026",
+          material: "Paint collage on paper",
+          image: "drawings/08-thank-you-magenta.jpg",
+          size: "series",
+          series: "thank-you-teachers",
+          seriesLabel: "Kindergarten N · Graduation",
+          seriesTitle: "Thank You Letters",
+          panel: "III / III",
+          note: "三联感谢信的收束。玫红与荧光绿撞色，把毕业这一天的温度和孩子对三位老师的谢谢留在墙上。"
+        }
       ];
 
       const mainTrack = document.getElementById("mainTrack");
@@ -1097,11 +1203,15 @@
         current = index;
         updateView();
 
+        const seriesLine = work.series
+          ? `<div class="material">${work.seriesLabel || "Series"} · ${work.panel || ""}</div>`
+          : "";
         previewMeta.innerHTML = `
           <div class="fav">&#9825;</div>
           <div class="artist">${work.artist}${work.years ? ` ${work.years}` : ""}</div>
           <div class="title">${work.title}, ${work.year}</div>
           <div class="material">${work.material}</div>
+          ${seriesLine}
           <p class="note">${work.note || ""}</p>
         `;
         previewFrame.className = `frame size-${work.size}`;
@@ -1119,9 +1229,10 @@
         previewIndex = null;
       }
 
-      function createItem(work, index, clickable) {
+      function createSoloItem(work, index, clickable) {
         const item = document.createElement("article");
         item.className = "work-item";
+        item.dataset.workIndex = String(index);
         item.innerHTML = `
           <div class="frame size-${work.size}" ${clickable ? `data-preview-index="${index}"` : ""}>
             <img src="${work.image}" alt="${work.title}, ${work.year}" loading="lazy" />
@@ -1136,13 +1247,83 @@
         return item;
       }
 
-      works.forEach((work, index) => {
-        const mainItem = createItem(work, index, true);
-        const reflectionItem = createItem(work, index, false);
+      function createSeriesItem(seriesWorks, clickable) {
+        const item = document.createElement("article");
+        item.className = "work-series";
+        item.dataset.series = seriesWorks[0].work.series;
+        const first = seriesWorks[0].work;
+        const frames = seriesWorks
+          .map(
+            ({ work, index }) => `
+              <div class="frame size-${work.size}" data-work-index="${index}" ${clickable ? `data-preview-index="${index}"` : ""}>
+                <img src="${work.image}" alt="${work.title}, ${work.year}" loading="lazy" />
+              </div>
+            `
+          )
+          .join("");
+
+        item.innerHTML = `
+          <div class="series-frames">${frames}</div>
+          <div class="meta">
+            <div class="fav">&#9825;</div>
+            <div class="series-label">${first.seriesLabel || "Series"}</div>
+            <div class="artist">${first.artist}${first.years ? ` ${first.years}` : ""}</div>
+            <div class="title">${first.seriesTitle || first.title}, ${first.year}</div>
+            <div class="material">${first.material} · ${seriesWorks.length} panels</div>
+            <div class="material series-panel" data-series-panel></div>
+          </div>
+        `;
+        return item;
+      }
+
+      function buildDisplayUnits() {
+        const units = [];
+        let i = 0;
+        while (i < works.length) {
+          const work = works[i];
+          if (work.series) {
+            const seriesWorks = [];
+            const seriesId = work.series;
+            while (i < works.length && works[i].series === seriesId) {
+              seriesWorks.push({ work: works[i], index: i });
+              i += 1;
+            }
+            units.push({ type: "series", seriesWorks });
+          } else {
+            units.push({ type: "solo", work, index: i });
+            i += 1;
+          }
+        }
+        return units;
+      }
+
+      const displayUnits = buildDisplayUnits();
+      const indexToUnit = new Map();
+
+      displayUnits.forEach((unit) => {
+        const mainItem =
+          unit.type === "series"
+            ? createSeriesItem(unit.seriesWorks, true)
+            : createSoloItem(unit.work, unit.index, true);
+        const reflectionItem =
+          unit.type === "series"
+            ? createSeriesItem(unit.seriesWorks, false)
+            : createSoloItem(unit.work, unit.index, false);
+
         mainTrack.appendChild(mainItem);
         reflectionTrack.appendChild(reflectionItem);
-        mainItem.querySelector("img").addEventListener("load", updateView);
-        mainItem.querySelector(".frame").addEventListener("click", () => openPreview(index));
+
+        if (unit.type === "series") {
+          unit.seriesWorks.forEach(({ index }) => indexToUnit.set(index, mainItem));
+          mainItem.querySelectorAll("img").forEach((img) => img.addEventListener("load", updateView));
+          mainItem.querySelectorAll("[data-preview-index]").forEach((frame) => {
+            frame.addEventListener("click", () => openPreview(Number(frame.dataset.previewIndex)));
+          });
+        } else {
+          indexToUnit.set(unit.index, mainItem);
+          mainItem.querySelector("img").addEventListener("load", updateView);
+          mainItem.querySelector(".frame").addEventListener("click", () => openPreview(unit.index));
+        }
       });
 
       function getCenterOffset(item) {
@@ -1151,15 +1332,29 @@
       }
 
       function updateView() {
-        const items = mainTrack.children;
-        const item = items[current];
-        if (!item) return;
+        const work = works[current];
+        const item = indexToUnit.get(current);
+        if (!item || !work) return;
 
         const offset = getCenterOffset(item);
         mainTrack.style.transform = `translateX(${offset}px)`;
         reflectionTrack.style.transform = `scaleY(-1) translate(${offset}px, 6%)`;
         pageInfo.textContent = `${current + 1}/${works.length}`;
-        artLabel.textContent = `安迟美术馆 — ${works[current].title}`;
+        artLabel.textContent = `安迟美术馆 — ${work.seriesTitle || work.title}`;
+
+        mainTrack.querySelectorAll(".series-frames .frame").forEach((frame) => {
+          frame.classList.toggle("is-active", Number(frame.dataset.workIndex) === current);
+        });
+        reflectionTrack.querySelectorAll(".series-frames .frame").forEach((frame) => {
+          frame.classList.toggle("is-active", Number(frame.dataset.workIndex) === current);
+        });
+
+        if (work.series) {
+          const panelText = work.panel ? `Panel ${work.panel}` : "";
+          item.querySelectorAll("[data-series-panel]").forEach((node) => {
+            node.textContent = panelText ? `${panelText} · ${work.title}` : work.title;
+          });
+        }
       }
 
       function showIntroduction() {
