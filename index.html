@@ -390,6 +390,13 @@
         max-width: 50%;
         text-align: left;
         margin: auto;
+        background: transparent;
+      }
+
+      .cover-preface,
+      .enter-exhibition {
+        position: relative;
+        z-index: 3;
       }
 
       .cover-preface {
@@ -432,10 +439,13 @@
       }
 
       .cover-logo {
+        position: relative;
+        z-index: 6;
         display: block;
         width: min(132px, 28vw);
         height: auto;
         margin-top: 0.2rem;
+        mix-blend-mode: multiply;
       }
 
       .enter-exhibition {
