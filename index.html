@@ -307,7 +307,7 @@
         user-select: none;
       }
 
-      .year {
+      .title {
         color: var(--text-strong);
         margin-bottom: 0.12rem;
       }
@@ -1208,7 +1208,7 @@
         color: var(--text);
       }
 
-      .preview-meta .year {
+      .preview-meta .title {
         color: var(--text-strong);
         font-size: 13px;
         margin-bottom: 0.2rem;
@@ -1857,8 +1857,12 @@
       let guideSpeakingIndex = null;
       let guideAudio = null;
 
+      function workHeadline(work) {
+        return `${work.title}, ${work.year}`;
+      }
+
       function guideScript(work) {
-        return `${work.year}年。材質，${work.material}。${work.note || ""}`;
+        return `${workHeadline(work)}。材質，${work.material}。${work.note || ""}`;
       }
 
       function syncGuideButtons() {
@@ -1939,13 +1943,13 @@
           <button type="button" class="audio-guide${guideSpeakingIndex === index ? " is-playing" : ""}" data-guide-index="${index}" aria-label="語音導覽" aria-pressed="${guideSpeakingIndex === index ? "true" : "false"}" title="語音導覽">
             ${speakerIcon}
           </button>
-          <div class="year">${work.year}</div>
+          <div class="title">${workHeadline(work)}</div>
           <div class="material">${work.material}</div>
           <p class="note">${work.note || ""}</p>
         `;
         previewFrame.className = `frame size-${work.size}`;
         previewImage.src = work.image;
-        previewImage.alt = `${work.year}，${work.material}`;
+        previewImage.alt = workHeadline(work);
         renderComments(index);
         museum.classList.add("is-preview");
         previewLayer.setAttribute("aria-hidden", "false");
@@ -1979,7 +1983,7 @@
           : `<span class="audio-guide" aria-hidden="true">${speakerIcon}</span>`;
         return `
           ${guideMarkup}
-          <div class="year" data-series-year>${work.year}</div>
+          <div class="title" data-series-title>${workHeadline(work)}</div>
           <div class="material" data-series-material>${work.material}</div>
           <div class="note" data-series-note>${work.note || ""}</div>
         `;
@@ -1993,7 +1997,7 @@
           ${frameMarkup({
             size: work.size,
             image: work.image,
-            alt: `${work.year}，${work.material}`,
+            alt: workHeadline(work),
             attrs: clickable ? `data-preview-index="${index}"` : ""
           })}
           <div class="meta">
@@ -2014,7 +2018,7 @@
             frameMarkup({
               size: work.size,
               image: work.image,
-              alt: `${work.year}，${work.material}`,
+              alt: workHeadline(work),
               workIndex: String(index),
               attrs: clickable ? `data-preview-index="${index}"` : ""
             })
@@ -2148,8 +2152,8 @@
         });
 
         if (work.series) {
-          item.querySelectorAll("[data-series-year]").forEach((node) => {
-            node.textContent = work.year;
+          item.querySelectorAll("[data-series-title]").forEach((node) => {
+            node.textContent = workHeadline(work);
           });
           item.querySelectorAll("[data-series-material]").forEach((node) => {
             node.textContent = work.material;
