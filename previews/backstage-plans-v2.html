@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>幕後放映 · 三套方案預覽 · 安遲美術館</title>
+    <style>
+      :root {
+        --wall: #e8e8e6;
+        --ink: #2c2621;
+        --muted: #6f675f;
+        --maple: #cdb9a0;
+        --line: rgba(70, 52, 36, 0.16);
+        --dark: #0d0c0b;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Songti TC", serif;
+        background: var(--wall);
+        color: var(--ink);
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        align-items: center;
+        padding: 0.9rem 1.1rem;
+        background: rgba(232, 232, 230, 0.94);
+        border-bottom: 1px solid var(--line);
+        backdrop-filter: blur(8px);
+      }
+
+      header h1 {
+        margin: 0 0.4rem 0 0;
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      header button {
+        appearance: none;
+        border: 1px solid var(--line);
+        background: transparent;
+        color: var(--ink);
+        font: inherit;
+        font-size: 12px;
+        letter-spacing: 0.04em;
+        padding: 0.4rem 0.75rem;
+        cursor: pointer;
+      }
+
+      header button[aria-pressed="true"] {
+        background: var(--ink);
+        color: var(--wall);
+        border-color: var(--ink);
+      }
+
+      .swatches {
+        display: flex;
+        gap: 0.35rem;
+        margin-left: auto;
+        align-items: center;
+      }
+
+      .swatch {
+        width: 14px;
+        height: 14px;
+        border: 1px solid var(--line);
+      }
+
+      .swatch.wall { background: #e8e8e6; }
+      .swatch.maple { background: #cdb9a0; }
+      .swatch.mat { background: #f7f4ee; }
+      .swatch.dark { background: #0d0c0b; }
+
+      .note {
+        width: 100%;
+        margin: 0.1rem 0 0;
+        font-size: 11px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .panel {
+        display: none;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 1.2rem 1.1rem 2.5rem;
+      }
+
+      .panel.is-active {
+        display: block;
+      }
+
+      .hero {
+        display: block;
+        width: 100%;
+        border: 1px solid var(--line);
+        background: var(--dark);
+      }
+
+      .copy {
+        margin-top: 1rem;
+      }
+
+      .tag {
+        font-size: 10px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .copy h2 {
+        margin: 0.35rem 0 0.55rem;
+        font-size: 1.45rem;
+        font-weight: 500;
+      }
+
+      .copy p {
+        margin: 0 0 0.7rem;
+        font-size: 13px;
+        line-height: 1.7;
+        color: var(--muted);
+      }
+
+      .copy ul {
+        margin: 0;
+        padding-left: 1.15rem;
+        color: var(--ink);
+        font-size: 12.5px;
+        line-height: 1.75;
+      }
+
+      .bridge {
+        margin-top: 1.1rem;
+        padding: 0.85rem 1rem;
+        border-left: 3px solid var(--maple);
+        background: #f3f1ec;
+        font-size: 12px;
+        line-height: 1.65;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>幕後 · 三套方案</h1>
+      <button type="button" data-plan="1" aria-pressed="true">方案 1 暗室楓木長椅</button>
+      <button type="button" data-plan="2" aria-pressed="false">方案 2 成對影廳</button>
+      <button type="button" data-plan="3" aria-pressed="false">方案 3 楓木框投影</button>
+      <div class="swatches" aria-label="與主展廊協調的色票">
+        <span class="swatch wall" title="展廊灰牆"></span>
+        <span class="swatch maple" title="楓木畫框"></span>
+        <span class="swatch mat" title="象牙襯紙"></span>
+        <span class="swatch dark" title="幕後暗室"></span>
+      </div>
+      <p class="note">
+        共通條件：整體暗色 · 鏡頭正對投影 · 橫豎各一（16:9）· 前方長椅 · 與主展廊楓木 / 象牙 / 冷灰協調。
+      </p>
+    </header>
+
+    <section class="panel is-active" data-panel="1">
+      <img class="hero" src="backstage-plan1-maple-dark.jpg" alt="方案 1：暗室楓木長椅" />
+      <div class="copy">
+        <div class="tag">Plan 1</div>
+        <h2>暗室楓木長椅</h2>
+        <p>全黑沉浸放映廳，鏡頭正對雙幕；前方楓木長椅與主展廊畫框同色系，地板反光帶一點冷灰與暖象牙餘光。</p>
+        <ul>
+          <li>橫屏偏左、豎屏偏右並置</li>
+          <li>氣氛最接近美術館黑匣，又不會跟展廊脫節</li>
+          <li>推薦作為默認幕後方向</li>
+        </ul>
+        <div class="bridge">與主展協調：長椅用楓木色 `#CDB9A0`，環境反光帶一點展廊灰 `#E8E8E6`。</div>
+      </div>
+    </section>
+
+    <section class="panel" data-panel="2">
+      <img class="hero" src="backstage-plan2-paired-cinema.jpg" alt="方案 2：成對影廳" />
+      <div class="copy">
+        <div class="tag">Plan 2</div>
+        <h2>成對影廳</h2>
+        <p>主橫屏居中靠後，豎屏略靠前成對出現，像影廳雙畫幅；長椅更近鏡頭，景深更強。</p>
+        <ul>
+          <li>敘事重心清楚：大片在先、豎屏作特寫軌</li>
+          <li>地板反光偏暖象牙，呼應襯紙</li>
+          <li>空間層次更「電影院」</li>
+        </ul>
+        <div class="bridge">與主展協調：暗石墨底 + 暖象牙反光；螢幕內容用粉彩/蠟筆色溫，對上展廊作品。</div>
+      </div>
+    </section>
+
+    <section class="panel" data-panel="3">
+      <img class="hero" src="backstage-plan3-framed-screens.jpg" alt="方案 3：楓木框投影" />
+      <div class="copy">
+        <div class="tag">Plan 3</div>
+        <h2>楓木框投影</h2>
+        <p>投影本身裝進與展廊一致的楓木細框，下方有一條冷灰建築帶，把「幕後暗室」和「展廊灰牆」接起來。</p>
+        <ul>
+          <li>品牌連續性最強：框、椅、冷灰帶都與主展同源</li>
+          <li>仍是暗色、正對鏡頭、橫豎 16:9</li>
+          <li>若希望幕後與展廊「同館一家」感最明顯，選這套</li>
+        </ul>
+        <div class="bridge">與主展協調：螢幕邊框 = 楓木畫框；牆帶 = 展廊灰；襯亮 = 象牙墊。</div>
+      </div>
+    </section>
+
+    <script>
+      const buttons = [...document.querySelectorAll("header button[data-plan]")];
+      const panels = [...document.querySelectorAll("[data-panel]")];
+
+      function show(plan) {
+        buttons.forEach((btn) => btn.setAttribute("aria-pressed", String(btn.dataset.plan === plan)));
+        panels.forEach((panel) => panel.classList.toggle("is-active", panel.dataset.panel === plan));
+        history.replaceState(null, "", `#${plan}`);
+      }
+
+      buttons.forEach((btn) => btn.addEventListener("click", () => show(btn.dataset.plan)));
+      const initial = (location.hash || "#1").slice(1);
+      show(["1", "2", "3"].includes(initial) ? initial : "1");
+    </script>
+  </body>
+</html>
