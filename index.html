@@ -17,12 +17,7 @@
         --frame-bg: #cdb9a0;
         --frame-border: #b7a08a;
         --mat-color: #f7f4ee;
-        --box-pad: 14%;
-        --mat-pad-a3: 15%;
-        --mat-pad-a5: 12%;
-        --mat-pad-tall: 11%;
-        --mat-pad-wide: 12%;
-        --mat-pad-series: 12%;
+        --box-pad: clamp(28px, 14%, 64px);
         --ui-muted: #8a8178;
         --ui-line: rgba(70, 52, 36, 0.16);
         --art-h-a3: min(42vh, 420px);
@@ -210,17 +205,13 @@
       }
 
       .frame.size-a3 {
-        --local-pad: var(--mat-pad-a3);
+        --local-pad: clamp(32px, 15%, 72px);
       }
 
       .frame.size-a5,
       .frame.size-series {
-        --local-pad: var(--mat-pad-a5);
+        --local-pad: clamp(16px, 12%, 36px);
         --local-rail: 2px;
-      }
-
-      .frame.size-series {
-        --local-pad: var(--mat-pad-series);
       }
 
       .frame.size-a3 img {
@@ -266,12 +257,12 @@
       }
 
       .frame.size-tall {
-        --local-pad: var(--mat-pad-tall);
+        --local-pad: clamp(18px, 11%, 40px);
         --local-rail: 2px;
       }
 
       .frame.size-wide {
-        --local-pad: var(--mat-pad-wide);
+        --local-pad: clamp(22px, 12%, 48px);
       }
 
       .work-item:hover .frame {
@@ -408,18 +399,87 @@
 
       .cover-piece {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: center;
         gap: clamp(1.6rem, 3.5vw, 3rem);
       }
 
       .cover-frame.frame.size-a5 {
         flex: 0 0 auto;
+        align-self: center;
       }
 
       .cover-frame.frame.size-a5 img {
         max-height: min(28vh, 200px);
         max-width: min(20vw, 140px);
+      }
+
+      .cover-meta {
+        flex: 1 1 auto;
+        max-width: 360px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.15rem;
+        text-align: left;
+      }
+
+      .cover-meta-head .year {
+        color: var(--text-strong);
+        font-size: 12px;
+        margin-bottom: 0.15rem;
+      }
+
+      .cover-meta-head .material {
+        color: var(--ui-muted);
+        font-size: 10px;
+        letter-spacing: 0.02em;
+        margin-bottom: 0.35rem;
+      }
+
+      .cover-meta-head .note {
+        color: var(--text);
+        font-size: 11px;
+        line-height: 1.55;
+      }
+
+      .cover-preface {
+        width: 100%;
+        color: var(--text-strong);
+      }
+
+      .cover-preface .zh,
+      .cover-preface .en {
+        margin: 0;
+      }
+
+      .cover-preface .zh p,
+      .cover-preface .en p {
+        margin: 0 0 0.65em;
+        font-size: 11px;
+        line-height: 1.75;
+      }
+
+      .cover-preface .zh p:last-child,
+      .cover-preface .en p:last-child {
+        margin-bottom: 0;
+      }
+
+      .cover-preface .zh {
+        color: var(--text-strong);
+      }
+
+      .cover-preface .en {
+        margin-top: 0.95rem;
+        padding-top: 0.85rem;
+        border-top: 1px solid var(--ui-line);
+        color: var(--text);
+      }
+
+      .cover-preface .en p {
+        font-size: 10px;
+        line-height: 1.65;
+        letter-spacing: 0.01em;
       }
 
       .cover-logo {
@@ -434,8 +494,9 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        align-self: center;
         gap: 0.5rem;
-        margin-top: 1.5rem;
+        margin-top: 0.1rem;
         padding: 0;
         border: 0;
         background: transparent;
@@ -591,12 +652,7 @@
           --art-w-tall: min(28vw, 150px);
           --art-w-wide: min(58vw, 320px);
           --art-w-series: min(18vw, 120px);
-          --box-pad: 13%;
-          --mat-pad-a3: 14%;
-          --mat-pad-a5: 12%;
-          --mat-pad-tall: 11%;
-          --mat-pad-wide: 12%;
-          --mat-pad-series: 12%;
+          --box-pad: clamp(22px, 12%, 48px);
           --stage-top: 8%;
           --stage-bottom: 33%;
           --track-gap: 8vw;
@@ -624,12 +680,7 @@
           --art-w-tall: min(26vw, 110px);
           --art-w-wide: min(72vw, 280px);
           --art-w-series: min(18vw, 90px);
-          --box-pad: 12%;
-          --mat-pad-a3: 13%;
-          --mat-pad-a5: 11%;
-          --mat-pad-tall: 10%;
-          --mat-pad-wide: 11%;
-          --mat-pad-series: 11%;
+          --box-pad: 16px;
           --frame-rail: 2px;
           --stage-top: 10%;
           --stage-bottom: 36%;
@@ -724,12 +775,34 @@
           max-width: min(36vw, 118px);
         }
 
+        .cover-meta {
+          max-width: 100%;
+          width: 100%;
+          gap: 1rem;
+        }
+
+        .cover-preface .zh p,
+        .cover-preface .en p {
+          font-size: 10.5px;
+          line-height: 1.7;
+        }
+
+        .cover-preface .en {
+          margin-top: 0.85rem;
+          padding-top: 0.75rem;
+        }
+
+        .cover-preface .en p {
+          font-size: 9.5px;
+        }
+
         .cover-logo {
           width: min(100px, 34vw);
+          align-self: center;
         }
 
         .enter-exhibition {
-          margin-top: 1.25rem;
+          align-self: center;
         }
       }
 
@@ -956,27 +1029,24 @@
           0 3px 8px rgba(40, 38, 34, 0.12);
       }
 
-      /* Preview enlarges the same gallery proportions (≈2× gallery max). */
-      .preview-art .frame img,
-      .preview-art .frame.size-a4 img {
-        max-height: min(72vh, 620px);
-        max-width: min(56vw, 490px);
+      .preview-art .frame img {
+        max-height: min(72vh, 680px);
+        max-width: min(56vw, 540px);
       }
 
       .preview-art .frame.size-a5 img {
-        max-height: min(52vh, 440px);
-        max-width: min(42vw, 350px);
+        max-height: min(56vh, 480px);
+        max-width: min(42vw, 380px);
       }
 
       .preview-art .frame.size-a3 img {
-        max-height: min(84vh, 840px);
-        max-width: min(62vw, 620px);
+        max-height: min(76vh, 720px);
+        max-width: min(60vw, 580px);
       }
 
       .preview-art .frame.size-series .shadowbox {
-        --pv-series-h: min(70vh, 660px);
-        width: calc(var(--pv-series-h) * 150 / 220);
-        height: var(--pv-series-h);
+        width: min(48vw, 460px);
+        height: min(74vh, 700px);
         box-sizing: border-box;
         display: flex;
         align-items: center;
@@ -992,13 +1062,13 @@
       }
 
       .preview-art .frame.size-tall img {
-        max-height: min(84vh, 920px);
-        max-width: min(34vw, 340px);
+        max-height: min(78vh, 760px);
+        max-width: min(32vw, 280px);
       }
 
       .preview-art .frame.size-wide img {
-        max-height: min(52vh, 480px);
-        max-width: min(76vw, 760px);
+        max-height: min(52vh, 420px);
+        max-width: min(72vw, 720px);
       }
 
       @media (max-width: 900px) {
@@ -1007,14 +1077,8 @@
         }
 
         .preview-art .frame img,
-        .preview-art .frame.size-a4 img {
-          max-height: min(64vh, 520px);
-          max-width: min(48vw, 410px);
-        }
-
         .preview-art .frame.size-a3 img {
-          max-height: min(70vh, 640px);
-          max-width: min(52vw, 472px);
+          max-width: min(48vw, 420px);
         }
       }
 
@@ -1063,42 +1127,20 @@
         }
 
         .preview-art .frame img,
-        .preview-art .frame.size-a4 img {
-          max-height: min(40vh, 300px);
-          max-width: min(70vw, 237px);
+        .preview-art .frame.size-a3 img,
+        .preview-art .frame.size-a5 img,
+        .preview-art .frame.size-tall img,
+        .preview-art .frame.size-wide img,
+        .preview-art .frame.size-series img {
+          max-height: min(42vh, 340px);
+          max-width: min(78vw, 320px);
           width: auto;
           height: auto;
         }
 
-        .preview-art .frame.size-a5 img {
-          max-height: min(34vh, 240px);
-          max-width: min(58vw, 191px);
-        }
-
-        .preview-art .frame.size-a3 img {
-          max-height: min(44vh, 360px);
-          max-width: min(74vw, 266px);
-        }
-
-        .preview-art .frame.size-tall img {
-          max-height: min(48vh, 400px);
-          max-width: min(40vw, 148px);
-        }
-
-        .preview-art .frame.size-wide img {
-          max-height: min(28vh, 200px);
-          max-width: min(84vw, 316px);
-        }
-
-        .preview-art .frame.size-series img {
-          max-height: 100%;
-          max-width: 100%;
-        }
-
         .preview-art .frame.size-series .shadowbox {
-          --pv-series-h: min(40vh, 300px);
-          width: calc(var(--pv-series-h) * 150 / 220);
-          height: var(--pv-series-h);
+          width: min(78vw, 320px);
+          height: min(42vh, 340px);
         }
 
         .comment-list {
@@ -1127,18 +1169,41 @@
           <article class="cover-piece">
             <div class="frame size-a5 cover-frame" aria-hidden="false">
               <div class="shadowbox">
-                <img src="drawings/03-A5.jpg" alt="" />
+                <img src="drawings/03-A5.jpg" alt="2024，綜合媒材" />
               </div>
             </div>
-            <img
-              class="cover-logo"
-              src="assets/4360.png?v=2"
-              alt="安遲美術館 Archie Art Museum"
-              width="664"
-              height="487"
-            />
+            <div class="cover-meta">
+              <div class="cover-meta-head">
+                <div class="year">2024</div>
+                <div class="material">綜合媒材</div>
+                <div class="note">少數幾個色點就撐開了整張紙的空氣。</div>
+              </div>
+              <div class="cover-preface">
+                <div class="zh" lang="zh-Hant">
+                  <p>歡迎來到安遲美術館，這是一位三歲小朋友創作集合。</p>
+                  <p>展覽分為展廊與幕後兩個部分。</p>
+                  <p>展廊，呈現安遲日常的繪畫與雕塑創作，這裡有他畫下的第一幅畫。他最愛的創作主題：下雨、颳風、彩虹。除了這些系列作品，還有他的第一幅人物肖像畫。</p>
+                  <p>幕後，以照片與影片的方式，記錄這些作品從無到有的過程。分享創作背後的故事。</p>
+                  <p>在這裡，希望你能感受到他創作的自由和熱情。若有想說的，歡迎在每幅畫的留言區寫下感想。願你有個好心情。</p>
+                </div>
+                <div class="en" lang="en">
+                  <p>Welcome to Archie Art Museum, a collection of works by a three-year-old.</p>
+                  <p>The exhibition has two parts: the Gallery and Behind the Scenes.</p>
+                  <p>The Gallery presents Archie’s everyday paintings and sculptures, including his first drawing. His favorite subjects—rain, wind, and rainbows—run through these series, along with his first portrait.</p>
+                  <p>Behind the Scenes records, through photos and video, how these works came into being, and shares the stories behind them.</p>
+                  <p>We hope you feel the freedom and enthusiasm in his making. If you have something to say, leave a note under each work. Wishing you a good day.</p>
+                </div>
+              </div>
+              <img
+                class="cover-logo"
+                src="assets/4360.png?v=2"
+                alt="安遲美術館 Archie Art Museum"
+                width="664"
+                height="487"
+              />
+              <button class="enter-exhibition" id="enterBtn" type="button">進入展覽</button>
+            </div>
           </article>
-          <button class="enter-exhibition" id="enterBtn" type="button">進入展覽</button>
         </div>
       </section>
 
