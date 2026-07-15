@@ -120,6 +120,64 @@
         color: rgba(111, 103, 95, 0.55);
       }
 
+      .lang-switch {
+        position: absolute;
+        z-index: 9;
+        top: 1.45rem;
+        right: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        color: var(--ui-muted);
+        font-size: 9px;
+        letter-spacing: 0.08em;
+        user-select: none;
+      }
+
+      .lang-switch button {
+        appearance: none;
+        border: 0;
+        padding: 0;
+        margin: 0;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        letter-spacing: inherit;
+        cursor: pointer;
+        opacity: 0.55;
+        transition: opacity 180ms ease, color 180ms ease;
+      }
+
+      .lang-switch button:hover {
+        opacity: 0.9;
+      }
+
+      .lang-switch button.is-active {
+        color: var(--text-strong);
+        opacity: 1;
+      }
+
+      .lang-switch .sep {
+        opacity: 0.35;
+      }
+
+      .museum.is-backstage .lang-switch {
+        color: rgba(111, 103, 95, 0.72);
+      }
+
+      .museum.is-backstage .lang-switch button.is-active {
+        color: var(--text-strong);
+      }
+
+      .cover-preface [data-lang-panel] {
+        display: none;
+      }
+
+      .cover-preface [data-lang-panel].is-active {
+        display: block;
+      }
+
+
       .icon {
         width: 16px;
         height: 16px;
@@ -740,38 +798,25 @@
         color: var(--text-strong);
       }
 
-      .cover-preface .zh,
-      .cover-preface .en {
+      .cover-preface [data-lang-panel] {
         margin: 0;
       }
 
-      .cover-preface .zh p,
-      .cover-preface .en p {
+      .cover-preface [data-lang-panel] p {
         margin: 0 0 0.65em;
         font-size: 11px;
         line-height: 1.75;
       }
 
-      .cover-preface .zh p:last-child,
-      .cover-preface .en p:last-child {
+      .cover-preface [data-lang-panel] p:last-child {
         margin-bottom: 0;
       }
 
-      .cover-preface .zh {
-        color: var(--text-strong);
-      }
-
-      .cover-preface .en {
-        margin-top: 0.95rem;
-        padding-top: 0.85rem;
-        border-top: 1px solid var(--ui-line);
-        color: var(--text);
-      }
-
-      .cover-preface .en p {
+      .cover-preface [data-lang-panel][lang="en"] p {
         font-size: 10px;
         line-height: 1.65;
         letter-spacing: 0.01em;
+        color: var(--text);
       }
 
       .cover-logo {
@@ -1018,8 +1063,15 @@
         .art-label {
           top: 1.1rem;
           font-size: 8px;
-          max-width: 92vw;
+          max-width: 68vw;
           letter-spacing: 0.06em;
+        }
+
+        .lang-switch {
+          top: 1.15rem;
+          right: 1rem;
+          font-size: 8px;
+          gap: 0.28rem;
         }
 
         .controls {
@@ -1073,18 +1125,12 @@
           gap: 1rem;
         }
 
-        .cover-preface .zh p,
-        .cover-preface .en p {
+        .cover-preface [data-lang-panel] p {
           font-size: 10.5px;
           line-height: 1.7;
         }
 
-        .cover-preface .en {
-          margin-top: 0.85rem;
-          padding-top: 0.75rem;
-        }
-
-        .cover-preface .en p {
+        .cover-preface [data-lang-panel][lang="en"] p {
           font-size: 9.5px;
         }
 
@@ -1162,7 +1208,8 @@
       .museum.is-preview .reflection-zone,
       .museum.is-preview .intro-screen,
       .museum.is-preview .backstage-screen,
-      .museum.is-preview .art-label {
+      .museum.is-preview .art-label,
+      .museum.is-preview .lang-switch {
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
@@ -1488,21 +1535,21 @@
     </style>
   </head>
   <body>
-    <main class="museum is-intro" aria-label="線上美術館展廳">
-      <nav class="site-nav" aria-label="站點導航">
-        <button class="icon-btn is-active" id="navCoverBtn" type="button" aria-label="封面" aria-pressed="true" title="封面">
+    <main class="museum is-intro" aria-label="線上美術館展廳" data-i18n-aria="museumLabel">
+      <nav class="site-nav" aria-label="站點導航" data-i18n-aria="siteNav">
+        <button class="icon-btn is-active" id="navCoverBtn" type="button" aria-label="封面" data-i18n-aria="navCover" data-i18n-title="navCover" aria-pressed="true" title="封面">
           <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M3.5 10.5L12 4l8.5 6.5"></path>
             <path d="M6.6 9.4V20h10.8V9.4"></path>
           </svg>
         </button>
-        <button class="icon-btn" id="navGalleryBtn" type="button" aria-label="展廊" aria-pressed="false" title="展廊">
+        <button class="icon-btn" id="navGalleryBtn" type="button" aria-label="展廊" data-i18n-aria="navGallery" data-i18n-title="navGallery" aria-pressed="false" title="展廊">
           <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
             <rect x="3.5" y="6" width="7" height="9"></rect>
             <rect x="13.5" y="8" width="7" height="9"></rect>
           </svg>
         </button>
-        <button class="icon-btn" id="navBackstageBtn" type="button" aria-label="幕後" aria-pressed="false" title="幕後">
+        <button class="icon-btn" id="navBackstageBtn" type="button" aria-label="幕後" data-i18n-aria="navBackstage" data-i18n-title="navBackstage" aria-pressed="false" title="幕後">
           <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
             <rect x="3" y="7" width="12" height="10"></rect>
             <path d="M15 9.5l6-2.5v10l-6-2.5z"></path>
@@ -1510,26 +1557,40 @@
         </button>
       </nav>
       <div class="art-label" id="artLabel">安遲美術館，ARCHIE ART MUSEUM</div>
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button type="button" data-lang="zh-Hans" aria-label="简体中文" title="简体中文" aria-pressed="false">简</button>
+        <span class="sep" aria-hidden="true">·</span>
+        <button type="button" data-lang="zh-Hant" class="is-active" aria-label="繁體中文" title="繁體中文" aria-pressed="true">繁</button>
+        <span class="sep" aria-hidden="true">·</span>
+        <button type="button" data-lang="en" aria-label="English" title="English" aria-pressed="false">EN</button>
+      </div>
 
       <section class="intro-screen" id="introScreen" aria-labelledby="introTitle">
         <div class="cover-stage">
-          <h1 id="introTitle" class="visually-hidden">安遲美術館</h1>
+          <h1 id="introTitle" class="visually-hidden" data-i18n="museumName">安遲美術館</h1>
           <article class="cover-piece">
             <div class="frame size-a5 cover-frame" aria-hidden="false">
               <div class="shadowbox">
-                <img src="drawings/03-A5.jpg" alt="2024，綜合媒材" />
+                <img src="drawings/03-A5.jpg" alt="2024，綜合媒材" data-i18n-alt="coverPieceAlt" />
               </div>
             </div>
             <div class="cover-meta">
               <div class="cover-preface">
-                <div class="zh" lang="zh-Hant">
+                <div data-lang-panel="zh-Hans" lang="zh-Hans">
+                  <p>欢迎来到安迟美术馆，这是一位三岁小朋友创作集合。</p>
+                  <p>展览分为展廊与幕后两个部分。</p>
+                  <p>展廊，呈现安迟日常的绘画与雕塑创作，这里有他画下的第一幅画。他最爱的创作主题：下雨、刮风、彩虹。除了这些系列作品，还有他的第一幅人物肖像画。</p>
+                  <p>幕后，以照片与影片的方式，记录这些作品从无到有的过程。分享创作背后的故事。</p>
+                  <p>在这里，希望你能感受到他创作的自由和热情。若有想说的，欢迎在每幅画的留言区写下感想。愿你有个好心情。</p>
+                </div>
+                <div data-lang-panel="zh-Hant" lang="zh-Hant" class="is-active">
                   <p>歡迎來到安遲美術館，這是一位三歲小朋友創作集合。</p>
                   <p>展覽分為展廊與幕後兩個部分。</p>
                   <p>展廊，呈現安遲日常的繪畫與雕塑創作，這裡有他畫下的第一幅畫。他最愛的創作主題：下雨、颳風、彩虹。除了這些系列作品，還有他的第一幅人物肖像畫。</p>
                   <p>幕後，以照片與影片的方式，記錄這些作品從無到有的過程。分享創作背後的故事。</p>
                   <p>在這裡，希望你能感受到他創作的自由和熱情。若有想說的，歡迎在每幅畫的留言區寫下感想。願你有個好心情。</p>
                 </div>
-                <div class="en" lang="en">
+                <div data-lang-panel="en" lang="en">
                   <p>Welcome to Archie Art Museum, a collection of works by a three-year-old.</p>
                   <p>The exhibition has two parts: the Gallery and Behind the Scenes.</p>
                   <p>The Gallery presents Archie’s everyday paintings and sculptures, including his first drawing. His favorite subjects—rain, wind, and rainbows—run through these series, along with his first portrait.</p>
@@ -1541,19 +1602,20 @@
                 class="cover-logo"
                 src="assets/4360.png?v=2"
                 alt="安遲美術館 Archie Art Museum"
+                data-i18n-alt="logoAlt"
                 width="664"
                 height="487"
               />
-              <button class="enter-exhibition" id="enterBtn" type="button">進入展覽</button>
+              <button class="enter-exhibition" id="enterBtn" type="button" data-i18n="enter">進入展覽</button>
             </div>
           </article>
         </div>
       </section>
 
-      <section class="backstage-screen" id="backstageScreen" aria-label="幕後放映">
+      <section class="backstage-screen" id="backstageScreen" aria-label="幕後放映" data-i18n-aria="backstageSection">
         <div class="backstage-room" id="backstageRoom">
           <div class="backstage-stage" id="backstageStage">
-            <figure class="wall-projection landscape is-active" data-proj="0" tabindex="0" aria-label="橫向投影">
+            <figure class="wall-projection landscape is-active" data-proj="0" tabindex="0" aria-label="橫向投影" data-i18n-aria="projLandscape">
               <div class="projection-media">
                 <video
                   id="backstageVideo0"
@@ -1564,10 +1626,10 @@
                 >
                   <source src="assets/backstage-landscape.mp4" type="video/mp4" />
                 </video>
-                <img src="drawings/%E8%BF%BD%E9%80%90%20A4.jpg" alt="橫向投影：追逐" />
+                <img src="drawings/%E8%BF%BD%E9%80%90%20A4.jpg" alt="橫向投影：追逐" data-i18n-alt="projLandscapeAlt" />
               </div>
             </figure>
-            <figure class="wall-projection portrait" data-proj="1" tabindex="0" aria-label="豎向投影">
+            <figure class="wall-projection portrait" data-proj="1" tabindex="0" aria-label="豎向投影" data-i18n-aria="projPortrait">
               <div class="projection-media">
                 <video
                   id="backstageVideo1"
@@ -1578,7 +1640,7 @@
                 >
                   <source src="assets/backstage-portrait.mp4" type="video/mp4" />
                 </video>
-                <img src="drawings/%E6%B0%B4%E6%9E%9C%20A5%E5%8A%A0%E9%95%BF.jpg" alt="豎向投影：水果" />
+                <img src="drawings/%E6%B0%B4%E6%9E%9C%20A5%E5%8A%A0%E9%95%BF.jpg" alt="豎向投影：水果" data-i18n-alt="projPortraitAlt" />
               </div>
             </figure>
           </div>
@@ -1591,11 +1653,11 @@
               <path d="M8 6.5h2.6v11H8zM13.4 6.5H16v11h-2.6z"></path>
             </svg>
           </button>
-          <p class="backstage-caption">幕後 · Behind the Scenes</p>
+          <p class="backstage-caption" data-i18n="backstageCaption">幕後 · Behind the Scenes</p>
         </div>
       </section>
 
-      <section class="main-stage" aria-label="展品陳列">
+      <section class="main-stage" aria-label="展品陳列" data-i18n-aria="gallerySection">
         <div class="track" id="mainTrack"></div>
       </section>
 
@@ -1619,13 +1681,13 @@
         </div>
 
         <div class="pager">
-          <button class="arrow-btn" id="prevBtn" aria-label="上一件">
+          <button class="arrow-btn" id="prevBtn" aria-label="上一件" data-i18n-aria="prev">
             <svg class="arrow" viewBox="0 0 24 24">
               <path d="M14.8 5.8L8.7 12l6.1 6.2"></path>
             </svg>
           </button>
           <span id="pageInfo">1/5</span>
-          <button class="arrow-btn" id="nextBtn" aria-label="下一件">
+          <button class="arrow-btn" id="nextBtn" aria-label="下一件" data-i18n-aria="next">
             <svg class="arrow" viewBox="0 0 24 24">
               <path d="M9.2 5.8L15.3 12l-6.1 6.2"></path>
             </svg>
@@ -1636,16 +1698,16 @@
       </footer>
 
       <section class="preview-layer" id="previewLayer" aria-hidden="true">
-        <button class="preview-close" id="previewClose" type="button" aria-label="關閉預覽">×</button>
+        <button class="preview-close" id="previewClose" type="button" aria-label="關閉預覽" data-i18n-aria="closePreview">×</button>
         <aside class="preview-side">
           <div class="preview-meta" id="previewMeta"></div>
           <div class="comment-panel">
-            <h2>參觀評價</h2>
+            <h2 data-i18n="comments">參觀評價</h2>
             <div class="comment-list" id="commentList"></div>
             <form class="comment-form" id="commentForm">
-              <input id="commentName" type="text" maxlength="24" placeholder="名字（可選）" autocomplete="nickname" />
-              <textarea id="commentText" maxlength="180" placeholder="寫下感受…" rows="1" required></textarea>
-              <button type="submit">留下 →</button>
+              <input id="commentName" type="text" maxlength="24" placeholder="名字（可選）" data-i18n-placeholder="namePlaceholder" autocomplete="nickname" />
+              <textarea id="commentText" maxlength="180" placeholder="寫下感受…" data-i18n-placeholder="commentPlaceholder" rows="1" required></textarea>
+              <button type="submit" data-i18n="leaveComment">留下 →</button>
             </form>
           </div>
         </aside>
@@ -1663,86 +1725,163 @@
       const art = (file) => encodeURI(`drawings/${file}`);
 
       const works = [
-        { title: "Composition on Grid", year: "2024", material: "彩色鉛筆", image: art("01-A4.jpg"), size: "a4", note: "方格紙上交織的彩色線條，像是一場尚未落地的夢。" },
-        { title: "Loop Study", year: "2024", material: "蠟筆", image: art("02-A4.jpg"), size: "a4", note: "層層疊疊的環狀筆觸，把玩耍的節奏留在了紙面。" },
-        { title: "Scattered Forms", year: "2024", material: "綜合媒材", image: art("03-A5.jpg"), size: "a5", note: "少數幾個色點就撐開了整張紙的空氣。" },
-        { title: "Green Column", year: "2024", material: "水彩", image: art("04-A5.jpg"), size: "a5", note: "綠與黃疊印成一條豎直的路徑，安靜卻有力。" },
-        { title: "Candle Collage", year: "2024", material: "黏土與顏料", image: art("05-A3.jpg"), size: "a3", note: "黏土、箔片與顏料堆疊出燭火般的溫度。" },
         {
-          title: "人物 I",
+          titles: { "zh-Hans": "方格构图", "zh-Hant": "方格構圖", en: "Composition on Grid" },
+          year: "2024",
+          materials: { "zh-Hans": "彩色铅笔", "zh-Hant": "彩色鉛筆", en: "Colored pencil" },
+          image: art("01-A4.jpg"),
+          size: "a4",
+          notes: { "zh-Hans": "方格纸上交织的彩色线条，像是一场尚未落地的梦。", "zh-Hant": "方格紙上交織的彩色線條，像是一場尚未落地的夢。", en: "Colored lines weave across graph paper like a dream not yet landed." }
+        },
+        {
+          titles: { "zh-Hans": "回环练习", "zh-Hant": "迴圈練習", en: "Loop Study" },
+          year: "2024",
+          materials: { "zh-Hans": "蜡笔", "zh-Hant": "蠟筆", en: "Crayon" },
+          image: art("02-A4.jpg"),
+          size: "a4",
+          notes: { "zh-Hans": "层层叠叠的环状笔触，把玩耍的节奏留在了纸面。", "zh-Hant": "層層疊疊的環狀筆觸，把玩耍的節奏留在了紙面。", en: "Layered looping strokes keep the rhythm of play on the page." }
+        },
+        {
+          titles: { "zh-Hans": "散落的形", "zh-Hant": "散落的形", en: "Scattered Forms" },
+          year: "2024",
+          materials: { "zh-Hans": "综合媒材", "zh-Hant": "綜合媒材", en: "Mixed media" },
+          image: art("03-A5.jpg"),
+          size: "a5",
+          notes: { "zh-Hans": "少数几个色点就撑开了整张纸的空气。", "zh-Hant": "少數幾個色點就撐開了整張紙的空氣。", en: "A few color spots open up the air of the whole sheet." }
+        },
+        {
+          titles: { "zh-Hans": "绿色立柱", "zh-Hant": "綠色立柱", en: "Green Column" },
+          year: "2024",
+          materials: { "zh-Hans": "水彩", "zh-Hant": "水彩", en: "Watercolor" },
+          image: art("04-A5.jpg"),
+          size: "a5",
+          notes: { "zh-Hans": "绿与黄叠印成一条竖直的路径，安静却有力。", "zh-Hant": "綠與黃疊印成一條豎直的路徑，安靜卻有力。", en: "Green and yellow stack into a quiet, vertical path." }
+        },
+        {
+          titles: { "zh-Hans": "烛火拼贴", "zh-Hant": "燭火拼貼", en: "Candle Collage" },
+          year: "2024",
+          materials: { "zh-Hans": "粘土与颜料", "zh-Hant": "黏土與顏料", en: "Clay and paint" },
+          image: art("05-A3.jpg"),
+          size: "a3",
+          notes: { "zh-Hans": "粘土、箔片与颜料堆叠出烛火般的温度。", "zh-Hant": "黏土、箔片與顏料堆疊出燭火般的溫度。", en: "Clay, foil, and paint build a candle-like warmth." }
+        },
+        {
+          titles: { "zh-Hans": "人物 I", "zh-Hant": "人物 I", en: "Portrait I" },
           year: "2025",
-          material: "馬克筆",
+          materials: { "zh-Hans": "马克笔", "zh-Hant": "馬克筆", en: "Marker" },
           image: art("人物 A5.jpg"),
           size: "series",
           series: "portrait-duo",
           panel: "I / II",
-          note: "藍色筆跡上下貫穿，像是第一次為「人」留下輪廓。"
+          notes: { "zh-Hans": "蓝色笔迹上下贯穿，像是第一次为「人」留下轮廓。", "zh-Hant": "藍色筆跡上下貫穿，像是第一次為「人」留下輪廓。", en: "Blue marks run through the page, as if outlining “person” for the first time." }
         },
         {
-          title: "人物 II",
+          titles: { "zh-Hans": "人物 II", "zh-Hant": "人物 II", en: "Portrait II" },
           year: "2025",
-          material: "蠟筆",
+          materials: { "zh-Hans": "蜡笔", "zh-Hant": "蠟筆", en: "Crayon" },
           image: art("人物2 A5.jpg"),
           size: "series",
           series: "portrait-duo",
           panel: "II / II",
-          note: "同樣以藍線展開，筆觸更密、更奔放。"
+          notes: { "zh-Hans": "同样以蓝线展开，笔触更密、更奔放。", "zh-Hant": "同樣以藍線展開，筆觸更密、更奔放。", en: "Blue lines again, denser and more free." }
         },
         {
-          title: "地球 I",
+          titles: { "zh-Hans": "地球 I", "zh-Hant": "地球 I", en: "Earth I" },
           year: "2025",
-          material: "蠟筆",
+          materials: { "zh-Hans": "蜡笔", "zh-Hant": "蠟筆", en: "Crayon" },
           image: art("地球 A4.jpg"),
           size: "series",
           series: "earth-duo",
           panel: "I / II",
-          note: "黃與灰綠交纏的圓形筆觸，像是他眼中旋轉的地球。"
+          notes: { "zh-Hans": "黄与灰绿交缠的圆形笔触，像是他眼中旋转的地球。", "zh-Hant": "黃與灰綠交纏的圓形筆觸，像是他眼中旋轉的地球。", en: "Yellow and gray-green circles spin like Earth in his eyes." }
         },
         {
-          title: "地球 II",
+          titles: { "zh-Hans": "地球 II", "zh-Hant": "地球 II", en: "Earth II" },
           year: "2025",
-          material: "鉛筆",
+          materials: { "zh-Hans": "铅笔", "zh-Hant": "鉛筆", en: "Pencil" },
           image: art("地球2 A4.jpg"),
           size: "series",
           series: "earth-duo",
           panel: "II / II",
-          note: "石墨線條層層繞行，把地球的動量留在紙上。"
+          notes: { "zh-Hans": "石墨线条层层绕行，把地球的动量留在纸上。", "zh-Hant": "石墨線條層層繞行，把地球的動量留在紙上。", en: "Graphite lines coil round, keeping Earth’s momentum on paper." }
         },
-        { title: "彩虹", year: "2025", material: "蠟筆", image: art("彩虹 A4.jpg"), size: "a4", note: "橙、藍、綠交疊的弧線，是他最愛的彩虹主題之一。" },
-        { title: "風，水，海，沙", year: "2025", material: "彩色鉛筆", image: art("风，水，海，沙 A4.jpg"), size: "a4", note: "風、水、海、沙同時出現，淡彩線條在紙面流動、衝撞。" },
-        { title: "米奇", year: "2025", material: "水彩", image: art("米奇 A5.jpg"), size: "a5", note: "粉、紅、藍、黃的色塊聚成一團，是他對米奇的抽象想像。" },
-        { title: "水果", year: "2025", material: "水彩", image: art("水果 A5加长.jpg"), size: "tall", note: "細長紙面上串起紅、粉、綠的圓點，像一排新鮮水果。" },
-        { title: "追逐", year: "2020", material: "蠟筆", image: art("追逐 A4.jpg"), size: "wide", note: "紅與藍的線條互相追逐，在紙面上留下奔跑的痕跡。" },
-        { title: "未知", year: "2025", material: "蠟筆", image: art("未知.jpg"), size: "a4", note: "粉紅線條自上方垂落，留下開敞的想像空間。" },
         {
-          title: "Thank You Letter I",
+          titles: { "zh-Hans": "彩虹", "zh-Hant": "彩虹", en: "Rainbow" },
+          year: "2025",
+          materials: { "zh-Hans": "蜡笔", "zh-Hant": "蠟筆", en: "Crayon" },
+          image: art("彩虹 A4.jpg"),
+          size: "a4",
+          notes: { "zh-Hans": "橙、蓝、绿交叠的弧线，是他最爱的彩虹主题之一。", "zh-Hant": "橙、藍、綠交疊的弧線，是他最愛的彩虹主題之一。", en: "Overlapping arcs of orange, blue, and green—one of his favorite rainbows." }
+        },
+        {
+          titles: { "zh-Hans": "风，水，海，沙", "zh-Hant": "風，水，海，沙", en: "Wind, Water, Sea, Sand" },
+          year: "2025",
+          materials: { "zh-Hans": "彩色铅笔", "zh-Hant": "彩色鉛筆", en: "Colored pencil" },
+          image: art("风，水，海，沙 A4.jpg"),
+          size: "a4",
+          notes: { "zh-Hans": "风、水、海、沙同时出现，淡彩线条在纸面流动、冲撞。", "zh-Hant": "風、水、海、沙同時出現，淡彩線條在紙面流動、衝撞。", en: "Wind, water, sea, and sand appear at once; soft lines stream and collide." }
+        },
+        {
+          titles: { "zh-Hans": "米奇", "zh-Hant": "米奇", en: "Mickey" },
+          year: "2025",
+          materials: { "zh-Hans": "水彩", "zh-Hant": "水彩", en: "Watercolor" },
+          image: art("米奇 A5.jpg"),
+          size: "a5",
+          notes: { "zh-Hans": "粉、红、蓝、黄的色块聚成一团，是他对米奇的抽象想象。", "zh-Hant": "粉、紅、藍、黃的色塊聚成一團，是他對米奇的抽象想像。", en: "Pink, red, blue, and yellow gather into an abstract Mickey." }
+        },
+        {
+          titles: { "zh-Hans": "水果", "zh-Hant": "水果", en: "Fruit" },
+          year: "2025",
+          materials: { "zh-Hans": "水彩", "zh-Hant": "水彩", en: "Watercolor" },
+          image: art("水果 A5加长.jpg"),
+          size: "tall",
+          notes: { "zh-Hans": "细长纸面上串起红、粉、绿的圆点，像一排新鲜水果。", "zh-Hant": "細長紙面上串起紅、粉、綠的圓點，像一排新鮮水果。", en: "Red, pink, and green dots line up like fresh fruit on a tall page." }
+        },
+        {
+          titles: { "zh-Hans": "追逐", "zh-Hant": "追逐", en: "Chase" },
+          year: "2020",
+          materials: { "zh-Hans": "蜡笔", "zh-Hant": "蠟筆", en: "Crayon" },
+          image: art("追逐 A4.jpg"),
+          size: "wide",
+          notes: { "zh-Hans": "红与蓝的线条互相追逐，在纸面上留下奔跑的痕迹。", "zh-Hant": "紅與藍的線條互相追逐，在紙面上留下奔跑的痕跡。", en: "Red and blue lines chase each other, leaving a running trail." }
+        },
+        {
+          titles: { "zh-Hans": "未知", "zh-Hant": "未知", en: "Untitled" },
+          year: "2025",
+          materials: { "zh-Hans": "蜡笔", "zh-Hant": "蠟筆", en: "Crayon" },
+          image: art("未知.jpg"),
+          size: "a4",
+          notes: { "zh-Hans": "粉红线条自上方垂落，留下开敞的想象空间。", "zh-Hant": "粉紅線條自上方垂落，留下開敞的想像空間。", en: "Pink lines fall from above, leaving room to imagine." }
+        },
+        {
+          titles: { "zh-Hans": "感谢信 I", "zh-Hant": "感謝信 I", en: "Thank You Letter I" },
           year: "2026",
-          material: "顏料拼貼",
+          materials: { "zh-Hans": "颜料拼贴", "zh-Hant": "顏料拼貼", en: "Paint collage" },
           image: art("06-thank-you-apricot.jpg"),
           size: "series",
           series: "thank-you-teachers",
           panel: "I / III",
-          note: "送給幼兒園老師的感謝信，大字由兩歲九個月的手親手寫下。"
+          notes: { "zh-Hans": "送给幼儿园老师的感谢信，大字由两岁九个月的手亲手写下。", "zh-Hant": "送給幼兒園老師的感謝信，大字由兩歲九個月的手親手寫下。", en: "A thank-you letter for kindergarten teachers, letters written by a hand of two years and nine months." }
         },
         {
-          title: "Thank You Letter II",
+          titles: { "zh-Hans": "感谢信 II", "zh-Hant": "感謝信 II", en: "Thank You Letter II" },
           year: "2026",
-          material: "顏料拼貼",
+          materials: { "zh-Hans": "颜料拼贴", "zh-Hant": "顏料拼貼", en: "Paint collage" },
           image: art("07-thank-you-blue.jpg"),
           size: "series",
           series: "thank-you-teachers",
           panel: "II / III",
-          note: "天藍與檸檬黃呼應學期裡明朗的日子。"
+          notes: { "zh-Hans": "天蓝与柠檬黄呼应学期里明朗的日子。", "zh-Hant": "天藍與檸檬黃呼應學期裡明朗的日子。", en: "Sky blue and lemon yellow echo the bright days of the term." }
         },
         {
-          title: "Thank You Letter III",
+          titles: { "zh-Hans": "感谢信 III", "zh-Hant": "感謝信 III", en: "Thank You Letter III" },
           year: "2026",
-          material: "顏料拼貼",
+          materials: { "zh-Hans": "颜料拼贴", "zh-Hant": "顏料拼貼", en: "Paint collage" },
           image: art("08-thank-you-magenta.jpg"),
           size: "series",
           series: "thank-you-teachers",
           panel: "III / III",
-          note: "玫紅與熒光綠撞色，把畢業那天的謝謝留在牆上。"
+          notes: { "zh-Hans": "玫红与荧光绿撞色，把毕业那天的谢谢留在墙上。", "zh-Hant": "玫紅與熒光綠撞色，把畢業那天的謝謝留在牆上。", en: "Magenta and neon green keep the thank-you of graduation day on the wall." }
         }
       ];
 
@@ -1757,8 +1896,117 @@
       const navBackstageBtn = document.getElementById("navBackstageBtn");
       const enterBtn = document.getElementById("enterBtn");
       const artLabel = document.getElementById("artLabel");
-      const galleryTitle = "安遲美術館，ARCHIE ART MUSEUM";
-      const backstageTitle = "幕後 · BEHIND THE SCENES";
+      const LANGS = ["zh-Hans", "zh-Hant", "en"];
+      const UI = {
+        "zh-Hans": {
+          museumName: "安迟美术馆",
+          museumLabel: "线上美术馆展厅",
+          siteNav: "站点导航",
+          pageTitle: "安迟美术馆 · Archie Art Museum",
+          galleryTitle: "安迟美术馆，ARCHIE ART MUSEUM",
+          backstageTitle: "幕后 · BEHIND THE SCENES",
+          backstageCaption: "幕后 · Behind the Scenes",
+          enter: "进入展览",
+          navCover: "封面",
+          navGallery: "展廊",
+          navBackstage: "幕后",
+          backstageSection: "幕后放映",
+          gallerySection: "展品陈列",
+          closePreview: "关闭预览",
+          prev: "上一件",
+          next: "下一件",
+          comments: "参观评价",
+          namePlaceholder: "名字（可选）",
+          commentPlaceholder: "写下感受…",
+          leaveComment: "留下 →",
+          commentEmpty: "还没有评价",
+          visitor: "一位参观者",
+          audioGuide: "语音导览",
+          play: "播放",
+          pause: "暂停",
+          materialSpeech: "材质",
+          logoAlt: "安迟美术馆 Archie Art Museum",
+          coverPieceAlt: "2024，综合媒材",
+          projLandscape: "横向投影",
+          projPortrait: "竖向投影",
+          projLandscapeAlt: "横向投影：追逐",
+          projPortraitAlt: "竖向投影：水果"
+        },
+        "zh-Hant": {
+          museumName: "安遲美術館",
+          museumLabel: "線上美術館展廳",
+          siteNav: "站點導航",
+          pageTitle: "安遲美術館 · Archie Art Museum",
+          galleryTitle: "安遲美術館，ARCHIE ART MUSEUM",
+          backstageTitle: "幕後 · BEHIND THE SCENES",
+          backstageCaption: "幕後 · Behind the Scenes",
+          enter: "進入展覽",
+          navCover: "封面",
+          navGallery: "展廊",
+          navBackstage: "幕後",
+          backstageSection: "幕後放映",
+          gallerySection: "展品陳列",
+          closePreview: "關閉預覽",
+          prev: "上一件",
+          next: "下一件",
+          comments: "參觀評價",
+          namePlaceholder: "名字（可選）",
+          commentPlaceholder: "寫下感受…",
+          leaveComment: "留下 →",
+          commentEmpty: "還沒有評價",
+          visitor: "一位參觀者",
+          audioGuide: "語音導覽",
+          play: "播放",
+          pause: "暫停",
+          materialSpeech: "材質",
+          logoAlt: "安遲美術館 Archie Art Museum",
+          coverPieceAlt: "2024，綜合媒材",
+          projLandscape: "橫向投影",
+          projPortrait: "豎向投影",
+          projLandscapeAlt: "橫向投影：追逐",
+          projPortraitAlt: "豎向投影：水果"
+        },
+        en: {
+          museumName: "Archie Art Museum",
+          museumLabel: "Online art museum gallery",
+          siteNav: "Site navigation",
+          pageTitle: "Archie Art Museum",
+          galleryTitle: "ARCHIE ART MUSEUM",
+          backstageTitle: "BEHIND THE SCENES",
+          backstageCaption: "Behind the Scenes",
+          enter: "Enter Exhibition",
+          navCover: "Cover",
+          navGallery: "Gallery",
+          navBackstage: "Backstage",
+          backstageSection: "Behind-the-scenes screening",
+          gallerySection: "Exhibition display",
+          closePreview: "Close preview",
+          prev: "Previous",
+          next: "Next",
+          comments: "Visitor notes",
+          namePlaceholder: "Name (optional)",
+          commentPlaceholder: "Write a note…",
+          leaveComment: "Leave →",
+          commentEmpty: "No notes yet",
+          visitor: "A visitor",
+          audioGuide: "Audio guide",
+          play: "Play",
+          pause: "Pause",
+          materialSpeech: "Medium",
+          logoAlt: "Archie Art Museum",
+          coverPieceAlt: "2024, mixed media",
+          projLandscape: "Landscape projection",
+          projPortrait: "Portrait projection",
+          projLandscapeAlt: "Landscape projection: Chase",
+          projPortraitAlt: "Portrait projection: Fruit"
+        }
+      };
+      let lang = localStorage.getItem("archie-museum-lang") || "zh-Hant";
+      if (!LANGS.includes(lang)) lang = "zh-Hant";
+      const t = (key) => (UI[lang] && UI[lang][key]) || UI["zh-Hant"][key] || key;
+      const pick = (map) => (map && (map[lang] || map["zh-Hant"] || map.en)) || "";
+      const galleryTitle = () => t("galleryTitle");
+      const backstageTitle = () => t("backstageTitle");
       const backstageRoom = document.getElementById("backstageRoom");
       const backstageStage = document.getElementById("backstageStage");
       const backstagePlayBtn = document.getElementById("backstagePlayBtn");
@@ -1830,7 +2078,7 @@
       function renderComments(index) {
         const comments = loadComments(index);
         if (!comments.length) {
-          commentList.innerHTML = `<p class="comment-empty">還沒有評價</p>`;
+          commentList.innerHTML = `<p class="comment-empty">${t("commentEmpty")}</p>`;
           return;
         }
 
@@ -1838,7 +2086,7 @@
           .map(
             (item) => `
               <article class="comment-item">
-                <div class="who">${escapeHtml(item.name || "一位參觀者")}</div>
+                <div class="who">${escapeHtml(item.name || t("visitor"))}</div>
                 <p class="body">${escapeHtml(item.text)}</p>
               </article>
             `
@@ -1858,11 +2106,116 @@
       let guideAudio = null;
 
       function workHeadline(work) {
-        return `${work.title}, ${work.year}`;
+        return `${pick(work.titles)}, ${work.year}`;
+      }
+
+      function workMaterial(work) {
+        return pick(work.materials);
+      }
+
+      function workNote(work) {
+        return pick(work.notes);
       }
 
       function guideScript(work) {
-        return `${workHeadline(work)}。材質，${work.material}。${work.note || ""}`;
+        if (lang === "en") {
+          return `${workHeadline(work)}. ${t("materialSpeech")}, ${workMaterial(work)}. ${workNote(work)}`;
+        }
+        return `${workHeadline(work)}。${t("materialSpeech")}，${workMaterial(work)}。${workNote(work)}`;
+      }
+
+      function applyLanguage(nextLang) {
+        if (!LANGS.includes(nextLang)) return;
+        lang = nextLang;
+        localStorage.setItem("archie-museum-lang", lang);
+        document.documentElement.lang = lang;
+        document.title = t("pageTitle");
+
+        document.querySelectorAll(".lang-switch [data-lang]").forEach((btn) => {
+          const active = btn.dataset.lang === lang;
+          btn.classList.toggle("is-active", active);
+          btn.setAttribute("aria-pressed", active ? "true" : "false");
+        });
+
+        document.querySelectorAll("[data-i18n]").forEach((node) => {
+          node.textContent = t(node.dataset.i18n);
+        });
+        document.querySelectorAll("[data-i18n-aria]").forEach((node) => {
+          node.setAttribute("aria-label", t(node.dataset.i18nAria));
+        });
+        document.querySelectorAll("[data-i18n-title]").forEach((node) => {
+          node.setAttribute("title", t(node.dataset.i18nTitle));
+        });
+        document.querySelectorAll("[data-i18n-placeholder]").forEach((node) => {
+          node.setAttribute("placeholder", t(node.dataset.i18nPlaceholder));
+        });
+        document.querySelectorAll("[data-i18n-alt]").forEach((node) => {
+          node.setAttribute("alt", t(node.dataset.i18nAlt));
+        });
+
+        document.querySelectorAll("[data-lang-panel]").forEach((panel) => {
+          panel.classList.toggle("is-active", panel.dataset.langPanel === lang);
+        });
+
+        document.querySelectorAll(".meta").forEach((meta) => {
+          const host = meta.closest("[data-work-index], .work-series");
+          if (!host) return;
+          let index = host.dataset.workIndex;
+          if (index === undefined) {
+            const active = host.querySelector(".frame.is-active[data-work-index]") || host.querySelector("[data-work-index]");
+            index = active ? active.dataset.workIndex : null;
+          }
+          if (index === null || index === undefined) return;
+          const work = works[Number(index)];
+          if (!work) return;
+          const titleNode = meta.querySelector("[data-series-title], .title");
+          const materialNode = meta.querySelector("[data-series-material], .material");
+          const noteNode = meta.querySelector("[data-series-note], .note");
+          if (titleNode) titleNode.textContent = workHeadline(work);
+          if (materialNode) materialNode.textContent = workMaterial(work);
+          if (noteNode) noteNode.textContent = workNote(work);
+        });
+
+        document.querySelectorAll(".frame img[alt]").forEach((img) => {
+          if (img.hasAttribute("data-i18n-alt")) return;
+          const frame = img.closest("[data-work-index], [data-preview-index]");
+          if (!frame) return;
+          const index = frame.dataset.workIndex || frame.dataset.previewIndex;
+          if (index === undefined || index === "") return;
+          const work = works[Number(index)];
+          if (work) img.alt = workHeadline(work);
+        });
+
+        if (previewIndex !== null) {
+          const work = works[previewIndex];
+          if (work) {
+            const titleNode = previewMeta.querySelector(".title");
+            const materialNode = previewMeta.querySelector(".material");
+            const noteNode = previewMeta.querySelector(".note");
+            if (titleNode) titleNode.textContent = workHeadline(work);
+            if (materialNode) materialNode.textContent = workMaterial(work);
+            if (noteNode) noteNode.textContent = workNote(work);
+            previewImage.alt = workHeadline(work);
+            const guideBtn = previewMeta.querySelector(".audio-guide");
+            if (guideBtn) {
+              guideBtn.setAttribute("aria-label", t("audioGuide"));
+              guideBtn.title = t("audioGuide");
+            }
+          }
+          renderComments(previewIndex);
+        }
+
+        document.querySelectorAll(".audio-guide[aria-label]").forEach((btn) => {
+          btn.setAttribute("aria-label", t("audioGuide"));
+          if (btn.hasAttribute("title")) btn.title = t("audioGuide");
+        });
+
+        if (museum.classList.contains("is-backstage")) {
+          artLabel.textContent = backstageTitle();
+        } else {
+          artLabel.textContent = galleryTitle();
+        }
+        syncBackstagePlayUi();
       }
 
       function syncGuideButtons() {
@@ -1920,7 +2273,7 @@
         }
 
         const utterance = new SpeechSynthesisUtterance(guideScript(work));
-        utterance.lang = "zh-TW";
+        utterance.lang = lang === "en" ? "en-US" : lang === "zh-Hans" ? "zh-CN" : "zh-TW";
         utterance.rate = 0.92;
         utterance.onend = () => {
           if (guideSpeakingIndex === index) stopGuide();
@@ -1940,12 +2293,12 @@
         updateView();
 
         previewMeta.innerHTML = `
-          <button type="button" class="audio-guide${guideSpeakingIndex === index ? " is-playing" : ""}" data-guide-index="${index}" aria-label="語音導覽" aria-pressed="${guideSpeakingIndex === index ? "true" : "false"}" title="語音導覽">
+          <button type="button" class="audio-guide${guideSpeakingIndex === index ? " is-playing" : ""}" data-guide-index="${index}" aria-label="${t("audioGuide")}" aria-pressed="${guideSpeakingIndex === index ? "true" : "false"}" title="${t("audioGuide")}">
             ${speakerIcon}
           </button>
           <div class="title">${workHeadline(work)}</div>
-          <div class="material">${work.material}</div>
-          <p class="note">${work.note || ""}</p>
+          <div class="material">${workMaterial(work)}</div>
+          <p class="note">${workNote(work)}</p>
         `;
         previewFrame.className = `frame size-${work.size}`;
         previewImage.src = work.image;
@@ -1979,13 +2332,13 @@
 
       function workMetaMarkup(work, index, interactive) {
         const guideMarkup = interactive
-          ? `<button type="button" class="audio-guide" data-guide-index="${index}" aria-label="語音導覽" aria-pressed="false" title="語音導覽">${speakerIcon}</button>`
+          ? `<button type="button" class="audio-guide" data-guide-index="${index}" aria-label="${t("audioGuide")}" aria-pressed="false" title="${t("audioGuide")}">${speakerIcon}</button>`
           : `<span class="audio-guide" aria-hidden="true">${speakerIcon}</span>`;
         return `
           ${guideMarkup}
           <div class="title" data-series-title>${workHeadline(work)}</div>
-          <div class="material" data-series-material>${work.material}</div>
-          <div class="note" data-series-note>${work.note || ""}</div>
+          <div class="material" data-series-material>${workMaterial(work)}</div>
+          <div class="note" data-series-note>${workNote(work)}</div>
         `;
       }
 
@@ -2142,7 +2495,7 @@
         mainTrack.style.transform = `translateX(${offset}px)`;
         reflectionTrack.style.transform = `scaleY(-1) translate(${offset}px, 6%)`;
         pageInfo.textContent = `${current + 1}/${works.length}`;
-        artLabel.textContent = galleryTitle;
+        artLabel.textContent = galleryTitle();
 
         mainTrack.querySelectorAll(".series-frames .frame").forEach((frame) => {
           frame.classList.toggle("is-active", Number(frame.dataset.workIndex) === current);
@@ -2156,10 +2509,10 @@
             node.textContent = workHeadline(work);
           });
           item.querySelectorAll("[data-series-material]").forEach((node) => {
-            node.textContent = work.material;
+            node.textContent = workMaterial(work);
           });
           item.querySelectorAll("[data-series-note]").forEach((node) => {
-            node.textContent = work.note || "";
+            node.textContent = workNote(work);
           });
           item.querySelectorAll(".audio-guide[data-guide-index]").forEach((node) => {
             node.dataset.guideIndex = String(current);
@@ -2181,8 +2534,8 @@
 
       function syncBackstagePlayUi() {
         backstageRoom.classList.toggle("is-playing", backstagePlaying);
-        backstagePlayBtn.setAttribute("aria-label", backstagePlaying ? "暫停" : "播放");
-        backstagePlayBtn.title = backstagePlaying ? "暫停" : "播放";
+        backstagePlayBtn.setAttribute("aria-label", backstagePlaying ? t("pause") : t("play"));
+        backstagePlayBtn.title = backstagePlaying ? t("pause") : t("play");
       }
 
       function pauseBackstageMedia() {
@@ -2263,7 +2616,7 @@
         museum.classList.add("is-intro");
         syncNav("cover");
         pageInfo.textContent = "";
-        artLabel.textContent = galleryTitle;
+        artLabel.textContent = galleryTitle();
       }
 
       function showGallery() {
@@ -2282,7 +2635,7 @@
         museum.classList.add("is-backstage");
         syncNav("backstage");
         pageInfo.textContent = "";
-        artLabel.textContent = backstageTitle;
+        artLabel.textContent = backstageTitle();
         setBackstageFocus(backstageFocus);
       }
 
@@ -2418,6 +2771,12 @@
         if (event.key === "ArrowRight") goNext();
       });
       setupBackstageMedia();
+
+      document.querySelectorAll(".lang-switch [data-lang]").forEach((btn) => {
+        btn.addEventListener("click", () => applyLanguage(btn.dataset.lang));
+      });
+
+      applyLanguage(lang);
       showCover();
     </script>
   </body>
