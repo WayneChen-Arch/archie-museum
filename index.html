@@ -2169,6 +2169,10 @@
         backstageProjections.forEach((node, i) => {
           node.classList.toggle("is-active", i === backstageFocus);
         });
+        if (backstagePlaying) playBackstageMedia();
+        else {
+          backstageVideos.forEach((video) => video.pause());
+        }
       }
 
       function syncBackstagePlayUi() {
@@ -2187,11 +2191,12 @@
         backstagePlaying = true;
         syncBackstagePlayUi();
         backstageVideos.forEach((video, index) => {
-          if (video.classList.contains("is-hidden")) return;
-          // Prefer the focused reel; keep the other softly looping if available.
-          if (index === backstageFocus || true) {
-            video.play().catch(() => video.classList.add("is-hidden"));
+          if (index !== backstageFocus) {
+            video.pause();
+            return;
           }
+          if (video.classList.contains("is-hidden")) return;
+          video.play().catch(() => video.classList.add("is-hidden"));
         });
       }
 
