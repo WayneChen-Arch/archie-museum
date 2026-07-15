@@ -305,9 +305,39 @@
         line-height: 1.5;
       }
 
-      .fav {
-        margin-bottom: 0.45rem;
+      .audio-guide {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 0 0.45rem;
+        padding: 0;
+        border: 0;
+        background: transparent;
         color: var(--ui-muted);
+        cursor: pointer;
+        line-height: 1;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .audio-guide svg {
+        width: 12px;
+        height: 12px;
+        display: block;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.55;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .audio-guide:hover,
+      .audio-guide.is-playing {
+        color: var(--text-strong);
+      }
+
+      .audio-guide:focus-visible {
+        outline: 1px solid var(--ui-line);
+        outline-offset: 3px;
       }
 
       .reflection-zone {
@@ -518,6 +548,7 @@
 
       .reflection-track .meta {
         opacity: 0;
+        pointer-events: none;
       }
 
       .reflection-track .series-frames .frame {
@@ -707,7 +738,7 @@
           font-size: 10px;
         }
 
-        .fav {
+        .audio-guide {
           margin-bottom: 0.35rem;
         }
 
@@ -1448,15 +1479,99 @@
           .join("");
       }
 
+      const speakerIcon = `
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4.5 9.2v5.6h2.7l4.3 3.4V5.8L7.2 9.2H4.5z"></path>
+          <path d="M15.2 9c1.05.8 1.7 1.85 1.7 3s-.65 2.2-1.7 3"></path>
+          <path d="M17.4 6.6c1.9 1.45 3 3.3 3 5.4s-1.1 3.95-3 5.4"></path>
+        </svg>
+      `;
+
+      let guideSpeakingIndex = null;
+      let guideAudio = null;
+
+      function guideScript(work) {
+        return `${work.year}年。材質，${work.material}。${work.note || ""}`;
+      }
+
+      function syncGuideButtons() {
+        document.querySelectorAll(".audio-guide[data-guide-index]").forEach((btn) => {
+          const index = Number(btn.dataset.guideIndex);
+          btn.classList.toggle("is-playing", guideSpeakingIndex === index);
+          btn.setAttribute("aria-pressed", guideSpeakingIndex === index ? "true" : "false");
+        });
+      }
+
+      function stopGuide() {
+        if (window.speechSynthesis) window.speechSynthesis.cancel();
+        if (guideAudio) {
+          guideAudio.pause();
+          guideAudio = null;
+        }
+        guideSpeakingIndex = null;
+        syncGuideButtons();
+      }
+
+      function playGuide(index) {
+        const work = works[index];
+        if (!work) return;
+
+        if (guideSpeakingIndex === index) {
+          stopGuide();
+          return;
+        }
+
+        stopGuide();
+        guideSpeakingIndex = index;
+        syncGuideButtons();
+
+        if (work.audio) {
+          guideAudio = new Audio(work.audio);
+          guideAudio.addEventListener("ended", () => {
+            if (guideSpeakingIndex === index) stopGuide();
+          });
+          guideAudio.addEventListener("error", () => {
+            if (guideSpeakingIndex === index) speakGuide(work, index);
+          });
+          guideAudio.play().catch(() => {
+            if (guideSpeakingIndex === index) speakGuide(work, index);
+          });
+          return;
+        }
+
+        speakGuide(work, index);
+      }
+
+      function speakGuide(work, index) {
+        if (!window.speechSynthesis) {
+          stopGuide();
+          return;
+        }
+
+        const utterance = new SpeechSynthesisUtterance(guideScript(work));
+        utterance.lang = "zh-TW";
+        utterance.rate = 0.92;
+        utterance.onend = () => {
+          if (guideSpeakingIndex === index) stopGuide();
+        };
+        utterance.onerror = () => {
+          if (guideSpeakingIndex === index) stopGuide();
+        };
+        window.speechSynthesis.speak(utterance);
+      }
+
       function openPreview(index) {
         if (museum.classList.contains("is-intro")) return;
+        if (guideSpeakingIndex !== null && guideSpeakingIndex !== index) stopGuide();
         const work = works[index];
         previewIndex = index;
         current = index;
         updateView();
 
         previewMeta.innerHTML = `
-          <div class="fav">&#9825;</div>
+          <button type="button" class="audio-guide${guideSpeakingIndex === index ? " is-playing" : ""}" data-guide-index="${index}" aria-label="語音導覽" aria-pressed="${guideSpeakingIndex === index ? "true" : "false"}" title="語音導覽">
+            ${speakerIcon}
+          </button>
           <div class="year">${work.year}</div>
           <div class="material">${work.material}</div>
           <p class="note">${work.note || ""}</p>
@@ -1474,6 +1589,7 @@
       }
 
       function closePreview() {
+        stopGuide();
         museum.classList.remove("is-preview");
         previewLayer.setAttribute("aria-hidden", "true");
         previewIndex = null;
@@ -1490,9 +1606,12 @@
         `;
       }
 
-      function workMetaMarkup(work) {
+      function workMetaMarkup(work, index, interactive) {
+        const guideMarkup = interactive
+          ? `<button type="button" class="audio-guide" data-guide-index="${index}" aria-label="語音導覽" aria-pressed="false" title="語音導覽">${speakerIcon}</button>`
+          : `<span class="audio-guide" aria-hidden="true">${speakerIcon}</span>`;
         return `
-          <div class="fav">&#9825;</div>
+          ${guideMarkup}
           <div class="year" data-series-year>${work.year}</div>
           <div class="material" data-series-material>${work.material}</div>
           <div class="note" data-series-note>${work.note || ""}</div>
@@ -1511,7 +1630,7 @@
             attrs: clickable ? `data-preview-index="${index}"` : ""
           })}
           <div class="meta">
-            ${workMetaMarkup(work)}
+            ${workMetaMarkup(work, index, clickable)}
           </div>
         `;
         return item;
@@ -1522,6 +1641,7 @@
         item.className = "work-series";
         item.dataset.series = seriesWorks[0].work.series;
         const first = seriesWorks[0].work;
+        const firstIndex = seriesWorks[0].index;
         const frames = seriesWorks
           .map(({ work, index }) =>
             frameMarkup({
@@ -1537,7 +1657,7 @@
         item.innerHTML = `
           <div class="series-frames">${frames}</div>
           <div class="meta">
-            ${workMetaMarkup(first)}
+            ${workMetaMarkup(first, firstIndex, clickable)}
           </div>
         `;
         return item;
@@ -1670,10 +1790,15 @@
           item.querySelectorAll("[data-series-note]").forEach((node) => {
             node.textContent = work.note || "";
           });
+          item.querySelectorAll(".audio-guide[data-guide-index]").forEach((node) => {
+            node.dataset.guideIndex = String(current);
+          });
         }
+        syncGuideButtons();
       }
 
       function showIntroduction() {
+        stopGuide();
         closePreview();
         museum.classList.add("is-intro");
         pageInfo.textContent = "";
@@ -1693,6 +1818,7 @@
           showIntroduction();
           return;
         }
+        stopGuide();
         current -= 1;
         pagingLockedUntil = Date.now() + 720;
         updateView();
@@ -1705,10 +1831,22 @@
           return;
         }
         if (Date.now() < pagingLockedUntil) return;
+        stopGuide();
         current = (current + 1) % works.length;
         pagingLockedUntil = Date.now() + 720;
         updateView();
       }
+
+      function onGuideClick(event) {
+        const btn = event.target.closest(".audio-guide[data-guide-index]");
+        if (!btn) return;
+        event.preventDefault();
+        event.stopPropagation();
+        playGuide(Number(btn.dataset.guideIndex));
+      }
+
+      mainTrack.addEventListener("click", onGuideClick);
+      previewMeta.addEventListener("click", onGuideClick);
 
       prevBtn.addEventListener("click", goPrev);
       nextBtn.addEventListener("click", goNext);
