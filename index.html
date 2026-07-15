@@ -408,87 +408,18 @@
 
       .cover-piece {
         display: flex;
-        align-items: flex-start;
+        align-items: center;
         justify-content: center;
         gap: clamp(1.6rem, 3.5vw, 3rem);
       }
 
       .cover-frame.frame.size-a5 {
         flex: 0 0 auto;
-        align-self: center;
       }
 
       .cover-frame.frame.size-a5 img {
         max-height: min(28vh, 200px);
         max-width: min(20vw, 140px);
-      }
-
-      .cover-meta {
-        flex: 1 1 auto;
-        max-width: 360px;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1.15rem;
-        text-align: left;
-      }
-
-      .cover-meta-head .year {
-        color: var(--text-strong);
-        font-size: 12px;
-        margin-bottom: 0.15rem;
-      }
-
-      .cover-meta-head .material {
-        color: var(--ui-muted);
-        font-size: 10px;
-        letter-spacing: 0.02em;
-        margin-bottom: 0.35rem;
-      }
-
-      .cover-meta-head .note {
-        color: var(--text);
-        font-size: 11px;
-        line-height: 1.55;
-      }
-
-      .cover-preface {
-        width: 100%;
-        color: var(--text-strong);
-      }
-
-      .cover-preface .zh,
-      .cover-preface .en {
-        margin: 0;
-      }
-
-      .cover-preface .zh p,
-      .cover-preface .en p {
-        margin: 0 0 0.65em;
-        font-size: 11px;
-        line-height: 1.75;
-      }
-
-      .cover-preface .zh p:last-child,
-      .cover-preface .en p:last-child {
-        margin-bottom: 0;
-      }
-
-      .cover-preface .zh {
-        color: var(--text-strong);
-      }
-
-      .cover-preface .en {
-        margin-top: 0.95rem;
-        padding-top: 0.85rem;
-        border-top: 1px solid var(--ui-line);
-        color: var(--text);
-      }
-
-      .cover-preface .en p {
-        font-size: 10px;
-        line-height: 1.65;
-        letter-spacing: 0.01em;
       }
 
       .cover-logo {
@@ -503,9 +434,8 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        align-self: center;
         gap: 0.5rem;
-        margin-top: 0.1rem;
+        margin-top: 1.5rem;
         padding: 0;
         border: 0;
         background: transparent;
@@ -794,34 +724,12 @@
           max-width: min(36vw, 118px);
         }
 
-        .cover-meta {
-          max-width: 100%;
-          width: 100%;
-          gap: 1rem;
-        }
-
-        .cover-preface .zh p,
-        .cover-preface .en p {
-          font-size: 10.5px;
-          line-height: 1.7;
-        }
-
-        .cover-preface .en {
-          margin-top: 0.85rem;
-          padding-top: 0.75rem;
-        }
-
-        .cover-preface .en p {
-          font-size: 9.5px;
-        }
-
         .cover-logo {
           width: min(100px, 34vw);
-          align-self: center;
         }
 
         .enter-exhibition {
-          align-self: center;
+          margin-top: 1.25rem;
         }
       }
 
@@ -1219,41 +1127,18 @@
           <article class="cover-piece">
             <div class="frame size-a5 cover-frame" aria-hidden="false">
               <div class="shadowbox">
-                <img src="drawings/03-A5.jpg" alt="2024，綜合媒材" />
+                <img src="drawings/03-A5.jpg" alt="" />
               </div>
             </div>
-            <div class="cover-meta">
-              <div class="cover-meta-head">
-                <div class="year">2024</div>
-                <div class="material">綜合媒材</div>
-                <div class="note">少數幾個色點就撐開了整張紙的空氣。</div>
-              </div>
-              <div class="cover-preface">
-                <div class="zh" lang="zh-Hant">
-                  <p>歡迎來到安遲美術館，這是一位三歲小朋友創作集合。</p>
-                  <p>展覽分為展廊與幕後兩個部分。</p>
-                  <p>展廊，呈現安遲日常的繪畫與雕塑創作，這裡有他畫下的第一幅畫。他最愛的創作主題：下雨、颳風、彩虹。除了這些系列作品，還有他的第一幅人物肖像畫。</p>
-                  <p>幕後，以照片與影片的方式，記錄這些作品從無到有的過程。分享創作背後的故事。</p>
-                  <p>在這裡，希望你能感受到他創作的自由和熱情。若有想說的，歡迎在每幅畫的留言區寫下感想。願你有個好心情。</p>
-                </div>
-                <div class="en" lang="en">
-                  <p>Welcome to Archie Art Museum, a collection of works by a three-year-old.</p>
-                  <p>The exhibition has two parts: the Gallery and Behind the Scenes.</p>
-                  <p>The Gallery presents Archie’s everyday paintings and sculptures, including his first drawing. His favorite subjects—rain, wind, and rainbows—run through these series, along with his first portrait.</p>
-                  <p>Behind the Scenes records, through photos and video, how these works came into being, and shares the stories behind them.</p>
-                  <p>We hope you feel the freedom and enthusiasm in his making. If you have something to say, leave a note under each work. Wishing you a good day.</p>
-                </div>
-              </div>
-              <img
-                class="cover-logo"
-                src="assets/4360.png?v=2"
-                alt="安遲美術館 Archie Art Museum"
-                width="664"
-                height="487"
-              />
-              <button class="enter-exhibition" id="enterBtn" type="button">進入展覽</button>
-            </div>
+            <img
+              class="cover-logo"
+              src="assets/4360.png?v=2"
+              alt="安遲美術館 Archie Art Museum"
+              width="664"
+              height="487"
+            />
           </article>
+          <button class="enter-exhibition" id="enterBtn" type="button">進入展覽</button>
         </div>
       </section>
 
