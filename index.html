@@ -94,6 +94,32 @@
         transform: translateY(-1px);
       }
 
+      .icon-btn.is-active {
+        color: var(--text-strong);
+        opacity: 1;
+      }
+
+      .site-nav {
+        position: relative;
+        z-index: 9;
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+      }
+
+      .museum.is-backstage .site-nav .icon-btn {
+        color: rgba(235, 230, 223, 0.52);
+      }
+
+      .museum.is-backstage .site-nav .icon-btn:hover,
+      .museum.is-backstage .site-nav .icon-btn.is-active {
+        color: rgba(235, 230, 223, 0.96);
+      }
+
+      .museum.is-backstage .art-label {
+        color: rgba(235, 230, 223, 0.38);
+      }
+
       .icon {
         width: 16px;
         height: 16px;
@@ -380,10 +406,201 @@
 
       .museum.is-intro .main-stage,
       .museum.is-intro .reflection-zone,
-      .museum.is-intro .controls {
+      .museum.is-intro .controls,
+      .museum.is-intro .backstage-screen {
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
+      }
+
+      .backstage-screen {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        display: flex;
+        align-items: stretch;
+        justify-content: center;
+        overflow: hidden;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 420ms ease, visibility 420ms ease;
+      }
+
+      .museum.is-backstage {
+        background: #050505;
+      }
+
+      .museum.is-backstage .backstage-screen {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+
+      .museum.is-backstage .intro-screen,
+      .museum.is-backstage .main-stage,
+      .museum.is-backstage .reflection-zone,
+      .museum.is-backstage .controls {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+
+      .backstage-room {
+        position: relative;
+        flex: 1;
+        min-height: 0;
+        background: radial-gradient(ellipse at 50% 34%, #141414 0%, #050505 58%, #000 100%);
+      }
+
+      .backstage-stage {
+        position: absolute;
+        inset: 10% 7% 30%;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        gap: clamp(1.2rem, 3vw, 2.4rem);
+      }
+
+      .projection-screen {
+        position: relative;
+        background: #0a0a0a;
+        box-shadow:
+          0 0 48px rgba(120, 170, 90, 0.1),
+          0 20px 44px rgba(0, 0, 0, 0.55);
+        outline: 1px solid rgba(255, 255, 255, 0.05);
+        overflow: hidden;
+      }
+
+      .projection-screen.landscape {
+        width: min(46%, 440px);
+        aspect-ratio: 16 / 9;
+      }
+
+      .projection-screen.portrait {
+        width: min(17%, 148px);
+        aspect-ratio: 9 / 16;
+      }
+
+      .projection-screen video,
+      .projection-screen img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        animation: projection-drift 18s ease-in-out infinite alternate;
+      }
+
+      .projection-screen video.is-hidden {
+        display: none;
+      }
+
+      @keyframes projection-drift {
+        from {
+          transform: scale(1.03);
+        }
+        to {
+          transform: scale(1.09) translate3d(-1%, 0.8%, 0);
+        }
+      }
+
+      .projection-screen::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(247, 244, 238, 0.04), transparent 28%, rgba(0, 0, 0, 0.16));
+        pointer-events: none;
+      }
+
+      .backstage-floor {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 36%;
+        background:
+          radial-gradient(ellipse at 50% 0%, rgba(90, 140, 70, 0.12), transparent 46%),
+          radial-gradient(ellipse at 50% 0%, rgba(232, 232, 230, 0.04), transparent 55%),
+          linear-gradient(180deg, #0d0d0d, #040404 72%);
+      }
+
+      .backstage-reflection {
+        position: absolute;
+        left: 7%;
+        right: 7%;
+        bottom: 11%;
+        height: 20%;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        gap: clamp(1.2rem, 3vw, 2.4rem);
+        transform: scaleY(-1);
+        opacity: 0.26;
+        filter: blur(5px) saturate(0.82);
+        mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.72), transparent 86%);
+        -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.72), transparent 86%);
+        pointer-events: none;
+      }
+
+      .backstage-reflection .projection-screen {
+        box-shadow: none;
+        outline: none;
+      }
+
+      .backstage-reflection .projection-screen::after {
+        display: none;
+      }
+
+      .backstage-bench {
+        position: absolute;
+        left: 50%;
+        bottom: 8%;
+        width: min(40%, 340px);
+        height: 22px;
+        transform: translateX(-50%);
+        background: linear-gradient(180deg, #cdb9a0, #a89278);
+        border-radius: 2px;
+        box-shadow: 0 10px 26px rgba(0, 0, 0, 0.55);
+      }
+
+      .backstage-bench::before,
+      .backstage-bench::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        width: 4px;
+        height: 14px;
+        background: #8a7560;
+      }
+
+      .backstage-bench::before {
+        left: 10%;
+      }
+
+      .backstage-bench::after {
+        right: 10%;
+      }
+
+      .bench-slats {
+        position: absolute;
+        inset: 3px 6px;
+        background: repeating-linear-gradient(
+          90deg,
+          transparent 0 10px,
+          rgba(0, 0, 0, 0.22) 10px 12px
+        );
+        opacity: 0.75;
+      }
+
+      .backstage-caption {
+        position: absolute;
+        left: 1.6rem;
+        bottom: 1.35rem;
+        margin: 0;
+        font-size: 9px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: rgba(235, 230, 223, 0.32);
       }
 
       .cover-stage {
@@ -785,6 +1002,29 @@
         .enter-exhibition {
           align-self: center;
         }
+
+        .backstage-stage {
+          inset: 12% 5% 34%;
+          gap: 0.85rem;
+        }
+
+        .projection-screen.landscape {
+          width: 54%;
+        }
+
+        .projection-screen.portrait {
+          width: 22%;
+        }
+
+        .backstage-bench {
+          width: min(56%, 280px);
+          bottom: 9%;
+        }
+
+        .backstage-caption {
+          left: 1.1rem;
+          bottom: 1rem;
+        }
       }
 
       .preview-layer {
@@ -809,6 +1049,7 @@
       .museum.is-preview .main-stage,
       .museum.is-preview .reflection-zone,
       .museum.is-preview .intro-screen,
+      .museum.is-preview .backstage-screen,
       .museum.is-preview .art-label {
         opacity: 0;
         visibility: hidden;
@@ -1136,12 +1377,26 @@
   </head>
   <body>
     <main class="museum is-intro" aria-label="線上美術館展廳">
-      <button class="icon-btn" id="homeBtn" aria-label="返回展覽首頁">
-        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M3.5 10.5L12 4l8.5 6.5"></path>
-          <path d="M6.6 9.4V20h10.8V9.4"></path>
-        </svg>
-      </button>
+      <nav class="site-nav" aria-label="站點導航">
+        <button class="icon-btn is-active" id="navCoverBtn" type="button" aria-label="封面" aria-pressed="true" title="封面">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3.5 10.5L12 4l8.5 6.5"></path>
+            <path d="M6.6 9.4V20h10.8V9.4"></path>
+          </svg>
+        </button>
+        <button class="icon-btn" id="navGalleryBtn" type="button" aria-label="展廊" aria-pressed="false" title="展廊">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3.5" y="6" width="7" height="9"></rect>
+            <rect x="13.5" y="8" width="7" height="9"></rect>
+          </svg>
+        </button>
+        <button class="icon-btn" id="navBackstageBtn" type="button" aria-label="幕後" aria-pressed="false" title="幕後">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="7" width="12" height="10"></rect>
+            <path d="M15 9.5l6-2.5v10l-6-2.5z"></path>
+          </svg>
+        </button>
+      </nav>
       <div class="art-label" id="artLabel">安遲美術館，ARCHIE ART MUSEUM</div>
 
       <section class="intro-screen" id="introScreen" aria-labelledby="introTitle">
@@ -1180,6 +1435,50 @@
               <button class="enter-exhibition" id="enterBtn" type="button">進入展覽</button>
             </div>
           </article>
+        </div>
+      </section>
+
+      <section class="backstage-screen" id="backstageScreen" aria-label="幕後放映">
+        <div class="backstage-room">
+          <div class="backstage-stage">
+            <div class="projection-screen landscape">
+              <video
+                id="backstageLandscapeVideo"
+                muted
+                loop
+                playsinline
+                autoplay
+                poster="drawings/%E8%BF%BD%E9%80%90%20A4.jpg"
+              >
+                <source src="assets/backstage-landscape.mp4" type="video/mp4" />
+              </video>
+              <img src="drawings/%E8%BF%BD%E9%80%90%20A4.jpg" alt="" />
+            </div>
+            <div class="projection-screen portrait">
+              <video
+                id="backstagePortraitVideo"
+                muted
+                loop
+                playsinline
+                autoplay
+                poster="drawings/%E6%B0%B4%E6%9E%9C%20A5%E5%8A%A0%E9%95%BF.jpg"
+              >
+                <source src="assets/backstage-portrait.mp4" type="video/mp4" />
+              </video>
+              <img src="drawings/%E6%B0%B4%E6%9E%9C%20A5%E5%8A%A0%E9%95%BF.jpg" alt="" />
+            </div>
+          </div>
+          <div class="backstage-floor" aria-hidden="true"></div>
+          <div class="backstage-reflection" aria-hidden="true">
+            <div class="projection-screen landscape">
+              <img src="drawings/%E8%BF%BD%E9%80%90%20A4.jpg" alt="" />
+            </div>
+            <div class="projection-screen portrait">
+              <img src="drawings/%E6%B0%B4%E6%9E%9C%20A5%E5%8A%A0%E9%95%BF.jpg" alt="" />
+            </div>
+          </div>
+          <div class="backstage-bench" aria-hidden="true"><div class="bench-slats"></div></div>
+          <p class="backstage-caption">幕後 · Behind the Scenes</p>
         </div>
       </section>
 
@@ -1340,10 +1639,16 @@
       const prevBtn = document.getElementById("prevBtn");
       const nextBtn = document.getElementById("nextBtn");
       const museum = document.querySelector(".museum");
-      const homeBtn = document.getElementById("homeBtn");
+      const navCoverBtn = document.getElementById("navCoverBtn");
+      const navGalleryBtn = document.getElementById("navGalleryBtn");
+      const navBackstageBtn = document.getElementById("navBackstageBtn");
       const enterBtn = document.getElementById("enterBtn");
       const artLabel = document.getElementById("artLabel");
       const galleryTitle = "安遲美術館，ARCHIE ART MUSEUM";
+      const backstageTitle = "幕後 · BEHIND THE SCENES";
+      const backstageLandscapeVideo = document.getElementById("backstageLandscapeVideo");
+      const backstagePortraitVideo = document.getElementById("backstagePortraitVideo");
+      const backstageVideos = [backstageLandscapeVideo, backstagePortraitVideo].filter(Boolean);
       const previewLayer = document.getElementById("previewLayer");
       const previewClose = document.getElementById("previewClose");
       const previewMeta = document.getElementById("previewMeta");
@@ -1360,6 +1665,39 @@
       let suppressClickUntil = 0;
       let pagingLockedUntil = 0;
       let previewIndex = null;
+
+      function syncNav(view) {
+        const buttons = {
+          cover: navCoverBtn,
+          gallery: navGalleryBtn,
+          backstage: navBackstageBtn
+        };
+        Object.entries(buttons).forEach(([key, btn]) => {
+          const active = key === view;
+          btn.classList.toggle("is-active", active);
+          btn.setAttribute("aria-pressed", active ? "true" : "false");
+        });
+      }
+
+      function pauseBackstageVideos() {
+        backstageVideos.forEach((video) => {
+          video.pause();
+        });
+      }
+
+      function playBackstageVideos() {
+        backstageVideos.forEach((video) => {
+          if (video.classList.contains("is-hidden")) return;
+          video.play().catch(() => video.classList.add("is-hidden"));
+        });
+      }
+
+      function setupBackstageMedia() {
+        backstageVideos.forEach((video) => {
+          video.addEventListener("error", () => video.classList.add("is-hidden"));
+          video.addEventListener("stalled", () => video.classList.add("is-hidden"));
+        });
+      }
 
       function commentKey(index) {
         return `archie-museum-comments-${works[index].image}`;
@@ -1487,7 +1825,7 @@
       }
 
       function openPreview(index) {
-        if (museum.classList.contains("is-intro")) return;
+        if (museum.classList.contains("is-intro") || museum.classList.contains("is-backstage")) return;
         if (guideSpeakingIndex !== null && guideSpeakingIndex !== index) stopGuide();
         const work = works[index];
         previewIndex = index;
@@ -1681,13 +2019,13 @@
 
       let refreshTimer = 0;
       function scheduleViewRefresh() {
-        if (museum.classList.contains("is-intro")) return;
+        if (museum.classList.contains("is-intro") || museum.classList.contains("is-backstage")) return;
         window.clearTimeout(refreshTimer);
         refreshTimer = window.setTimeout(() => updateView(), 48);
       }
 
       function updateView() {
-        if (museum.classList.contains("is-intro")) return;
+        if (museum.classList.contains("is-intro") || museum.classList.contains("is-backstage")) return;
 
         const work = works[current];
         const item = indexToUnit.get(current);
@@ -1723,25 +2061,43 @@
         syncGuideButtons();
       }
 
-      function showIntroduction() {
+      function showCover() {
         stopGuide();
         closePreview();
+        pauseBackstageVideos();
+        museum.classList.remove("is-backstage");
         museum.classList.add("is-intro");
+        syncNav("cover");
         pageInfo.textContent = "";
         artLabel.textContent = galleryTitle;
       }
 
-      function showExhibition() {
-        museum.classList.remove("is-intro");
+      function showGallery() {
+        stopGuide();
+        closePreview();
+        pauseBackstageVideos();
+        museum.classList.remove("is-intro", "is-backstage");
+        syncNav("gallery");
         updateView();
+      }
+
+      function showBackstage() {
+        stopGuide();
+        closePreview();
+        museum.classList.remove("is-intro");
+        museum.classList.add("is-backstage");
+        syncNav("backstage");
+        pageInfo.textContent = "";
+        artLabel.textContent = backstageTitle;
+        playBackstageVideos();
       }
 
       function goPrev() {
         if (museum.classList.contains("is-preview")) return;
-        if (museum.classList.contains("is-intro")) return;
+        if (museum.classList.contains("is-intro") || museum.classList.contains("is-backstage")) return;
         if (Date.now() < pagingLockedUntil) return;
         if (current === 0) {
-          showIntroduction();
+          showCover();
           return;
         }
         stopGuide();
@@ -1753,9 +2109,10 @@
       function goNext() {
         if (museum.classList.contains("is-preview")) return;
         if (museum.classList.contains("is-intro")) {
-          showExhibition();
+          showGallery();
           return;
         }
+        if (museum.classList.contains("is-backstage")) return;
         if (Date.now() < pagingLockedUntil) return;
         stopGuide();
         current = (current + 1) % works.length;
@@ -1777,8 +2134,10 @@
       prevBtn.addEventListener("click", goPrev);
       nextBtn.addEventListener("click", goNext);
 
-      homeBtn.addEventListener("click", showIntroduction);
-      enterBtn.addEventListener("click", showExhibition);
+      navCoverBtn.addEventListener("click", showCover);
+      navGalleryBtn.addEventListener("click", showGallery);
+      navBackstageBtn.addEventListener("click", showBackstage);
+      enterBtn.addEventListener("click", showGallery);
       previewClose.addEventListener("click", closePreview);
       previewLayer.addEventListener("click", (event) => {
         if (event.target === previewLayer) closePreview();
@@ -1802,7 +2161,11 @@
       });
 
       window.addEventListener("resize", () => {
-        if (!museum.classList.contains("is-intro") && !museum.classList.contains("is-preview")) {
+        if (
+          !museum.classList.contains("is-intro") &&
+          !museum.classList.contains("is-preview") &&
+          !museum.classList.contains("is-backstage")
+        ) {
           scheduleViewRefresh();
         }
       });
@@ -1819,7 +2182,12 @@
       mainStage.addEventListener(
         "touchend",
         (event) => {
-          if (museum.classList.contains("is-intro") || museum.classList.contains("is-preview")) return;
+          if (
+            museum.classList.contains("is-intro") ||
+            museum.classList.contains("is-preview") ||
+            museum.classList.contains("is-backstage")
+          )
+            return;
           const touch = event.changedTouches[0];
           const deltaX = touch.clientX - touchStartX;
           const deltaY = touch.clientY - touchStartY;
@@ -1839,7 +2207,8 @@
         if (event.key === "ArrowLeft") goPrev();
         if (event.key === "ArrowRight") goNext();
       });
-      showIntroduction();
+      setupBackstageMedia();
+      showCover();
     </script>
   </body>
 </html>
