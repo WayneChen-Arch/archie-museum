@@ -1208,7 +1208,8 @@
       .museum.is-preview .reflection-zone,
       .museum.is-preview .intro-screen,
       .museum.is-preview .backstage-screen,
-      .museum.is-preview .art-label {
+      .museum.is-preview .art-label,
+      .museum.is-preview .lang-switch {
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
@@ -1557,11 +1558,11 @@
       </nav>
       <div class="art-label" id="artLabel">安遲美術館，ARCHIE ART MUSEUM</div>
       <div class="lang-switch" role="group" aria-label="Language">
-        <button type="button" data-lang="zh-Hans" aria-pressed="false">简</button>
+        <button type="button" data-lang="zh-Hans" aria-label="简体中文" title="简体中文" aria-pressed="false">简</button>
         <span class="sep" aria-hidden="true">·</span>
-        <button type="button" data-lang="zh-Hant" class="is-active" aria-pressed="true">繁</button>
+        <button type="button" data-lang="zh-Hant" class="is-active" aria-label="繁體中文" title="繁體中文" aria-pressed="true">繁</button>
         <span class="sep" aria-hidden="true">·</span>
-        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+        <button type="button" data-lang="en" aria-label="English" title="English" aria-pressed="false">EN</button>
       </div>
 
       <section class="intro-screen" id="introScreen" aria-labelledby="introTitle">
