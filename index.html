@@ -2176,9 +2176,11 @@
         });
 
         document.querySelectorAll(".frame img[alt]").forEach((img) => {
+          if (img.hasAttribute("data-i18n-alt")) return;
           const frame = img.closest("[data-work-index], [data-preview-index]");
-          const index = frame && (frame.dataset.workIndex || frame.dataset.previewIndex);
-          if (index === undefined) return;
+          if (!frame) return;
+          const index = frame.dataset.workIndex || frame.dataset.previewIndex;
+          if (index === undefined || index === "") return;
           const work = works[Number(index)];
           if (work) img.alt = workHeadline(work);
         });
