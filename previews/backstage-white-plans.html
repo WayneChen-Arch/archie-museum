@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>幕後白牆方案 · 三套預覽 · 安遲美術館</title>
+    <style>
+      :root {
+        --wall: #e8e8e6;
+        --ink: #2c2621;
+        --muted: #6f675f;
+        --maple: #cdb9a0;
+        --line: rgba(70, 52, 36, 0.16);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Songti TC", serif;
+        background: var(--wall);
+        color: var(--ink);
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        align-items: center;
+        padding: 0.9rem 1.1rem;
+        background: rgba(232, 232, 230, 0.94);
+        border-bottom: 1px solid var(--line);
+        backdrop-filter: blur(8px);
+      }
+
+      header h1 {
+        margin: 0 0.4rem 0 0;
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      header button {
+        appearance: none;
+        border: 1px solid var(--line);
+        background: transparent;
+        color: var(--ink);
+        font: inherit;
+        font-size: 12px;
+        letter-spacing: 0.04em;
+        padding: 0.4rem 0.75rem;
+        cursor: pointer;
+      }
+
+      header button[aria-pressed="true"] {
+        background: var(--ink);
+        color: var(--wall);
+        border-color: var(--ink);
+      }
+
+      .note {
+        width: 100%;
+        margin: 0.1rem 0 0;
+        font-size: 11px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .panel {
+        display: none;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 1.2rem 1.1rem 2.5rem;
+      }
+
+      .panel.is-active {
+        display: block;
+      }
+
+      .hero {
+        display: block;
+        width: 100%;
+        border: 1px solid var(--line);
+        background: #fff;
+      }
+
+      .copy {
+        margin-top: 1rem;
+      }
+
+      .tag {
+        font-size: 10px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .copy h2 {
+        margin: 0.35rem 0 0.55rem;
+        font-size: 1.45rem;
+        font-weight: 500;
+      }
+
+      .copy p {
+        margin: 0 0 0.7rem;
+        font-size: 13px;
+        line-height: 1.7;
+        color: var(--muted);
+      }
+
+      .copy ul {
+        margin: 0;
+        padding-left: 1.15rem;
+        color: var(--ink);
+        font-size: 12.5px;
+        line-height: 1.75;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>幕後 · 白牆三方案</h1>
+      <button type="button" data-plan="a" aria-pressed="true">A 楓木框雙屏</button>
+      <button type="button" data-plan="b" aria-pressed="false">B 現代螢幕裝置</button>
+      <button type="button" data-plan="c" aria-pressed="false">C 展台雙屏</button>
+      <p class="note">
+        共通條件：美術館白牆 + 地面 · 兩台螢幕（橫豎 16:9）· 前方保留長椅 · 與主展廊淺灰 / 楓木協調。
+      </p>
+    </header>
+
+    <section class="panel is-active" data-panel="a">
+      <img class="hero" src="backstage-white-a-framed.jpg" alt="方案 A：楓木框雙屏" />
+      <div class="copy">
+        <div class="tag">Plan A</div>
+        <h2>楓木框雙屏</h2>
+        <p>白牆展廳裡兩台獨立螢幕加楓木外框，前方楓木長椅，地面微反光——最接近主展廊畫框語言。</p>
+        <ul>
+          <li>品牌連續性強</li>
+          <li>仍清楚是「螢幕放映」不是黑匣投影</li>
+          <li>推薦作為默認白牆方案</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="panel" data-panel="b">
+      <img class="hero" src="backstage-white-b-monitors.jpg" alt="方案 B：現代螢幕裝置" />
+      <div class="copy">
+        <div class="tag">Plan B</div>
+        <h2>現代螢幕裝置</h2>
+        <p>白方塊展廳 + 細邊現代螢幕，長椅更近鏡頭；更乾淨、更當代媒體展牆感。</p>
+        <ul>
+          <li>UI 實作簡單清楚</li>
+          <li>木質元素主要落在長椅</li>
+          <li>氛圍偏當代美術館媒體區</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="panel" data-panel="c">
+      <img class="hero" src="backstage-white-c-ledge.jpg" alt="方案 C：展台雙屏" />
+      <div class="copy">
+        <div class="tag">Plan C</div>
+        <h2>展台雙屏</h2>
+        <p>螢幕放在白色低展台/媒體台上，地板偏暖木色；像策展裝置，長椅仍朝向雙屏。</p>
+        <ul>
+          <li>「展示」語感更強</li>
+          <li>地板木頭與長椅呼應</li>
+          <li>層次比 A/B 更豐富</li>
+        </ul>
+      </div>
+    </section>
+
+    <script>
+      const buttons = [...document.querySelectorAll("header button[data-plan]")];
+      const panels = [...document.querySelectorAll("[data-panel]")];
+
+      function show(plan) {
+        buttons.forEach((btn) => btn.setAttribute("aria-pressed", String(btn.dataset.plan === plan)));
+        panels.forEach((panel) => panel.classList.toggle("is-active", panel.dataset.panel === plan));
+        history.replaceState(null, "", `#${plan}`);
+      }
+
+      buttons.forEach((btn) => btn.addEventListener("click", () => show(btn.dataset.plan)));
+      const initial = (location.hash || "#a").slice(1);
+      show(["a", "b", "c"].includes(initial) ? initial : "a");
+    </script>
+  </body>
+</html>
