@@ -1570,7 +1570,7 @@
           <article class="cover-piece">
             <div class="frame size-a5 cover-frame" aria-hidden="false">
               <div class="shadowbox">
-                <img src="drawings/03-A5.jpg" alt="2024，綜合媒材" />
+                <img src="drawings/03-A5.jpg" alt="2024，綜合媒材" data-i18n-alt="coverPieceAlt" />
               </div>
             </div>
             <div class="cover-meta">
@@ -1601,6 +1601,7 @@
                 class="cover-logo"
                 src="assets/4360.png?v=2"
                 alt="安遲美術館 Archie Art Museum"
+                data-i18n-alt="logoAlt"
                 width="664"
                 height="487"
               />
@@ -1613,7 +1614,7 @@
       <section class="backstage-screen" id="backstageScreen" aria-label="幕後放映" data-i18n-aria="backstageSection">
         <div class="backstage-room" id="backstageRoom">
           <div class="backstage-stage" id="backstageStage">
-            <figure class="wall-projection landscape is-active" data-proj="0" tabindex="0" aria-label="橫向投影">
+            <figure class="wall-projection landscape is-active" data-proj="0" tabindex="0" aria-label="橫向投影" data-i18n-aria="projLandscape">
               <div class="projection-media">
                 <video
                   id="backstageVideo0"
@@ -1624,10 +1625,10 @@
                 >
                   <source src="assets/backstage-landscape.mp4" type="video/mp4" />
                 </video>
-                <img src="drawings/%E8%BF%BD%E9%80%90%20A4.jpg" alt="橫向投影：追逐" />
+                <img src="drawings/%E8%BF%BD%E9%80%90%20A4.jpg" alt="橫向投影：追逐" data-i18n-alt="projLandscapeAlt" />
               </div>
             </figure>
-            <figure class="wall-projection portrait" data-proj="1" tabindex="0" aria-label="豎向投影">
+            <figure class="wall-projection portrait" data-proj="1" tabindex="0" aria-label="豎向投影" data-i18n-aria="projPortrait">
               <div class="projection-media">
                 <video
                   id="backstageVideo1"
@@ -1638,7 +1639,7 @@
                 >
                   <source src="assets/backstage-portrait.mp4" type="video/mp4" />
                 </video>
-                <img src="drawings/%E6%B0%B4%E6%9E%9C%20A5%E5%8A%A0%E9%95%BF.jpg" alt="豎向投影：水果" />
+                <img src="drawings/%E6%B0%B4%E6%9E%9C%20A5%E5%8A%A0%E9%95%BF.jpg" alt="豎向投影：水果" data-i18n-alt="projPortraitAlt" />
               </div>
             </figure>
           </div>
@@ -1922,7 +1923,13 @@
           audioGuide: "语音导览",
           play: "播放",
           pause: "暂停",
-          materialSpeech: "材质"
+          materialSpeech: "材质",
+          logoAlt: "安迟美术馆 Archie Art Museum",
+          coverPieceAlt: "2024，综合媒材",
+          projLandscape: "横向投影",
+          projPortrait: "竖向投影",
+          projLandscapeAlt: "横向投影：追逐",
+          projPortraitAlt: "竖向投影：水果"
         },
         "zh-Hant": {
           museumName: "安遲美術館",
@@ -1950,7 +1957,13 @@
           audioGuide: "語音導覽",
           play: "播放",
           pause: "暫停",
-          materialSpeech: "材質"
+          materialSpeech: "材質",
+          logoAlt: "安遲美術館 Archie Art Museum",
+          coverPieceAlt: "2024，綜合媒材",
+          projLandscape: "橫向投影",
+          projPortrait: "豎向投影",
+          projLandscapeAlt: "橫向投影：追逐",
+          projPortraitAlt: "豎向投影：水果"
         },
         en: {
           museumName: "Archie Art Museum",
@@ -1978,7 +1991,13 @@
           audioGuide: "Audio guide",
           play: "Play",
           pause: "Pause",
-          materialSpeech: "Medium"
+          materialSpeech: "Medium",
+          logoAlt: "Archie Art Museum",
+          coverPieceAlt: "2024, mixed media",
+          projLandscape: "Landscape projection",
+          projPortrait: "Portrait projection",
+          projLandscapeAlt: "Landscape projection: Chase",
+          projPortraitAlt: "Portrait projection: Fruit"
         }
       };
       let lang = localStorage.getItem("archie-museum-lang") || "zh-Hant";
@@ -2129,6 +2148,9 @@
         document.querySelectorAll("[data-i18n-placeholder]").forEach((node) => {
           node.setAttribute("placeholder", t(node.dataset.i18nPlaceholder));
         });
+        document.querySelectorAll("[data-i18n-alt]").forEach((node) => {
+          node.setAttribute("alt", t(node.dataset.i18nAlt));
+        });
 
         document.querySelectorAll("[data-lang-panel]").forEach((panel) => {
           panel.classList.toggle("is-active", panel.dataset.langPanel === lang);
@@ -2187,10 +2209,10 @@
 
         if (museum.classList.contains("is-backstage")) {
           artLabel.textContent = backstageTitle();
-          syncBackstagePlayUi();
         } else {
           artLabel.textContent = galleryTitle();
         }
+        syncBackstagePlayUi();
       }
 
       function syncGuideButtons() {
