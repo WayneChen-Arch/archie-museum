@@ -9,7 +9,7 @@
         --bg: #e8e8e6;
         --bg-deep: #e8e8e6;
         --wall: #e8e8e6;
-        --floor: #e8e8e6;
+        --floor: #cfcfcd;
         --text: #6f675f;
         --text-strong: #2c2621;
         --shadow: rgba(74, 48, 28, 0.18);
@@ -130,46 +130,8 @@
         stroke-linejoin: round;
       }
 
-      .gallery-room {
-        position: absolute;
-        inset: 0;
-        z-index: 0;
-        overflow: hidden;
-        pointer-events: none;
-        opacity: 1;
-        visibility: visible;
-        transition: opacity 420ms ease, visibility 420ms ease;
-      }
-
-      .gallery-photo {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center 48%;
-        display: block;
-        user-select: none;
-      }
-
-      .gallery-photo-shade {
-        position: absolute;
-        inset: 0;
-        background:
-          linear-gradient(180deg, rgba(232, 232, 230, 0.22) 0%, transparent 20%, transparent 58%, rgba(220, 220, 218, 0.16) 100%),
-          radial-gradient(ellipse at 50% 36%, transparent 42%, rgba(40, 36, 32, 0.05) 100%);
-      }
-
-      .museum.is-intro .gallery-room,
-      .museum.is-backstage .gallery-room,
-      .museum.is-preview .gallery-room {
-        opacity: 0;
-        visibility: hidden;
-      }
-
       .main-stage {
         position: absolute;
-        z-index: 1;
         left: 0;
         right: 0;
         top: var(--stage-top);
@@ -397,17 +359,11 @@
 
       .reflection-zone {
         position: absolute;
-        z-index: 1;
         left: 0;
         right: 0;
         bottom: 0;
         height: 31%;
-        background: linear-gradient(
-          180deg,
-          rgba(232, 232, 230, 0.12) 0%,
-          rgba(232, 232, 230, 0.28) 36%,
-          rgba(232, 232, 230, 0.18) 100%
-        );
+        background: linear-gradient(180deg, rgba(232, 232, 230, 0.55) 0%, rgba(207, 207, 205, 0.92) 40%, var(--floor) 100%);
         overflow: hidden;
         transition: opacity 420ms ease, visibility 420ms ease;
       }
@@ -472,7 +428,7 @@
       }
 
       .museum.is-backstage {
-        background: #e8e8e6;
+        background: var(--wall);
         padding: 0;
       }
 
@@ -507,27 +463,19 @@
         min-height: 0;
         width: 100%;
         overflow: hidden;
-        background: #e8e8e6;
-      }
-
-      .backstage-photo {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center 48%;
-        display: block;
-        user-select: none;
-        pointer-events: none;
-      }
-
-      .backstage-photo-shade {
-        position: absolute;
-        inset: 0;
         background:
-          linear-gradient(180deg, rgba(232, 232, 230, 0.18) 0%, transparent 18%, transparent 62%, rgba(220, 220, 218, 0.12) 100%),
-          radial-gradient(ellipse at 50% 38%, transparent 40%, rgba(40, 36, 32, 0.06) 100%);
+          linear-gradient(180deg, var(--wall) 0%, var(--wall) 69%, var(--floor) 69%, var(--floor) 100%);
+      }
+
+      .backstage-room::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 69%;
+        height: 1px;
+        background: rgba(74, 48, 28, 0.1);
+        box-shadow: 0 6px 16px rgba(74, 48, 28, 0.06);
         pointer-events: none;
       }
 
@@ -797,12 +745,7 @@
       .reflection-fade {
         position: absolute;
         inset: 0;
-        background: linear-gradient(
-          180deg,
-          rgba(239, 232, 216, 0.08),
-          rgba(230, 228, 224, 0.28) 52%,
-          rgba(232, 232, 230, 0.16) 100%
-        );
+        background: linear-gradient(180deg, rgba(232, 232, 230, 0.16), rgba(207, 207, 205, 0.72) 52%, var(--floor) 100%);
         pointer-events: none;
       }
 
@@ -1459,11 +1402,6 @@
       </nav>
       <div class="art-label" id="artLabel">安遲美術館，ARCHIE ART MUSEUM</div>
 
-      <div class="gallery-room" aria-hidden="true">
-        <img class="gallery-photo" src="assets/backstage-room-b.jpg" alt="" />
-        <div class="gallery-photo-shade"></div>
-      </div>
-
       <section class="intro-screen" id="introScreen" aria-labelledby="introTitle">
         <div class="cover-stage">
           <h1 id="introTitle" class="visually-hidden">安遲美術館</h1>
@@ -1505,13 +1443,6 @@
 
       <section class="backstage-screen" id="backstageScreen" aria-label="幕後放映">
         <div class="backstage-room">
-          <img
-            class="backstage-photo"
-            src="assets/backstage-room-b.jpg"
-            alt=""
-            aria-hidden="true"
-          />
-          <div class="backstage-photo-shade" aria-hidden="true"></div>
           <div class="backstage-stage">
             <figure class="wall-projection landscape">
               <img src="drawings/%E8%BF%BD%E9%80%90%20A4.jpg" alt="橫向投影：追逐" />
