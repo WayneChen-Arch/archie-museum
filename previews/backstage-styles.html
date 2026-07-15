@@ -1,0 +1,714 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>幕後頁 · 五種風格預覽 · 安遲美術館</title>
+    <style>
+      :root {
+        --pick: #d8d2c8;
+        --pick-muted: #8d8680;
+        --line: rgba(255, 255, 255, 0.14);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Songti TC", serif;
+        background: #111110;
+        color: #ebe6df;
+      }
+
+      .chooser {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.55rem;
+        align-items: center;
+        padding: 0.85rem 1rem;
+        background: rgba(12, 12, 11, 0.92);
+        border-bottom: 1px solid var(--line);
+        backdrop-filter: blur(10px);
+      }
+
+      .chooser h1 {
+        margin: 0 0.6rem 0 0;
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        color: var(--pick-muted);
+        text-transform: uppercase;
+      }
+
+      .chooser button {
+        appearance: none;
+        border: 1px solid var(--line);
+        background: transparent;
+        color: var(--pick);
+        font: inherit;
+        font-size: 12px;
+        letter-spacing: 0.06em;
+        padding: 0.42rem 0.75rem;
+        cursor: pointer;
+      }
+
+      .chooser button[aria-pressed="true"] {
+        background: #ebe6df;
+        color: #151513;
+        border-color: #ebe6df;
+      }
+
+      .note {
+        width: 100%;
+        margin: 0.15rem 0 0;
+        font-size: 11px;
+        color: var(--pick-muted);
+        letter-spacing: 0.02em;
+      }
+
+      .panel {
+        display: none;
+        padding: 1rem 1rem 2.5rem;
+      }
+
+      .panel.is-active {
+        display: block;
+      }
+
+      .concept {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+        gap: 1rem;
+        max-width: 1180px;
+        margin: 0 auto 1rem;
+      }
+
+      @media (max-width: 860px) {
+        .concept {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .concept img {
+        width: 100%;
+        display: block;
+        border: 1px solid var(--line);
+      }
+
+      .blurb {
+        padding: 0.2rem 0.2rem 0;
+      }
+
+      .blurb .tag {
+        display: inline-block;
+        margin-bottom: 0.55rem;
+        font-size: 10px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--pick-muted);
+      }
+
+      .blurb h2 {
+        margin: 0 0 0.55rem;
+        font-size: 1.35rem;
+        font-weight: 500;
+        letter-spacing: 0.04em;
+      }
+
+      .blurb p {
+        margin: 0 0 0.7rem;
+        font-size: 13px;
+        line-height: 1.65;
+        color: #c9c3ba;
+      }
+
+      .blurb ul {
+        margin: 0;
+        padding-left: 1.1rem;
+        color: #a9a39a;
+        font-size: 12px;
+        line-height: 1.7;
+      }
+
+      /* ===== Shared mock shell ===== */
+      .mock-frame {
+        max-width: 1180px;
+        margin: 0 auto;
+        border: 1px solid var(--line);
+        overflow: hidden;
+      }
+
+      .mock-label {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.45rem 0.7rem;
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--pick-muted);
+        background: #0b0b0a;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .room {
+        position: relative;
+        aspect-ratio: 16 / 10;
+        min-height: 420px;
+        overflow: hidden;
+        background: #050505;
+      }
+
+      .room-nav {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        z-index: 5;
+        display: flex;
+        gap: 0.55rem;
+      }
+
+      .room-nav .icon {
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        border: 0;
+        background: transparent;
+        color: rgba(235, 230, 223, 0.55);
+        cursor: default;
+      }
+
+      .room-nav .icon svg {
+        width: 18px;
+        height: 18px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .room-nav .icon.is-active {
+        color: rgba(235, 230, 223, 0.95);
+      }
+
+      .stage {
+        position: absolute;
+        inset: 12% 8% 28%;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        gap: 2.2rem;
+      }
+
+      .screen {
+        position: relative;
+        background: #111;
+        box-shadow: 0 0 40px rgba(120, 180, 90, 0.12), 0 18px 40px rgba(0, 0, 0, 0.55);
+        overflow: hidden;
+      }
+
+      .screen.landscape {
+        width: min(48%, 420px);
+        aspect-ratio: 16 / 9;
+      }
+
+      .screen.portrait {
+        width: min(18%, 150px);
+        aspect-ratio: 9 / 16;
+      }
+
+      .screen img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        animation: drift 14s ease-in-out infinite alternate;
+      }
+
+      @keyframes drift {
+        from {
+          transform: scale(1.02) translate3d(0, 0, 0);
+        }
+        to {
+          transform: scale(1.08) translate3d(-1.5%, 1%, 0);
+        }
+      }
+
+      .screen::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 30%, rgba(0, 0, 0, 0.18));
+        pointer-events: none;
+      }
+
+      .floor {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 34%;
+        background: linear-gradient(180deg, #0a0a0a 0%, #050505 55%, #030303 100%);
+      }
+
+      .reflection {
+        position: absolute;
+        left: 8%;
+        right: 8%;
+        bottom: 10%;
+        height: 22%;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 2.2rem;
+        transform: scaleY(-1);
+        opacity: 0.28;
+        filter: blur(5px) saturate(0.85);
+        mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.75), transparent 85%);
+        -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.75), transparent 85%);
+        pointer-events: none;
+      }
+
+      .reflection .screen {
+        box-shadow: none;
+      }
+
+      .bench {
+        position: absolute;
+        left: 50%;
+        bottom: 7%;
+        width: min(42%, 360px);
+        height: 22px;
+        transform: translateX(-50%);
+        background: linear-gradient(180deg, #2a2622, #151310);
+        border-radius: 2px;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.55);
+      }
+
+      .bench::before,
+      .bench::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        width: 4px;
+        height: 14px;
+        background: #1a1714;
+      }
+
+      .bench::before {
+        left: 10%;
+      }
+
+      .bench::after {
+        right: 10%;
+      }
+
+      .bench-slats {
+        position: absolute;
+        inset: 3px 6px;
+        background: repeating-linear-gradient(
+          90deg,
+          transparent 0 10px,
+          rgba(0, 0, 0, 0.35) 10px 12px
+        );
+        opacity: 0.7;
+      }
+
+      .caption {
+        position: absolute;
+        left: 1.1rem;
+        bottom: 1rem;
+        font-size: 10px;
+        letter-spacing: 0.16em;
+        color: rgba(235, 230, 223, 0.35);
+        text-transform: uppercase;
+      }
+
+      /* Style A — classic black box */
+      .style-a .room {
+        background: radial-gradient(ellipse at 50% 35%, #141414 0%, #050505 58%, #000 100%);
+      }
+      .style-a .screen {
+        outline: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .style-a .floor {
+        background:
+          radial-gradient(ellipse at 50% 0%, rgba(90, 140, 70, 0.14), transparent 45%),
+          linear-gradient(180deg, #0d0d0d, #040404 70%);
+      }
+
+      /* Style B — asymmetric dual cinema */
+      .style-b .stage {
+        justify-content: flex-start;
+        padding-left: 6%;
+        gap: 3.5rem;
+        align-items: center;
+      }
+      .style-b .screen.landscape {
+        width: min(52%, 460px);
+      }
+      .style-b .screen.portrait {
+        width: min(16%, 130px);
+        margin-top: 8%;
+      }
+      .style-b .room {
+        background: #070709;
+      }
+      .style-b .floor {
+        background:
+          linear-gradient(90deg, transparent, rgba(120, 160, 90, 0.08), transparent),
+          linear-gradient(180deg, #101012, #050506);
+      }
+      .style-b .bench {
+        width: min(50%, 420px);
+        bottom: 8%;
+      }
+      .style-b .reflection {
+        opacity: 0.34;
+        filter: blur(4px);
+      }
+
+      /* Style C — floating screens */
+      .style-c .room {
+        background: radial-gradient(circle at 50% 40%, #1a1a1a 0%, #050505 42%, #000 75%);
+      }
+      .style-c .stage {
+        inset: 10% 10% 32%;
+        gap: 1.2rem;
+        align-items: center;
+      }
+      .style-c .screen {
+        box-shadow: 0 0 60px rgba(140, 200, 100, 0.18), 0 30px 60px rgba(0, 0, 0, 0.7);
+        transform: translateY(-4%);
+      }
+      .style-c .screen.portrait {
+        transform: translateY(8%);
+      }
+      .style-c .bench {
+        opacity: 0.85;
+        width: min(30%, 260px);
+      }
+      .style-c .floor {
+        height: 38%;
+        background: radial-gradient(ellipse at 50% 0%, rgba(100, 160, 80, 0.18), transparent 50%), #030303;
+      }
+      .style-c .reflection {
+        opacity: 0.4;
+        filter: blur(8px) saturate(1.1);
+      }
+
+      /* Style D — warm archival */
+      .style-d .room {
+        background: radial-gradient(ellipse at 55% 30%, #2a221c 0%, #120e0c 50%, #070505 100%);
+      }
+      .style-d .room-nav .icon {
+        color: rgba(230, 210, 180, 0.5);
+      }
+      .style-d .room-nav .icon.is-active {
+        color: rgba(240, 220, 190, 0.95);
+      }
+      .style-d .screen {
+        box-shadow: 0 0 36px rgba(180, 120, 60, 0.12), 0 16px 36px rgba(0, 0, 0, 0.5);
+        outline: 1px solid rgba(180, 140, 90, 0.12);
+      }
+      .style-d .floor {
+        background:
+          radial-gradient(ellipse at 50% 0%, rgba(160, 110, 50, 0.16), transparent 48%),
+          linear-gradient(180deg, #1a1410, #0a0807);
+      }
+      .style-d .bench {
+        background: linear-gradient(180deg, #3a2e24, #1c1510);
+      }
+      .style-d .caption {
+        color: rgba(230, 210, 180, 0.4);
+      }
+
+      /* Style E — graphic minimal UI */
+      .style-e .room {
+        background: #000;
+      }
+      .style-e .room-nav .icon {
+        width: 36px;
+        height: 36px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+      }
+      .style-e .stage {
+        inset: 16% 12% 30%;
+        gap: 1.6rem;
+        align-items: flex-end;
+      }
+      .style-e .screen {
+        box-shadow: none;
+        outline: 1px solid rgba(255, 255, 255, 0.55);
+      }
+      .style-e .screen::after {
+        background: none;
+      }
+      .style-e .floor {
+        height: 30%;
+        background: linear-gradient(180deg, #0c0c0c, #000);
+      }
+      .style-e .reflection {
+        opacity: 0.22;
+        filter: blur(2px);
+        bottom: 12%;
+        height: 16%;
+      }
+      .style-e .bench {
+        height: 14px;
+        background: #2c2c2c;
+        border-radius: 0;
+        box-shadow: none;
+      }
+      .style-e .bench::before,
+      .style-e .bench::after {
+        height: 10px;
+        background: #2c2c2c;
+      }
+      .style-e .caption {
+        letter-spacing: 0.28em;
+      }
+
+      @media (max-width: 700px) {
+        .room {
+          min-height: 360px;
+          aspect-ratio: 10 / 14;
+        }
+        .stage {
+          inset: 14% 8% 34%;
+          gap: 1rem;
+        }
+        .screen.landscape {
+          width: 58%;
+        }
+        .screen.portrait {
+          width: 24%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="chooser" role="tablist" aria-label="幕後風格選擇">
+      <h1>幕後 · 風格預覽</h1>
+      <button type="button" data-style="a" aria-pressed="true">A 經典黑匣</button>
+      <button type="button" data-style="b" aria-pressed="false">B 非對稱影廳</button>
+      <button type="button" data-style="c" aria-pressed="false">C 懸浮光幕</button>
+      <button type="button" data-style="d" aria-pressed="false">D 暖調檔案室</button>
+      <button type="button" data-style="e" aria-pressed="false">E 極簡 UI 框</button>
+      <p class="note">先選風格再做正式接入。左上三個圖示預覽：封面 / 展廊 / 幕後。畫面為示意影片（現用館藏圖替代動態）。</p>
+    </div>
+
+    <!-- A -->
+    <section class="panel is-active" id="panel-a" data-panel="a">
+      <div class="concept">
+        <img src="backstage-style-a-blackbox.jpg" alt="風格 A 效果圖：經典黑匣放映廳" />
+        <div class="blurb">
+          <span class="tag">Style A</span>
+          <h2>經典黑匣</h2>
+          <p>最接近參考圖：全黑沉浸、鏡面地面反光、長椅剪影，橫屏與豎屏並置發光。</p>
+          <ul>
+            <li>對比強、博物館感最穩</li>
+            <li>適合「幕後」與展廊灰牆形成劇烈切換</li>
+            <li>風險：過暗時手機端細節偏少</li>
+          </ul>
+        </div>
+      </div>
+      <div class="mock-frame style-a">
+        <div class="mock-label"><span>Live mock · A</span><span>16:9 + 豎屏 · 長椅 · 反光</span></div>
+        <div class="room" aria-label="風格 A 網頁示意">
+          <nav class="room-nav" aria-label="站點導航示意">
+            <span class="icon" title="封面"><svg viewBox="0 0 24 24"><path d="M3.5 10.5L12 4l8.5 6.5"/><path d="M6.6 9.4V20h10.8V9.4"/></svg></span>
+            <span class="icon" title="展廊"><svg viewBox="0 0 24 24"><rect x="3.5" y="6" width="7" height="9"/><rect x="13.5" y="8" width="7" height="9"/></svg></span>
+            <span class="icon is-active" title="幕後"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="12" height="10"/><path d="M15 9.5l6-2.5v10l-6-2.5z"/></svg></span>
+          </nav>
+          <div class="stage">
+            <div class="screen landscape"><img src="../drawings/彩虹%20A4.jpg" alt="" /></div>
+            <div class="screen portrait"><img src="../drawings/水果%20A5加长.jpg" alt="" /></div>
+          </div>
+          <div class="floor"></div>
+          <div class="reflection" aria-hidden="true">
+            <div class="screen landscape"><img src="../drawings/彩虹%20A4.jpg" alt="" /></div>
+            <div class="screen portrait"><img src="../drawings/水果%20A5加长.jpg" alt="" /></div>
+          </div>
+          <div class="bench"><div class="bench-slats"></div></div>
+          <div class="caption">幕後 · Behind the Scenes</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- B -->
+    <section class="panel" id="panel-b" data-panel="b">
+      <div class="concept">
+        <img src="backstage-style-b-asymmetric.jpg" alt="風格 B 效果圖：非對稱影廳" />
+        <div class="blurb">
+          <span class="tag">Style B</span>
+          <h2>非對稱影廳</h2>
+          <p>主橫屏偏左放大、豎屏退右，長椅更長，地面反光偏冷綠，更接近正式電影院排椅感。</p>
+          <ul>
+            <li>敘事重心清楚（大片在先）</li>
+            <li>景深與空間感更強</li>
+            <li>豎屏影片可作為「特寫軌」</li>
+          </ul>
+        </div>
+      </div>
+      <div class="mock-frame style-b">
+        <div class="mock-label"><span>Live mock · B</span><span>非對稱雙幕</span></div>
+        <div class="room">
+          <nav class="room-nav">
+            <span class="icon"><svg viewBox="0 0 24 24"><path d="M3.5 10.5L12 4l8.5 6.5"/><path d="M6.6 9.4V20h10.8V9.4"/></svg></span>
+            <span class="icon"><svg viewBox="0 0 24 24"><rect x="3.5" y="6" width="7" height="9"/><rect x="13.5" y="8" width="7" height="9"/></svg></span>
+            <span class="icon is-active"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="12" height="10"/><path d="M15 9.5l6-2.5v10l-6-2.5z"/></svg></span>
+          </nav>
+          <div class="stage">
+            <div class="screen landscape"><img src="../drawings/追逐%20A4.jpg" alt="" /></div>
+            <div class="screen portrait"><img src="../drawings/人物%20A5.jpg" alt="" /></div>
+          </div>
+          <div class="floor"></div>
+          <div class="reflection" aria-hidden="true">
+            <div class="screen landscape"><img src="../drawings/追逐%20A4.jpg" alt="" /></div>
+            <div class="screen portrait"><img src="../drawings/人物%20A5.jpg" alt="" /></div>
+          </div>
+          <div class="bench"><div class="bench-slats"></div></div>
+          <div class="caption">幕後 · Behind the Scenes</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- C -->
+    <section class="panel" id="panel-c" data-panel="c">
+      <div class="concept">
+        <img src="backstage-style-c-floating.jpg" alt="風格 C 效果圖：懸浮光幕" />
+        <div class="blurb">
+          <span class="tag">Style C</span>
+          <h2>懸浮光幕</h2>
+          <p>畫面幾乎只剩兩道光幕與地面暈影，長椅弱化，像沉浸式裝置而非傳統座位廳。</p>
+          <ul>
+            <li>最戲劇化、最「展覽空間」</li>
+            <li>適合短片、注重氛围</li>
+            <li>座位與導向感稍弱</li>
+          </ul>
+        </div>
+      </div>
+      <div class="mock-frame style-c">
+        <div class="mock-label"><span>Live mock · C</span><span>光幕漂浮 · 強暈影</span></div>
+        <div class="room">
+          <nav class="room-nav">
+            <span class="icon"><svg viewBox="0 0 24 24"><path d="M3.5 10.5L12 4l8.5 6.5"/><path d="M6.6 9.4V20h10.8V9.4"/></svg></span>
+            <span class="icon"><svg viewBox="0 0 24 24"><rect x="3.5" y="6" width="7" height="9"/><rect x="13.5" y="8" width="7" height="9"/></svg></span>
+            <span class="icon is-active"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="12" height="10"/><path d="M15 9.5l6-2.5v10l-6-2.5z"/></svg></span>
+          </nav>
+          <div class="stage">
+            <div class="screen landscape"><img src="../drawings/地球%20A4.jpg" alt="" /></div>
+            <div class="screen portrait"><img src="../drawings/米奇%20A5.jpg" alt="" /></div>
+          </div>
+          <div class="floor"></div>
+          <div class="reflection" aria-hidden="true">
+            <div class="screen landscape"><img src="../drawings/地球%20A4.jpg" alt="" /></div>
+            <div class="screen portrait"><img src="../drawings/米奇%20A5.jpg" alt="" /></div>
+          </div>
+          <div class="bench"><div class="bench-slats"></div></div>
+          <div class="caption">幕後 · Behind the Scenes</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- D -->
+    <section class="panel" id="panel-d" data-panel="d">
+      <div class="concept">
+        <img src="backstage-style-d-warm.jpg" alt="風格 D 效果圖：暖調檔案室" />
+        <div class="blurb">
+          <span class="tag">Style D</span>
+          <h2>暖調檔案室</h2>
+          <p>同样是暗室，但陰影偏暖褐，像私人電影檔案室；地面有琥珀色反光，長椅更木質。</p>
+          <ul>
+            <li>與現有展廊淺灰楓木調有遙相呼應</li>
+            <li>觀看兒童創作過程更「私密溫暖」</li>
+            <li>黑匣沉浸度略低於 A/B</li>
+          </ul>
+        </div>
+      </div>
+      <div class="mock-frame style-d">
+        <div class="mock-label"><span>Live mock · D</span><span>暖黑 · 木質長椅</span></div>
+        <div class="room">
+          <nav class="room-nav">
+            <span class="icon"><svg viewBox="0 0 24 24"><path d="M3.5 10.5L12 4l8.5 6.5"/><path d="M6.6 9.4V20h10.8V9.4"/></svg></span>
+            <span class="icon"><svg viewBox="0 0 24 24"><rect x="3.5" y="6" width="7" height="9"/><rect x="13.5" y="8" width="7" height="9"/></svg></span>
+            <span class="icon is-active"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="12" height="10"/><path d="M15 9.5l6-2.5v10l-6-2.5z"/></svg></span>
+          </nav>
+          <div class="stage">
+            <div class="screen landscape"><img src="../drawings/01-A4.jpg" alt="" /></div>
+            <div class="screen portrait"><img src="../drawings/04-A5.jpg" alt="" /></div>
+          </div>
+          <div class="floor"></div>
+          <div class="reflection" aria-hidden="true">
+            <div class="screen landscape"><img src="../drawings/01-A4.jpg" alt="" /></div>
+            <div class="screen portrait"><img src="../drawings/04-A5.jpg" alt="" /></div>
+          </div>
+          <div class="bench"><div class="bench-slats"></div></div>
+          <div class="caption">幕後 · Behind the Scenes</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- E -->
+    <section class="panel" id="panel-e" data-panel="e">
+      <div class="concept">
+        <img src="backstage-style-e-ui.jpg" alt="風格 E 效果圖：極簡 UI 框" />
+        <div class="blurb">
+          <span class="tag">Style E</span>
+          <h2>極簡 UI 框</h2>
+          <p>更偏產品介面：細白線畫框、圖示有方框按鈕感，反光收斂成一條地帶，長椅符号化。</p>
+          <ul>
+            <li>資訊結構最清楚、易實作</li>
+            <li>美術館氛圍最弱、偏 App/網站</li>
+            <li>若希望「像真實展厅」優先選 A–D</li>
+          </ul>
+        </div>
+      </div>
+      <div class="mock-frame style-e">
+        <div class="mock-label"><span>Live mock · E</span><span>線框 · 強 UI</span></div>
+        <div class="room">
+          <nav class="room-nav">
+            <span class="icon"><svg viewBox="0 0 24 24"><path d="M3.5 10.5L12 4l8.5 6.5"/><path d="M6.6 9.4V20h10.8V9.4"/></svg></span>
+            <span class="icon"><svg viewBox="0 0 24 24"><rect x="3.5" y="6" width="7" height="9"/><rect x="13.5" y="8" width="7" height="9"/></svg></span>
+            <span class="icon is-active"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="12" height="10"/><path d="M15 9.5l6-2.5v10l-6-2.5z"/></svg></span>
+          </nav>
+          <div class="stage">
+            <div class="screen landscape"><img src="../drawings/03-A5.jpg" alt="" /></div>
+            <div class="screen portrait"><img src="../drawings/未知.jpg" alt="" /></div>
+          </div>
+          <div class="floor"></div>
+          <div class="reflection" aria-hidden="true">
+            <div class="screen landscape"><img src="../drawings/03-A5.jpg" alt="" /></div>
+            <div class="screen portrait"><img src="../drawings/未知.jpg" alt="" /></div>
+          </div>
+          <div class="bench"><div class="bench-slats"></div></div>
+          <div class="caption">幕後 / Behind the Scenes</div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      const buttons = [...document.querySelectorAll(".chooser button[data-style]")];
+      const panels = [...document.querySelectorAll("[data-panel]")];
+
+      function show(style) {
+        buttons.forEach((btn) => btn.setAttribute("aria-pressed", String(btn.dataset.style === style)));
+        panels.forEach((panel) => panel.classList.toggle("is-active", panel.dataset.panel === style));
+        history.replaceState(null, "", `#${style}`);
+      }
+
+      buttons.forEach((btn) => btn.addEventListener("click", () => show(btn.dataset.style)));
+
+      const initial = (location.hash || "#a").slice(1);
+      show(["a", "b", "c", "d", "e"].includes(initial) ? initial : "a");
+    </script>
+  </body>
+</html>
