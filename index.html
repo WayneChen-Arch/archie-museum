@@ -490,6 +490,8 @@
         justify-content: center;
         gap: clamp(1.8rem, 4vw, 3.4rem);
         z-index: 2;
+        touch-action: pan-y;
+        user-select: none;
       }
 
       .wall-projection {
@@ -497,18 +499,39 @@
         flex: 0 0 auto;
         margin: 0;
         isolation: isolate;
+        cursor: pointer;
+        transition:
+          transform 520ms cubic-bezier(0.22, 0.61, 0.36, 1),
+          opacity 420ms ease,
+          width 520ms cubic-bezier(0.22, 0.61, 0.36, 1);
       }
 
       .wall-projection.landscape {
-        width: min(46vw, 400px);
+        width: min(38vw, 320px);
         aspect-ratio: 16 / 9;
-        transform: perspective(900px) rotateY(2deg);
+        transform: perspective(900px) rotateY(2deg) scale(0.84);
+        opacity: 0.52;
       }
 
       .wall-projection.portrait {
-        width: min(15vw, 128px);
+        width: min(12vw, 104px);
         aspect-ratio: 9 / 16;
-        transform: perspective(900px) rotateY(-3deg);
+        transform: perspective(900px) rotateY(-3deg) scale(0.84);
+        opacity: 0.52;
+      }
+
+      .wall-projection.landscape.is-active {
+        width: min(50vw, 440px);
+        transform: perspective(900px) rotateY(1deg) scale(1.08);
+        opacity: 1;
+        z-index: 3;
+      }
+
+      .wall-projection.portrait.is-active {
+        width: min(18vw, 152px);
+        transform: perspective(900px) rotateY(-1.5deg) scale(1.08);
+        opacity: 1;
+        z-index: 3;
       }
 
       .wall-projection::before {
@@ -524,11 +547,27 @@
         filter: blur(10px);
         z-index: 0;
         pointer-events: none;
+        opacity: 0.55;
+        transition: opacity 420ms ease;
       }
 
-      .wall-projection img {
+      .wall-projection.is-active::before {
+        opacity: 1;
+      }
+
+      .projection-media {
         position: relative;
         z-index: 1;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        -webkit-mask-image: radial-gradient(ellipse 92% 90% at 50% 50%, #000 58%, transparent 100%);
+        mask-image: radial-gradient(ellipse 92% 90% at 50% 50%, #000 58%, transparent 100%);
+        box-shadow: 0 0 34px rgba(255, 250, 240, 0.28);
+      }
+
+      .projection-media video,
+      .projection-media img {
         display: block;
         width: 100%;
         height: 100%;
@@ -536,10 +575,17 @@
         opacity: 0.78;
         mix-blend-mode: multiply;
         filter: saturate(0.88) contrast(0.94) brightness(1.08);
-        box-shadow: 0 0 34px rgba(255, 250, 240, 0.28);
-        -webkit-mask-image: radial-gradient(ellipse 92% 90% at 50% 50%, #000 58%, transparent 100%);
-        mask-image: radial-gradient(ellipse 92% 90% at 50% 50%, #000 58%, transparent 100%);
-        animation: projection-breathe 10s ease-in-out infinite alternate;
+        animation: projection-drift 14s ease-in-out infinite alternate;
+        animation-play-state: paused;
+      }
+
+      .projection-media video.is-hidden {
+        display: none;
+      }
+
+      .backstage-room.is-playing .projection-media video,
+      .backstage-room.is-playing .projection-media img {
+        animation-play-state: running;
       }
 
       .wall-projection::after {
@@ -555,17 +601,15 @@
         );
         mix-blend-mode: soft-light;
         pointer-events: none;
-        -webkit-mask-image: inherit;
-        mask-image: inherit;
       }
 
-      @keyframes projection-breathe {
+      @keyframes projection-drift {
         from {
-          opacity: 0.86;
+          transform: scale(1.02);
           filter: saturate(0.9) contrast(0.95) brightness(1.02);
         }
         to {
-          opacity: 0.94;
+          transform: scale(1.1) translate3d(-1.2%, 0.8%, 0);
           filter: saturate(0.96) contrast(0.98) brightness(1.08);
         }
       }
@@ -586,6 +630,59 @@
         filter: blur(8px);
         pointer-events: none;
         z-index: 1;
+      }
+
+      .backstage-play {
+        position: absolute;
+        left: 50%;
+        bottom: 1.25rem;
+        z-index: 5;
+        width: 22px;
+        height: 22px;
+        transform: translateX(-50%);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: rgba(111, 103, 95, 0.55);
+        cursor: pointer;
+        opacity: 0.8;
+        transition: opacity 180ms ease, color 180ms ease;
+      }
+
+      .backstage-play:hover {
+        opacity: 1;
+        color: var(--text-strong);
+      }
+
+      .backstage-play svg {
+        width: 12px;
+        height: 12px;
+        display: block;
+      }
+
+      .backstage-play .icon-play path {
+        fill: currentColor;
+        stroke: none;
+      }
+
+      .backstage-play .icon-pause path {
+        fill: currentColor;
+        stroke: none;
+      }
+
+      .backstage-play .icon-pause {
+        display: none;
+      }
+
+      .backstage-room.is-playing .backstage-play .icon-play {
+        display: none;
+      }
+
+      .backstage-room.is-playing .backstage-play .icon-pause {
+        display: block;
       }
 
       .backstage-caption {
@@ -1012,16 +1109,28 @@
         }
 
         .wall-projection.landscape {
-          width: min(54vw, 280px);
+          width: min(42vw, 210px);
         }
 
         .wall-projection.portrait {
-          width: min(20vw, 96px);
+          width: min(15vw, 72px);
+        }
+
+        .wall-projection.landscape.is-active {
+          width: min(58vw, 300px);
+        }
+
+        .wall-projection.portrait.is-active {
+          width: min(22vw, 104px);
         }
 
         .backstage-spill {
           top: 50%;
           width: min(70vw, 360px);
+        }
+
+        .backstage-play {
+          bottom: 1.05rem;
         }
 
         .backstage-caption {
@@ -1442,16 +1551,46 @@
       </section>
 
       <section class="backstage-screen" id="backstageScreen" aria-label="幕後放映">
-        <div class="backstage-room">
-          <div class="backstage-stage">
-            <figure class="wall-projection landscape">
-              <img src="drawings/%E8%BF%BD%E9%80%90%20A4.jpg" alt="橫向投影：追逐" />
+        <div class="backstage-room" id="backstageRoom">
+          <div class="backstage-stage" id="backstageStage">
+            <figure class="wall-projection landscape is-active" data-proj="0" tabindex="0" aria-label="橫向投影">
+              <div class="projection-media">
+                <video
+                  id="backstageVideo0"
+                  muted
+                  loop
+                  playsinline
+                  poster="drawings/%E8%BF%BD%E9%80%90%20A4.jpg"
+                >
+                  <source src="assets/backstage-landscape.mp4" type="video/mp4" />
+                </video>
+                <img src="drawings/%E8%BF%BD%E9%80%90%20A4.jpg" alt="橫向投影：追逐" />
+              </div>
             </figure>
-            <figure class="wall-projection portrait">
-              <img src="drawings/%E6%B0%B4%E6%9E%9C%20A5%E5%8A%A0%E9%95%BF.jpg" alt="豎向投影：水果" />
+            <figure class="wall-projection portrait" data-proj="1" tabindex="0" aria-label="豎向投影">
+              <div class="projection-media">
+                <video
+                  id="backstageVideo1"
+                  muted
+                  loop
+                  playsinline
+                  poster="drawings/%E6%B0%B4%E6%9E%9C%20A5%E5%8A%A0%E9%95%BF.jpg"
+                >
+                  <source src="assets/backstage-portrait.mp4" type="video/mp4" />
+                </video>
+                <img src="drawings/%E6%B0%B4%E6%9E%9C%20A5%E5%8A%A0%E9%95%BF.jpg" alt="豎向投影：水果" />
+              </div>
             </figure>
           </div>
           <div class="backstage-spill" aria-hidden="true"></div>
+          <button class="backstage-play" id="backstagePlayBtn" type="button" aria-label="播放" title="播放 / 暫停">
+            <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 6.5v11l9-5.5z"></path>
+            </svg>
+            <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 6.5h2.6v11H8zM13.4 6.5H16v11h-2.6z"></path>
+            </svg>
+          </button>
           <p class="backstage-caption">幕後 · Behind the Scenes</p>
         </div>
       </section>
@@ -1620,6 +1759,19 @@
       const artLabel = document.getElementById("artLabel");
       const galleryTitle = "安遲美術館，ARCHIE ART MUSEUM";
       const backstageTitle = "幕後 · BEHIND THE SCENES";
+      const backstageRoom = document.getElementById("backstageRoom");
+      const backstageStage = document.getElementById("backstageStage");
+      const backstagePlayBtn = document.getElementById("backstagePlayBtn");
+      const backstageProjections = [...document.querySelectorAll(".wall-projection[data-proj]")];
+      const backstageVideos = [
+        document.getElementById("backstageVideo0"),
+        document.getElementById("backstageVideo1")
+      ].filter(Boolean);
+
+      let backstageFocus = 0;
+      let backstagePlaying = false;
+      let backstageTouchX = 0;
+      let backstageTouchY = 0;
       const previewLayer = document.getElementById("previewLayer");
       const previewClose = document.getElementById("previewClose");
       const previewMeta = document.getElementById("previewMeta");
@@ -2012,9 +2164,92 @@
         syncGuideButtons();
       }
 
+      function setBackstageFocus(index) {
+        backstageFocus = ((index % backstageProjections.length) + backstageProjections.length) % backstageProjections.length;
+        backstageProjections.forEach((node, i) => {
+          node.classList.toggle("is-active", i === backstageFocus);
+        });
+      }
+
+      function syncBackstagePlayUi() {
+        backstageRoom.classList.toggle("is-playing", backstagePlaying);
+        backstagePlayBtn.setAttribute("aria-label", backstagePlaying ? "暫停" : "播放");
+        backstagePlayBtn.title = backstagePlaying ? "暫停" : "播放";
+      }
+
+      function pauseBackstageMedia() {
+        backstagePlaying = false;
+        backstageVideos.forEach((video) => video.pause());
+        syncBackstagePlayUi();
+      }
+
+      function playBackstageMedia() {
+        backstagePlaying = true;
+        syncBackstagePlayUi();
+        backstageVideos.forEach((video, index) => {
+          if (video.classList.contains("is-hidden")) return;
+          // Prefer the focused reel; keep the other softly looping if available.
+          if (index === backstageFocus || true) {
+            video.play().catch(() => video.classList.add("is-hidden"));
+          }
+        });
+      }
+
+      function toggleBackstagePlayback() {
+        if (backstagePlaying) pauseBackstageMedia();
+        else playBackstageMedia();
+      }
+
+      function setupBackstageMedia() {
+        backstageVideos.forEach((video) => {
+          video.addEventListener("error", () => video.classList.add("is-hidden"));
+          video.addEventListener("stalled", () => {
+            if (!video.currentSrc) video.classList.add("is-hidden");
+          });
+        });
+
+        backstageProjections.forEach((node) => {
+          node.addEventListener("click", () => {
+            setBackstageFocus(Number(node.dataset.proj));
+          });
+        });
+
+        backstagePlayBtn.addEventListener("click", (event) => {
+          event.stopPropagation();
+          toggleBackstagePlayback();
+        });
+
+        backstageStage.addEventListener(
+          "touchstart",
+          (event) => {
+            backstageTouchX = event.changedTouches[0].clientX;
+            backstageTouchY = event.changedTouches[0].clientY;
+          },
+          { passive: true }
+        );
+
+        backstageStage.addEventListener(
+          "touchend",
+          (event) => {
+            if (!museum.classList.contains("is-backstage")) return;
+            const touch = event.changedTouches[0];
+            const deltaX = touch.clientX - backstageTouchX;
+            const deltaY = touch.clientY - backstageTouchY;
+            if (Math.abs(deltaX) < 36 || Math.abs(deltaX) < Math.abs(deltaY)) return;
+            if (deltaX < 0) setBackstageFocus(backstageFocus + 1);
+            else setBackstageFocus(backstageFocus - 1);
+          },
+          { passive: true }
+        );
+
+        setBackstageFocus(0);
+        syncBackstagePlayUi();
+      }
+
       function showCover() {
         stopGuide();
         closePreview();
+        pauseBackstageMedia();
         museum.classList.remove("is-backstage");
         museum.classList.add("is-intro");
         syncNav("cover");
@@ -2025,6 +2260,7 @@
       function showGallery() {
         stopGuide();
         closePreview();
+        pauseBackstageMedia();
         museum.classList.remove("is-intro", "is-backstage");
         syncNav("gallery");
         updateView();
@@ -2038,6 +2274,7 @@
         syncNav("backstage");
         pageInfo.textContent = "";
         artLabel.textContent = backstageTitle;
+        setBackstageFocus(backstageFocus);
       }
 
       function goPrev() {
@@ -2152,9 +2389,26 @@
           return;
         }
         if (museum.classList.contains("is-preview")) return;
+        if (museum.classList.contains("is-backstage")) {
+          if (event.key === "ArrowLeft") {
+            setBackstageFocus(backstageFocus - 1);
+            return;
+          }
+          if (event.key === "ArrowRight") {
+            setBackstageFocus(backstageFocus + 1);
+            return;
+          }
+          if (event.key === " " || event.key === "Spacebar") {
+            event.preventDefault();
+            toggleBackstagePlayback();
+            return;
+          }
+          return;
+        }
         if (event.key === "ArrowLeft") goPrev();
         if (event.key === "ArrowRight") goNext();
       });
+      setupBackstageMedia();
       showCover();
     </script>
   </body>
