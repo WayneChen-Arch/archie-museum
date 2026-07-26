@@ -2118,7 +2118,9 @@
         velocity: 0,
         axis: null,
         dragged: false,
-        range: null
+        range: null,
+        surface: null,
+        listening: false
       };
 
       function syncNav(view) {
@@ -2630,6 +2632,14 @@
         return offset;
       }
 
+      function stopGalleryDragListening() {
+        if (!galleryDrag.listening) return;
+        window.removeEventListener("pointermove", onGalleryPointerMove, true);
+        window.removeEventListener("pointerup", endGalleryDrag, true);
+        window.removeEventListener("pointercancel", endGalleryDrag, true);
+        galleryDrag.listening = false;
+      }
+
       function endGalleryDrag(event) {
         if (galleryDrag.pointerId === null) return;
         if (event && event.pointerId !== galleryDrag.pointerId) return;
@@ -2638,21 +2648,26 @@
         const dragged = galleryDrag.dragged;
         const velocity = galleryDrag.velocity;
         const overscrolledRight = readTranslateX(mainTrack) - galleryDrag.originT;
+        const surface = galleryDrag.surface;
         galleryDrag.pointerId = null;
         galleryDrag.axis = null;
         galleryDrag.dragged = false;
+        galleryDrag.surface = null;
         museum.classList.remove("is-gallery-dragging");
+        stopGalleryDragListening();
 
-        try {
-          if (event && event.currentTarget && event.currentTarget.releasePointerCapture) {
-            event.currentTarget.releasePointerCapture(pointerId);
+        if (surface) {
+          try {
+            if (surface.hasPointerCapture && surface.hasPointerCapture(pointerId)) {
+              surface.releasePointerCapture(pointerId);
+            }
+          } catch (_) {
+            /* already released */
           }
-        } catch (_) {
-          /* already released */
         }
 
         if (!dragged) {
-          setTracksOffset(readTranslateX(mainTrack), true);
+          // Leave click alone so artwork preview still opens.
           return;
         }
 
@@ -2691,17 +2706,23 @@
         galleryDrag.axis = null;
         galleryDrag.dragged = false;
         galleryDrag.range = getGalleryOffsetRange();
+        galleryDrag.surface = event.currentTarget;
 
-        try {
-          event.currentTarget.setPointerCapture(event.pointerId);
-        } catch (_) {
-          /* ignore */
+        // Do not capture yet — early capture steals the click target from frames.
+        if (!galleryDrag.listening) {
+          window.addEventListener("pointermove", onGalleryPointerMove, { capture: true, passive: false });
+          window.addEventListener("pointerup", endGalleryDrag, true);
+          window.addEventListener("pointercancel", endGalleryDrag, true);
+          galleryDrag.listening = true;
         }
       }
 
       function onGalleryPointerMove(event) {
         if (galleryDrag.pointerId !== event.pointerId) return;
-        if (!isGalleryBrowseMode()) return;
+        if (!isGalleryBrowseMode()) {
+          endGalleryDrag(event);
+          return;
+        }
 
         const dx = event.clientX - galleryDrag.startX;
         const dy = event.clientY - galleryDrag.startY;
@@ -2712,6 +2733,14 @@
           if (galleryDrag.axis === "y") {
             endGalleryDrag(event);
             return;
+          }
+          // Capture only after horizontal drag is confirmed.
+          if (galleryDrag.surface) {
+            try {
+              galleryDrag.surface.setPointerCapture(event.pointerId);
+            } catch (_) {
+              /* ignore */
+            }
           }
         }
         if (galleryDrag.axis !== "x") return;
@@ -2985,12 +3014,6 @@
       const reflectionZone = document.querySelector(".reflection-zone");
       [mainStage, reflectionZone].forEach((surface) => {
         surface.addEventListener("pointerdown", onGalleryPointerDown);
-        surface.addEventListener("pointermove", onGalleryPointerMove, { passive: false });
-        surface.addEventListener("pointerup", endGalleryDrag);
-        surface.addEventListener("pointercancel", endGalleryDrag);
-        surface.addEventListener("lostpointercapture", (event) => {
-          if (galleryDrag.pointerId === event.pointerId) endGalleryDrag(event);
-        });
       });
       window.addEventListener("keydown", (event) => {
         if (event.key === "Escape" && museum.classList.contains("is-preview")) {
