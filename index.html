@@ -1188,7 +1188,7 @@
       .preview-layer {
         position: absolute;
         inset: 0;
-        z-index: 8;
+        z-index: 20;
         padding: 0;
         background: rgba(232, 232, 230, 0.94);
         backdrop-filter: blur(8px);
@@ -1209,6 +1209,7 @@
       .museum.is-preview .intro-screen,
       .museum.is-preview .backstage-screen,
       .museum.is-preview .art-label,
+      .museum.is-preview .site-nav,
       .museum.is-preview .lang-switch {
         opacity: 0;
         visibility: hidden;
@@ -1217,18 +1218,21 @@
 
       .preview-close {
         position: absolute;
-        top: 1.4rem;
-        right: 1.5rem;
-        z-index: 3;
-        width: 32px;
-        height: 32px;
+        top: 1.15rem;
+        right: 1.15rem;
+        z-index: 5;
+        width: 44px;
+        height: 44px;
         border: 0;
         background: transparent;
         color: var(--ui-muted);
-        font-size: 22px;
+        font-size: 28px;
         line-height: 1;
         cursor: pointer;
-        opacity: 0.75;
+        opacity: 0.8;
+        display: grid;
+        place-items: center;
+        -webkit-tap-highlight-color: transparent;
       }
 
       .preview-close:hover {
@@ -2400,6 +2404,8 @@
         previewLayer.setAttribute("aria-hidden", "true");
         previewIndex = null;
         syncPreviewProcess(null);
+        // Prevent the same tap/click from immediately reopening a gallery frame underneath.
+        suppressClickUntil = Date.now() + 450;
       }
 
       function frameMarkup({ size, image, alt, attrs = "", workIndex = "" }) {
@@ -2768,9 +2774,17 @@
       navGalleryBtn.addEventListener("click", showGallery);
       navBackstageBtn.addEventListener("click", showBackstage);
       enterBtn.addEventListener("click", showGallery);
-      previewClose.addEventListener("click", closePreview);
+      previewClose.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        closePreview();
+      });
       previewLayer.addEventListener("click", (event) => {
-        if (event.target === previewLayer) closePreview();
+        if (event.target === previewLayer || event.target === previewClose) {
+          event.preventDefault();
+          event.stopPropagation();
+          closePreview();
+        }
       });
 
       commentForm.addEventListener("submit", (event) => {
