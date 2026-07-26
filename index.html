@@ -196,6 +196,18 @@
         bottom: var(--stage-bottom);
         overflow: hidden;
         transition: opacity 420ms ease, visibility 420ms ease;
+        touch-action: pan-y;
+      }
+
+      .museum:not(.is-intro):not(.is-backstage):not(.is-preview) .main-stage,
+      .museum:not(.is-intro):not(.is-backstage):not(.is-preview) .reflection-zone {
+        cursor: grab;
+      }
+
+      .museum.is-gallery-dragging,
+      .museum.is-gallery-dragging * {
+        cursor: grabbing !important;
+        user-select: none !important;
       }
 
       .track {
@@ -207,6 +219,11 @@
         box-sizing: border-box;
         will-change: transform;
         transition: transform 980ms cubic-bezier(0.22, 0.61, 0.36, 1);
+      }
+
+      .track.is-dragging,
+      .reflection-track.is-dragging {
+        transition: none !important;
       }
 
       .work-item,
@@ -2094,11 +2111,21 @@
       const commentText = document.getElementById("commentText");
 
       let current = 0;
-      let touchStartX = 0;
-      let touchStartY = 0;
       let suppressClickUntil = 0;
       let pagingLockedUntil = 0;
       let previewIndex = null;
+      const galleryDrag = {
+        pointerId: null,
+        startX: 0,
+        startY: 0,
+        originT: 0,
+        lastX: 0,
+        lastTime: 0,
+        velocity: 0,
+        axis: null,
+        dragged: false,
+        range: null
+      };
 
       function syncNav(view) {
         const buttons = {
@@ -2566,6 +2593,153 @@
         return stageRect.width / 2 - naturalLeft - focusRect.width / 2;
       }
 
+      function isGalleryBrowseMode() {
+        return (
+          !museum.classList.contains("is-intro") &&
+          !museum.classList.contains("is-preview") &&
+          !museum.classList.contains("is-backstage")
+        );
+      }
+
+      function setTracksOffset(offset, animate) {
+        mainTrack.classList.toggle("is-dragging", !animate);
+        reflectionTrack.classList.toggle("is-dragging", !animate);
+        mainTrack.style.transform = `translateX(${offset}px)`;
+        reflectionTrack.style.transform = `scaleY(-1) translate(${offset}px, 6%)`;
+      }
+
+      function getGalleryOffsetRange() {
+        const offsets = works.map((_, index) => getCenterOffset(index));
+        return {
+          offsets,
+          min: Math.min(...offsets),
+          max: Math.max(...offsets)
+        };
+      }
+
+      function nearestWorkIndexForOffset(offset, offsets) {
+        let bestIndex = 0;
+        let bestDist = Infinity;
+        offsets.forEach((value, index) => {
+          const dist = Math.abs(value - offset);
+          if (dist < bestDist) {
+            bestDist = dist;
+            bestIndex = index;
+          }
+        });
+        return bestIndex;
+      }
+
+      function resistDragOffset(offset, min, max) {
+        if (offset > max) return max + (offset - max) * 0.28;
+        if (offset < min) return min + (offset - min) * 0.28;
+        return offset;
+      }
+
+      function endGalleryDrag(event) {
+        if (galleryDrag.pointerId === null) return;
+        if (event && event.pointerId !== galleryDrag.pointerId) return;
+
+        const pointerId = galleryDrag.pointerId;
+        const dragged = galleryDrag.dragged;
+        const velocity = galleryDrag.velocity;
+        const overscrolledRight = readTranslateX(mainTrack) - galleryDrag.originT;
+        galleryDrag.pointerId = null;
+        galleryDrag.axis = null;
+        galleryDrag.dragged = false;
+        museum.classList.remove("is-gallery-dragging");
+
+        try {
+          if (event && event.currentTarget && event.currentTarget.releasePointerCapture) {
+            event.currentTarget.releasePointerCapture(pointerId);
+          }
+        } catch (_) {
+          /* already released */
+        }
+
+        if (!dragged) {
+          setTracksOffset(readTranslateX(mainTrack), true);
+          return;
+        }
+
+        suppressClickUntil = Date.now() + 450;
+        const range = galleryDrag.range || getGalleryOffsetRange();
+        galleryDrag.range = null;
+        let projected = readTranslateX(mainTrack) + velocity * 260;
+        projected = Math.max(range.min, Math.min(range.max, projected));
+        const nextIndex = nearestWorkIndexForOffset(projected, range.offsets);
+
+        // Pulling the first work far to the right returns to the cover.
+        if (current === 0 && nextIndex === 0 && (velocity > 0.75 || overscrolledRight > 120)) {
+          setTracksOffset(readTranslateX(mainTrack), true);
+          showCover();
+          return;
+        }
+
+        stopGuide();
+        current = nextIndex;
+        pagingLockedUntil = Date.now() + 320;
+        updateView();
+      }
+
+      function onGalleryPointerDown(event) {
+        if (!isGalleryBrowseMode()) return;
+        if (event.pointerType === "mouse" && event.button !== 0) return;
+        if (event.target.closest("button, a, input, textarea, .audio-guide")) return;
+
+        galleryDrag.pointerId = event.pointerId;
+        galleryDrag.startX = event.clientX;
+        galleryDrag.startY = event.clientY;
+        galleryDrag.originT = readTranslateX(mainTrack);
+        galleryDrag.lastX = event.clientX;
+        galleryDrag.lastTime = performance.now();
+        galleryDrag.velocity = 0;
+        galleryDrag.axis = null;
+        galleryDrag.dragged = false;
+        galleryDrag.range = getGalleryOffsetRange();
+
+        try {
+          event.currentTarget.setPointerCapture(event.pointerId);
+        } catch (_) {
+          /* ignore */
+        }
+      }
+
+      function onGalleryPointerMove(event) {
+        if (galleryDrag.pointerId !== event.pointerId) return;
+        if (!isGalleryBrowseMode()) return;
+
+        const dx = event.clientX - galleryDrag.startX;
+        const dy = event.clientY - galleryDrag.startY;
+
+        if (!galleryDrag.axis) {
+          if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+          galleryDrag.axis = Math.abs(dx) >= Math.abs(dy) ? "x" : "y";
+          if (galleryDrag.axis === "y") {
+            endGalleryDrag(event);
+            return;
+          }
+        }
+        if (galleryDrag.axis !== "x") return;
+
+        event.preventDefault();
+        galleryDrag.dragged = true;
+        museum.classList.add("is-gallery-dragging");
+
+        const now = performance.now();
+        const dt = now - galleryDrag.lastTime;
+        if (dt > 0) {
+          const instant = (event.clientX - galleryDrag.lastX) / dt;
+          galleryDrag.velocity = galleryDrag.velocity * 0.7 + instant * 0.3;
+        }
+        galleryDrag.lastX = event.clientX;
+        galleryDrag.lastTime = now;
+
+        const range = galleryDrag.range || getGalleryOffsetRange();
+        const nextOffset = resistDragOffset(galleryDrag.originT + dx, range.min, range.max);
+        setTracksOffset(nextOffset, false);
+      }
+
       let refreshTimer = 0;
       function scheduleViewRefresh() {
         if (museum.classList.contains("is-intro") || museum.classList.contains("is-backstage")) return;
@@ -2581,8 +2755,7 @@
         if (!item || !work) return;
 
         const offset = getCenterOffset(current);
-        mainTrack.style.transform = `translateX(${offset}px)`;
-        reflectionTrack.style.transform = `scaleY(-1) translate(${offset}px, 6%)`;
+        setTracksOffset(offset, true);
         pageInfo.textContent = `${current + 1}/${works.length}`;
         artLabel.textContent = galleryTitle();
 
@@ -2815,33 +2988,16 @@
       });
 
       const mainStage = document.querySelector(".main-stage");
-      mainStage.addEventListener(
-        "touchstart",
-        (event) => {
-          touchStartX = event.changedTouches[0].clientX;
-          touchStartY = event.changedTouches[0].clientY;
-        },
-        { passive: true }
-      );
-      mainStage.addEventListener(
-        "touchend",
-        (event) => {
-          if (
-            museum.classList.contains("is-intro") ||
-            museum.classList.contains("is-preview") ||
-            museum.classList.contains("is-backstage")
-          )
-            return;
-          const touch = event.changedTouches[0];
-          const deltaX = touch.clientX - touchStartX;
-          const deltaY = touch.clientY - touchStartY;
-          if (Math.abs(deltaX) < 40 || Math.abs(deltaX) < Math.abs(deltaY)) return;
-          suppressClickUntil = Date.now() + 450;
-          if (deltaX < 0) goNext();
-          else goPrev();
-        },
-        { passive: true }
-      );
+      const reflectionZone = document.querySelector(".reflection-zone");
+      [mainStage, reflectionZone].forEach((surface) => {
+        surface.addEventListener("pointerdown", onGalleryPointerDown);
+        surface.addEventListener("pointermove", onGalleryPointerMove, { passive: false });
+        surface.addEventListener("pointerup", endGalleryDrag);
+        surface.addEventListener("pointercancel", endGalleryDrag);
+        surface.addEventListener("lostpointercapture", (event) => {
+          if (galleryDrag.pointerId === event.pointerId) endGalleryDrag(event);
+        });
+      });
       window.addEventListener("keydown", (event) => {
         if (event.key === "Escape" && museum.classList.contains("is-preview")) {
           closePreview();
