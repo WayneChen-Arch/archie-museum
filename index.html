@@ -1273,6 +1273,34 @@
         line-height: 1.55;
       }
 
+      .preview-process {
+        margin: 0;
+        display: none;
+        flex-direction: column;
+        gap: 0.4rem;
+        min-width: 0;
+      }
+
+      .preview-process.is-visible {
+        display: flex;
+      }
+
+      .preview-process img {
+        display: block;
+        width: 100%;
+        height: auto;
+        max-height: 160px;
+        object-fit: cover;
+        object-position: center;
+      }
+
+      .preview-process figcaption {
+        margin: 0;
+        color: var(--ui-muted);
+        font-size: 10px;
+        line-height: 1.5;
+      }
+
       .comment-panel {
         display: flex;
         flex-direction: column;
@@ -1503,6 +1531,12 @@
           padding-top: 0.5rem;
         }
 
+        .preview-process img {
+          max-height: 200px;
+          object-fit: contain;
+          object-position: left center;
+        }
+
         .preview-art .frame {
           max-width: 100%;
         }
@@ -1701,6 +1735,10 @@
         <button class="preview-close" id="previewClose" type="button" aria-label="關閉預覽" data-i18n-aria="closePreview">×</button>
         <aside class="preview-side">
           <div class="preview-meta" id="previewMeta"></div>
+          <figure class="preview-process" id="previewProcess" hidden>
+            <img id="previewProcessImage" src="" alt="" />
+            <figcaption id="previewProcessCaption"></figcaption>
+          </figure>
           <div class="comment-panel">
             <h2 data-i18n="comments">參觀評價</h2>
             <div class="comment-list" id="commentList"></div>
@@ -1882,6 +1920,24 @@
           series: "thank-you-teachers",
           panel: "III / III",
           notes: { "zh-Hans": "玫红与荧光绿撞色，把毕业那天的谢谢留在墙上。", "zh-Hant": "玫紅與熒光綠撞色，把畢業那天的謝謝留在牆上。", en: "Magenta and neon green keep the thank-you of graduation day on the wall." }
+        },
+        {
+          titles: { "zh-Hans": "我的妈妈", "zh-Hant": "我的媽媽", en: "My Mom" },
+          year: "2026",
+          materials: { "zh-Hans": "液晶画板", "zh-Hant": "液晶畫板", en: "LCD drawing board" },
+          image: art("我的妈妈 A5.png"),
+          size: "a5",
+          processImage: art("我的妈妈 (创作过程，将半透明液晶画板贴在妈妈脸上的速写).jpg"),
+          processCaptions: {
+            "zh-Hans": "创作过程：将半透明液晶画板贴在妈妈脸上的速写",
+            "zh-Hant": "創作過程：將半透明液晶畫板貼在媽媽臉上的速寫",
+            en: "Process: sketching with a translucent LCD board against Mom’s face"
+          },
+          notes: {
+            "zh-Hans": "绿与黄的线条勾出笑脸与眼镜，是画给妈妈的肖像。",
+            "zh-Hant": "綠與黃的線條勾出笑臉與眼鏡，是畫給媽媽的肖像。",
+            en: "Green and yellow lines sketch a smile and glasses—a portrait for Mom."
+          }
         }
       ];
 
@@ -2023,6 +2079,9 @@
       const previewLayer = document.getElementById("previewLayer");
       const previewClose = document.getElementById("previewClose");
       const previewMeta = document.getElementById("previewMeta");
+      const previewProcess = document.getElementById("previewProcess");
+      const previewProcessImage = document.getElementById("previewProcessImage");
+      const previewProcessCaption = document.getElementById("previewProcessCaption");
       const previewFrame = document.getElementById("previewFrame");
       const previewImage = document.getElementById("previewImage");
       const commentList = document.getElementById("commentList");
@@ -2117,6 +2176,27 @@
         return pick(work.notes);
       }
 
+      function workProcessCaption(work) {
+        return pick(work.processCaptions);
+      }
+
+      function syncPreviewProcess(work) {
+        if (!work || !work.processImage) {
+          previewProcess.classList.remove("is-visible");
+          previewProcess.hidden = true;
+          previewProcessImage.removeAttribute("src");
+          previewProcessImage.alt = "";
+          previewProcessCaption.textContent = "";
+          return;
+        }
+        const caption = workProcessCaption(work);
+        previewProcessImage.src = work.processImage;
+        previewProcessImage.alt = caption || workHeadline(work);
+        previewProcessCaption.textContent = caption;
+        previewProcess.hidden = false;
+        previewProcess.classList.add("is-visible");
+      }
+
       function guideScript(work) {
         if (lang === "en") {
           return `${workHeadline(work)}. ${t("materialSpeech")}, ${workMaterial(work)}. ${workNote(work)}`;
@@ -2196,6 +2276,7 @@
             if (materialNode) materialNode.textContent = workMaterial(work);
             if (noteNode) noteNode.textContent = workNote(work);
             previewImage.alt = workHeadline(work);
+            syncPreviewProcess(work);
             const guideBtn = previewMeta.querySelector(".audio-guide");
             if (guideBtn) {
               guideBtn.setAttribute("aria-label", t("audioGuide"));
@@ -2303,6 +2384,7 @@
         previewFrame.className = `frame size-${work.size}`;
         previewImage.src = work.image;
         previewImage.alt = workHeadline(work);
+        syncPreviewProcess(work);
         renderComments(index);
         museum.classList.add("is-preview");
         previewLayer.setAttribute("aria-hidden", "false");
@@ -2317,6 +2399,7 @@
         museum.classList.remove("is-preview");
         previewLayer.setAttribute("aria-hidden", "true");
         previewIndex = null;
+        syncPreviewProcess(null);
       }
 
       function frameMarkup({ size, image, alt, attrs = "", workIndex = "" }) {
