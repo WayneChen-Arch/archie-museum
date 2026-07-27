@@ -199,6 +199,22 @@
         touch-action: pan-y;
       }
 
+      /* Phone / touch gallery: take over horizontal swipes; no CSS snap easing. */
+      .museum.is-free-scroll .main-stage {
+        touch-action: none;
+      }
+
+      .museum.is-free-scroll .track,
+      .museum.is-free-scroll .reflection-track {
+        transition: none !important;
+      }
+
+      .museum.is-free-scroll .series-frames .frame,
+      .museum.is-free-scrolling .series-frames .frame,
+      .museum.is-free-scrolling .frame {
+        transition: none !important;
+      }
+
       .museum.is-gallery-dragging,
       .museum.is-gallery-dragging * {
         user-select: none !important;
@@ -2195,8 +2211,25 @@
         coastRaf: 0
       };
 
+      let freeScrollRestoreTimer = 0;
+
       function prefersFreeGallerySwipe() {
         return window.matchMedia("(max-width: 700px), (hover: none) and (pointer: coarse)").matches;
+      }
+
+      function setFreeScrollMode(enabled) {
+        museum.classList.toggle("is-free-scroll", Boolean(enabled) && prefersFreeGallerySwipe());
+      }
+
+      function beginFreeScrolling() {
+        if (!prefersFreeGallerySwipe()) return;
+        window.clearTimeout(freeScrollRestoreTimer);
+        setFreeScrollMode(true);
+        museum.classList.add("is-free-scrolling");
+      }
+
+      function endFreeScrolling() {
+        museum.classList.remove("is-free-scrolling");
       }
 
       function cancelGalleryCoast() {
@@ -2766,16 +2799,21 @@
         return offset;
       }
 
-      function syncGalleryIndexFromOffset(offset, offsets) {
+      function syncGalleryIndexFromOffset(offset, offsets, options = {}) {
         const nextIndex = nearestWorkIndexForOffset(offset, offsets);
+        const light = Boolean(options.light);
         if (nextIndex === current) {
           pageInfo.textContent = `${current + 1}/${works.length}`;
           return;
         }
         current = nextIndex;
+        pageInfo.textContent = `${current + 1}/${works.length}`;
+        // While fingers are gliding, only refresh the page counter — avoid
+        // active-frame / series-meta DOM thrash that feels like snap pauses.
+        if (light) return;
+
         const work = works[current];
         const item = indexToUnit.get(current);
-        pageInfo.textContent = `${current + 1}/${works.length}`;
         artLabel.textContent = galleryTitle();
         mainTrack.querySelectorAll(".series-frames .frame").forEach((frame) => {
           frame.classList.toggle("is-active", Number(frame.dataset.workIndex) === current);
@@ -2805,15 +2843,16 @@
 
       function finishFreeSwipe(offset, range) {
         const clamped = Math.max(range.min, Math.min(range.max, offset));
+        // Keep transition disabled so the coast doesn't settle with snap easing.
         setTracksOffset(clamped, false);
-        mainTrack.classList.remove("is-dragging");
-        reflectionTrack.classList.remove("is-dragging");
-        syncGalleryIndexFromOffset(clamped, range.offsets);
+        syncGalleryIndexFromOffset(clamped, range.offsets, { light: false });
+        endFreeScrolling();
         galleryDrag.coastRaf = 0;
       }
 
       function coastFreeSwipe(initialVelocity, range) {
         cancelGalleryCoast();
+        beginFreeScrolling();
         let offset = readTranslateX(mainTrack);
         let velocity = initialVelocity; // px per ms
         let last = performance.now();
@@ -2823,7 +2862,7 @@
         const step = (now) => {
           const dt = Math.min(34, Math.max(0, now - last));
           last = now;
-          const decel = 0.0038; // px/ms^2
+          const decel = 0.0022; // px/ms^2 — longer, softer glide on phones
           if (Math.abs(velocity) <= decel * dt) {
             finishFreeSwipe(offset, range);
             return;
@@ -2838,7 +2877,7 @@
             velocity = 0;
           }
           setTracksOffset(offset, false);
-          syncGalleryIndexFromOffset(offset, range.offsets);
+          syncGalleryIndexFromOffset(offset, range.offsets, { light: true });
           if (velocity === 0) {
             finishFreeSwipe(offset, range);
             return;
@@ -2884,6 +2923,7 @@
 
         if (!dragged) {
           // Leave click alone so artwork preview still opens.
+          endFreeScrolling();
           return;
         }
 
@@ -2894,6 +2934,8 @@
 
         // Pulling the first work far to the right returns to the cover.
         if (current === 0 && (velocity > 0.75 || overscrolledRight > 120) && liveOffset >= range.max - 8) {
+          endFreeScrolling();
+          setFreeScrollMode(false);
           setTracksOffset(liveOffset, true);
           showCover();
           return;
@@ -2905,16 +2947,16 @@
         if (prefersFreeGallerySwipe()) {
           const clamped = Math.max(range.min, Math.min(range.max, liveOffset));
           setTracksOffset(clamped, false);
-          syncGalleryIndexFromOffset(clamped, range.offsets);
-          if (Math.abs(velocity) > 0.05) {
+          if (Math.abs(velocity) > 0.04) {
             coastFreeSwipe(velocity, range);
           } else {
-            mainTrack.classList.remove("is-dragging");
-            reflectionTrack.classList.remove("is-dragging");
+            syncGalleryIndexFromOffset(clamped, range.offsets, { light: false });
+            endFreeScrolling();
           }
           return;
         }
 
+        endFreeScrolling();
         let projected = liveOffset + velocity * 260;
         projected = Math.max(range.min, Math.min(range.max, projected));
         current = nearestWorkIndexForOffset(projected, range.offsets);
@@ -2928,6 +2970,7 @@
         if (event.target.closest("button, a, input, textarea, .audio-guide")) return;
 
         cancelGalleryCoast();
+        if (prefersFreeGallerySwipe()) beginFreeScrolling();
         galleryDrag.pointerId = event.pointerId;
         galleryDrag.startX = event.clientX;
         galleryDrag.startY = event.clientY;
@@ -3003,7 +3046,12 @@
           // Avoid recentering while phones are free-scrolling the track.
           if (prefersFreeGallerySwipe() && isGalleryBrowseMode()) {
             const range = getGalleryOffsetRange();
-            syncGalleryIndexFromOffset(readTranslateX(mainTrack), range.offsets);
+            const offset = readTranslateX(mainTrack);
+            setTracksOffset(offset, false);
+            syncGalleryIndexFromOffset(offset, range.offsets, {
+              light: museum.classList.contains("is-free-scrolling")
+            });
+            setFreeScrollMode(true);
             return;
           }
           updateView();
@@ -3017,8 +3065,21 @@
         const item = indexToUnit.get(current);
         if (!item || !work) return;
 
+        endFreeScrolling();
+        cancelGalleryCoast();
         const offset = getCenterOffset(current);
-        setTracksOffset(offset, true);
+        const free = prefersFreeGallerySwipe();
+        if (free) {
+          // Allow button/keyboard snap animation, then return to free-scroll mode.
+          setFreeScrollMode(false);
+          setTracksOffset(offset, true);
+          window.clearTimeout(freeScrollRestoreTimer);
+          freeScrollRestoreTimer = window.setTimeout(() => {
+            if (isGalleryBrowseMode() && prefersFreeGallerySwipe()) setFreeScrollMode(true);
+          }, 1000);
+        } else {
+          setTracksOffset(offset, true);
+        }
         pageInfo.textContent = `${current + 1}/${works.length}`;
         artLabel.textContent = galleryTitle();
 
@@ -3140,6 +3201,9 @@
         stopGuide();
         closePreview();
         pauseBackstageMedia();
+        cancelGalleryCoast();
+        endFreeScrolling();
+        setFreeScrollMode(false);
         museum.classList.remove("is-backstage");
         museum.classList.add("is-intro");
         syncNav("cover");
@@ -3159,6 +3223,9 @@
       function showBackstage() {
         stopGuide();
         closePreview();
+        cancelGalleryCoast();
+        endFreeScrolling();
+        setFreeScrollMode(false);
         museum.classList.remove("is-intro");
         museum.classList.add("is-backstage");
         syncNav("backstage");
