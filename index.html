@@ -817,16 +817,22 @@
       }
 
       .cover-piece {
-        display: flex;
-        align-items: flex-start;
+        display: grid;
+        grid-template-columns: auto minmax(0, 360px);
+        grid-template-areas:
+          "portrait preface"
+          "portrait logo"
+          "portrait enter";
+        column-gap: clamp(1.6rem, 3.5vw, 3rem);
+        row-gap: 1.15rem;
+        align-items: start;
         justify-content: center;
-        gap: clamp(1.6rem, 3.5vw, 3rem);
         width: 100%;
       }
 
       .cover-portrait {
-        flex: 0 0 auto;
-        align-self: flex-start;
+        grid-area: portrait;
+        align-self: start;
         margin: 0;
         padding: 0;
         border: 0;
@@ -844,20 +850,11 @@
         object-position: center;
       }
 
-      .cover-meta {
-        flex: 1 1 auto;
-        max-width: 360px;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1.15rem;
-        text-align: left;
-        min-width: 0;
-      }
-
       .cover-preface {
+        grid-area: preface;
         width: 100%;
         color: var(--text-strong);
+        text-align: left;
       }
 
       .cover-preface [data-lang-panel] {
@@ -882,6 +879,7 @@
       }
 
       .cover-logo {
+        grid-area: logo;
         display: block;
         width: min(118px, 26vw);
         height: auto;
@@ -890,10 +888,11 @@
       }
 
       .enter-exhibition {
+        grid-area: enter;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        align-self: center;
+        justify-self: start;
         gap: 0.5rem;
         margin-top: 0.1rem;
         padding: 0;
@@ -1176,15 +1175,35 @@
         }
 
         .cover-piece {
+          display: flex;
           flex-direction: column;
           align-items: stretch;
-          gap: 1.25rem;
+          gap: 1.1rem;
           width: 100%;
         }
 
-        .cover-portrait {
+        .cover-logo {
+          order: 1;
+          width: min(108px, 38vw);
+          align-self: flex-start;
+        }
+
+        .cover-preface {
+          order: 2;
           width: 100%;
-          align-self: stretch;
+        }
+
+        .enter-exhibition {
+          order: 3;
+          align-self: flex-start;
+          justify-self: auto;
+        }
+
+        .cover-portrait {
+          order: 4;
+          width: 56%;
+          max-width: 200px;
+          align-self: flex-start;
         }
 
         .cover-portrait img {
@@ -1195,13 +1214,6 @@
           object-fit: cover;
         }
 
-        .cover-meta {
-          max-width: none;
-          width: 100%;
-          gap: 1rem;
-          align-items: flex-start;
-        }
-
         .cover-preface [data-lang-panel] p {
           font-size: 10.5px;
           line-height: 1.7;
@@ -1209,15 +1221,6 @@
 
         .cover-preface [data-lang-panel][lang="en"] p {
           font-size: 9.5px;
-        }
-
-        .cover-logo {
-          width: min(100px, 34vw);
-          align-self: flex-start;
-        }
-
-        .enter-exhibition {
-          align-self: flex-start;
         }
 
         .museum.is-backstage .site-nav {
@@ -1698,43 +1701,41 @@
         <div class="cover-stage">
           <h1 id="introTitle" class="visually-hidden" data-i18n="museumName">安遲美術館</h1>
           <article class="cover-piece">
+            <img
+              class="cover-logo"
+              src="assets/4360.png?v=2"
+              alt="安遲美術館 Archie Art Museum"
+              data-i18n-alt="logoAlt"
+              width="664"
+              height="487"
+            />
+            <div class="cover-preface">
+              <div data-lang-panel="zh-Hans" lang="zh-Hans">
+                <p>欢迎来到安迟美术馆，这是一位三岁小朋友创作集合。</p>
+                <p>展览分为展廊与幕后两个部分。</p>
+                <p>展廊，呈现安迟日常的绘画与雕塑创作，这里有他画下的第一幅画。他最爱的创作主题：下雨、刮风、彩虹。除了这些系列作品，还有他的第一幅人物肖像画。</p>
+                <p>幕后，以照片与影片的方式，记录这些作品从无到有的过程。分享创作背后的故事。</p>
+                <p>在这里，希望你能感受到他创作的自由和热情。若有想说的，欢迎在每幅画的留言区写下感想。愿你有个好心情。</p>
+              </div>
+              <div data-lang-panel="zh-Hant" lang="zh-Hant" class="is-active">
+                <p>歡迎來到安遲美術館，這是一位三歲小朋友創作集合。</p>
+                <p>展覽分為展廊與幕後兩個部分。</p>
+                <p>展廊，呈現安遲日常的繪畫與雕塑創作，這裡有他畫下的第一幅畫。他最愛的創作主題：下雨、颳風、彩虹。除了這些系列作品，還有他的第一幅人物肖像畫。</p>
+                <p>幕後，以照片與影片的方式，記錄這些作品從無到有的過程。分享創作背後的故事。</p>
+                <p>在這裡，希望你能感受到他創作的自由和熱情。若有想說的，歡迎在每幅畫的留言區寫下感想。願你有個好心情。</p>
+              </div>
+              <div data-lang-panel="en" lang="en">
+                <p>Welcome to Archie Art Museum, a collection of works by a three-year-old.</p>
+                <p>The exhibition has two parts: the Gallery and Behind the Scenes.</p>
+                <p>The Gallery presents Archie’s everyday paintings and sculptures, including his first drawing. His favorite subjects—rain, wind, and rainbows—run through these series, along with his first portrait.</p>
+                <p>Behind the Scenes records, through photos and video, how these works came into being, and shares the stories behind them.</p>
+                <p>We hope you feel the freedom and enthusiasm in his making. If you have something to say, leave a note under each work. Wishing you a good day.</p>
+              </div>
+            </div>
+            <button class="enter-exhibition" id="enterBtn" type="button" data-i18n="enter">進入展覽</button>
             <figure class="cover-portrait">
               <img src="assets/作者.jpg" alt="作者安迟" data-i18n-alt="coverPieceAlt" />
             </figure>
-            <div class="cover-meta">
-              <div class="cover-preface">
-                <div data-lang-panel="zh-Hans" lang="zh-Hans">
-                  <p>欢迎来到安迟美术馆，这是一位三岁小朋友创作集合。</p>
-                  <p>展览分为展廊与幕后两个部分。</p>
-                  <p>展廊，呈现安迟日常的绘画与雕塑创作，这里有他画下的第一幅画。他最爱的创作主题：下雨、刮风、彩虹。除了这些系列作品，还有他的第一幅人物肖像画。</p>
-                  <p>幕后，以照片与影片的方式，记录这些作品从无到有的过程。分享创作背后的故事。</p>
-                  <p>在这里，希望你能感受到他创作的自由和热情。若有想说的，欢迎在每幅画的留言区写下感想。愿你有个好心情。</p>
-                </div>
-                <div data-lang-panel="zh-Hant" lang="zh-Hant" class="is-active">
-                  <p>歡迎來到安遲美術館，這是一位三歲小朋友創作集合。</p>
-                  <p>展覽分為展廊與幕後兩個部分。</p>
-                  <p>展廊，呈現安遲日常的繪畫與雕塑創作，這裡有他畫下的第一幅畫。他最愛的創作主題：下雨、颳風、彩虹。除了這些系列作品，還有他的第一幅人物肖像畫。</p>
-                  <p>幕後，以照片與影片的方式，記錄這些作品從無到有的過程。分享創作背後的故事。</p>
-                  <p>在這裡，希望你能感受到他創作的自由和熱情。若有想說的，歡迎在每幅畫的留言區寫下感想。願你有個好心情。</p>
-                </div>
-                <div data-lang-panel="en" lang="en">
-                  <p>Welcome to Archie Art Museum, a collection of works by a three-year-old.</p>
-                  <p>The exhibition has two parts: the Gallery and Behind the Scenes.</p>
-                  <p>The Gallery presents Archie’s everyday paintings and sculptures, including his first drawing. His favorite subjects—rain, wind, and rainbows—run through these series, along with his first portrait.</p>
-                  <p>Behind the Scenes records, through photos and video, how these works came into being, and shares the stories behind them.</p>
-                  <p>We hope you feel the freedom and enthusiasm in his making. If you have something to say, leave a note under each work. Wishing you a good day.</p>
-                </div>
-              </div>
-              <img
-                class="cover-logo"
-                src="assets/4360.png?v=2"
-                alt="安遲美術館 Archie Art Museum"
-                data-i18n-alt="logoAlt"
-                width="664"
-                height="487"
-              />
-              <button class="enter-exhibition" id="enterBtn" type="button" data-i18n="enter">進入展覽</button>
-            </div>
           </article>
         </div>
       </section>
