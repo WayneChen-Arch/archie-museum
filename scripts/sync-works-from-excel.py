@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Generate or apply works.xlsx <-> index.html gallery copy.
+"""Sync works.xlsx <-> gallery copy in index.html (assets/).
 
 Usage:
-  python3 scripts/sync-works-from-excel.py export   # index.html -> works.xlsx
-  python3 scripts/sync-works-from-excel.py import   # works.xlsx -> index.html
+  python3 scripts/sync-works-from-excel.py export
+  python3 scripts/sync-works-from-excel.py import
 """
 
 from __future__ import annotations
@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import re
 import sys
+from datetime import datetime
 from pathlib import Path
 
 from openpyxl import Workbook, load_workbook
@@ -21,86 +22,95 @@ from opencc import OpenCC
 ROOT = Path(__file__).resolve().parents[1]
 HTML_PATH = ROOT / "index.html"
 XLSX_PATH = ROOT / "works.xlsx"
+ASSETS = ROOT / "assets"
 
 HEADERS = [
     "序号",
     "图片文件",
+    "画面尺寸",
     "名称",
     "年份",
+    "年龄",
     "创作媒介",
     "一句话介绍",
     "创作过程说明",
-    "名称（英文）",
-    "创作媒介（英文）",
-    "一句话介绍（英文）",
-    "创作过程说明（英文）",
 ]
+
+SIZE_TO_LABEL = {
+    "a3": "A3",
+    "a4": "A4",
+    "a5": "A5",
+    "tall": "A5加长",
+    "wide": "A4",
+    "series": "A5",
+}
 
 EDITABLE_NOTE = (
     "使用说明：\n"
-    "1. 请主要修改「名称」「年份」「创作媒介」「一句话介绍」「创作过程说明」这些简体中文列。\n"
-    "2. 「序号」和「图片文件」请勿改动，用于对应网页中的作品。\n"
-    "3. 英文列可按需修改；若英文列留空，同步时会保留网页里原来的英文。\n"
-    "4. 繁体中文无需手填：上传本文件到 GitHub 后，同步脚本会按简体自动转换为繁体，并写入网页三种语言。\n"
-    "5. 修改完成后，把本文件上传/覆盖到仓库根目录的 works.xlsx，并告知需要同步到网页。"
+    "1. 请主要修改「名称」「年份」「创作媒介」「一句话介绍」「创作过程说明」「画面尺寸」。\n"
+    "2. 「序号」和「图片文件」请勿随意改动；图片文件对应 assets/ 下不含扩展名的文件名。\n"
+    "3. 画面尺寸可用：A3 / A4 / A5 / A4加长 / A5加长。\n"
+    "4. 上传覆盖 works.xlsx 后运行：python3 scripts/sync-works-from-excel.py import\n"
+    "5. 同步规则：简体写入网页；繁体自动简转繁；英文列若之后扩展可再补。"
 )
 
 
 def s2t(text: str) -> str:
-    if not text:
-        return ""
-    return OpenCC("s2t").convert(text)
+    return OpenCC("s2t").convert(text) if text else ""
 
 
-def extract_works_block(html: str) -> tuple[str, str, str]:
-    start = html.find("const works = [")
+def extract_works_span(html: str) -> tuple[int, int]:
+    start = html.find("const art = (file) => encodeURI(`assets/${file}`);")
     if start < 0:
-        raise RuntimeError("找不到 const works = [")
-    end = html.find("\n      ];", start)
+        start = html.find("const art = (file) => encodeURI(`drawings/${file}`);")
+    if start < 0:
+        raise RuntimeError("找不到 art() 定义")
+    end = html.find("\n      const mainTrack", start)
     if end < 0:
-        raise RuntimeError("找不到 works 数组结尾")
-    end += len("\n      ];")
-    return html[:start], html[start:end], html[end:]
+        raise RuntimeError("找不到 works 后的 mainTrack")
+    return start, end
 
 
 def parse_works(html: str) -> list[dict]:
-    """Parse works objects with a light, structured regex (stable for this file)."""
-    _, block, _ = extract_works_block(html)
-    # Split on top-level object starts after "const works = ["
-    body = block[len("const works = [") : -len("];")].strip()
+    start, end = extract_works_span(html)
+    block = html[start:end]
+    body_m = re.search(r"const works = \[([\s\S]*)\];\s*$", block)
+    if not body_m:
+        raise RuntimeError("无法解析 works 数组")
+    body = body_m.group(1).strip()
     if body.endswith(","):
         body = body[:-1]
 
     objs: list[str] = []
     depth = 0
-    start = None
+    start_i = None
     for i, ch in enumerate(body):
         if ch == "{":
             if depth == 0:
-                start = i
+                start_i = i
             depth += 1
         elif ch == "}":
             depth -= 1
-            if depth == 0 and start is not None:
-                objs.append(body[start : i + 1])
-                start = None
+            if depth == 0 and start_i is not None:
+                objs.append(body[start_i : i + 1])
+                start_i = None
 
     works = []
     for obj in objs:
-        work = {
-            "titles": _pick_i18n(obj, "titles"),
-            "year": _pick_str(obj, "year"),
-            "materials": _pick_i18n(obj, "materials"),
-            "image_file": _pick_art(obj, "image"),
-            "size": _pick_str(obj, "size"),
-            "notes": _pick_i18n(obj, "notes"),
-            "process_file": _pick_art(obj, "processImage"),
-            "processCaptions": _pick_i18n(obj, "processCaptions") or {},
-            "series": _pick_str(obj, "series"),
-            "panel": _pick_str(obj, "panel"),
-            "raw": obj,
-        }
-        works.append(work)
+        works.append(
+            {
+                "titles": _pick_i18n(obj, "titles"),
+                "year": _pick_str(obj, "year"),
+                "materials": _pick_i18n(obj, "materials"),
+                "image_file": _pick_art(obj, "image"),
+                "size": _pick_str(obj, "size"),
+                "notes": _pick_i18n(obj, "notes"),
+                "process_file": _pick_art(obj, "processImage"),
+                "processCaptions": _pick_i18n(obj, "processCaptions") or {},
+                "series": _pick_str(obj, "series"),
+                "panel": _pick_str(obj, "panel"),
+            }
+        )
     return works
 
 
@@ -121,31 +131,18 @@ def _pick_i18n(obj: str, key: str) -> dict:
     body = m.group(1)
     out = {}
     for lang in ("zh-Hans", "zh-Hant", "en"):
-        lm = re.search(
-            rf'(?:"{lang}"|{re.escape(lang)}):\s*"((?:\\.|[^"\\])*)"',
-            body,
-        )
+        lm = re.search(rf'(?:"{lang}"|{re.escape(lang)}):\s*"((?:\\.|[^"\\])*)"', body)
         if lm:
             out[lang] = _unescape(lm.group(1))
     return out
 
 
 def _unescape(s: str) -> str:
-    return (
-        s.replace("\\n", "\n")
-        .replace("\\r", "")
-        .replace('\\"', '"')
-        .replace("\\\\", "\\")
-    )
+    return s.replace("\\n", "\n").replace("\\r", "").replace('\\"', '"').replace("\\\\", "\\")
 
 
 def _escape_js(s: str) -> str:
-    return (
-        s.replace("\\", "\\\\")
-        .replace('"', '\\"')
-        .replace("\n", "\\n")
-        .replace("\r", "")
-    )
+    return s.replace("\\", "\\\\").replace('"', '\\"').replace("\n", "\\n").replace("\r", "")
 
 
 def _i18n_literal(zh_hans: str, zh_hant: str, en: str) -> str:
@@ -179,87 +176,126 @@ def export_xlsx(works: list[dict]) -> None:
         cell = ws.cell(1, col, header)
         cell.font = header_font
         cell.fill = header_fill
-        cell.alignment = Alignment(wrap_text=True, vertical="center")
 
     for idx, work in enumerate(works, 1):
+        stem = Path(work["image_file"]).stem
         row = [
             idx,
-            work["image_file"],
+            stem,
+            SIZE_TO_LABEL.get(work["size"], work["size"].upper()),
             work["titles"].get("zh-Hans", ""),
             work["year"],
+            "",
             work["materials"].get("zh-Hans", ""),
-            work["notes"].get("zh-Hans", ""),
+            work["notes"].get("zh-Hans", "") or "无",
             work["processCaptions"].get("zh-Hans", ""),
-            work["titles"].get("en", ""),
-            work["materials"].get("en", ""),
-            work["notes"].get("en", ""),
-            work["processCaptions"].get("en", ""),
         ]
         for col, value in enumerate(row, 1):
             cell = ws.cell(idx + 1, col, value)
             cell.alignment = Alignment(wrap_text=True, vertical="top")
-            if col in (1, 2):
-                cell.fill = lock_fill
-            elif col in (3, 4, 5, 6, 7):
-                cell.fill = edit_fill
+            cell.fill = lock_fill if col in (1, 2) else edit_fill
 
-    widths = [6, 42, 16, 8, 14, 48, 36, 22, 18, 48, 36]
+    widths = [6, 28, 10, 22, 12, 8, 14, 48, 36]
     for i, width in enumerate(widths, 1):
         ws.column_dimensions[get_column_letter(i)].width = width
     ws.freeze_panes = "A2"
-    ws.auto_filter.ref = f"A1:{get_column_letter(len(HEADERS))}{len(works) + 1}"
-
     wb.save(XLSX_PATH)
     print(f"已导出 {len(works)} 件作品到 {XLSX_PATH}")
 
 
-def load_excel_rows() -> list[dict]:
-    if not XLSX_PATH.exists():
-        raise FileNotFoundError(f"找不到 {XLSX_PATH}")
-    wb = load_workbook(XLSX_PATH)
-    if "作品资料" not in wb.sheetnames:
-        raise RuntimeError("Excel 中缺少工作表「作品资料」")
-    ws = wb["作品资料"]
-    headers = [cell.value for cell in next(ws.iter_rows(min_row=1, max_row=1))]
-    expected = HEADERS
-    if headers[: len(expected)] != expected:
-        raise RuntimeError(f"表头不匹配。期望: {expected}，实际: {headers}")
+def map_size_label(raw: str) -> str:
+    raw = (raw or "").strip()
+    if "加长" in raw or "加長" in raw:
+        return "tall"
+    up = raw.upper()
+    if up.startswith("A3"):
+        return "a3"
+    if up.startswith("A5"):
+        return "a5"
+    if up.startswith("A4"):
+        return "a4"
+    return "a4"
 
+
+def find_asset(stem: str) -> str:
+    cands = [
+        p.name
+        for p in ASSETS.iterdir()
+        if p.name != "4360.png"
+        and p.suffix.lower() in {".png", ".jpg", ".jpeg", ".webp"}
+        and p.stem == stem
+    ]
+    if not cands:
+        raise FileNotFoundError(f"assets 中找不到：{stem}")
+    non_proc = [n for n in cands if "创作过程" not in n]
+    return sorted(non_proc or cands)[0]
+
+
+def find_process(stem: str) -> str:
+    for p in ASSETS.iterdir():
+        if p.stem.startswith(stem) and "创作过程" in p.name:
+            return p.name
+    return ""
+
+
+def load_excel_rows() -> list[dict]:
+    wb = load_workbook(XLSX_PATH)
+    ws = wb["作品资料"]
+    headers = [c.value for c in next(ws.iter_rows(min_row=1, max_row=1))]
+    if headers[:9] != HEADERS:
+        raise RuntimeError(f"表头不匹配。期望 {HEADERS}，实际 {headers[:9]}")
     rows = []
     for values in ws.iter_rows(min_row=2, values_only=True):
         if not values or not values[1]:
             continue
+        year = values[4]
+        if isinstance(year, datetime):
+            year_s = f"{year.year}.{year.month}.{year.day}"
+        else:
+            year_s = "" if year is None else str(year).strip()
+        note = "" if values[7] is None else str(values[7]).strip()
+        process = "" if values[8] is None else str(values[8]).strip()
         rows.append(
             {
-                "序号": values[0],
-                "图片文件": str(values[1]).strip(),
-                "名称": (values[2] or "").strip() if values[2] is not None else "",
-                "年份": str(values[3]).strip() if values[3] is not None else "",
-                "创作媒介": (values[4] or "").strip() if values[4] is not None else "",
-                "一句话介绍": (values[5] or "").strip() if values[5] is not None else "",
-                "创作过程说明": (values[6] or "").strip() if values[6] is not None else "",
-                "名称（英文）": (values[7] or "").strip() if len(values) > 7 and values[7] is not None else "",
-                "创作媒介（英文）": (values[8] or "").strip() if len(values) > 8 and values[8] is not None else "",
-                "一句话介绍（英文）": (values[9] or "").strip() if len(values) > 9 and values[9] is not None else "",
-                "创作过程说明（英文）": (values[10] or "").strip() if len(values) > 10 and values[10] is not None else "",
+                "stem": str(values[1]).strip(),
+                "paper": str(values[2]).strip() if values[2] else "",
+                "title": str(values[3]).strip() if values[3] else str(values[1]).strip(),
+                "year": year_s,
+                "medium": str(values[6]).strip() if values[6] else "",
+                "note": "" if note in ("无", "None") else note,
+                "process": "" if process in ("无", "None") else process,
             }
         )
     return rows
 
 
-def rebuild_work_object(old: dict, row: dict) -> str:
-    title_zh = row["名称"] or old["titles"].get("zh-Hans", "")
-    material_zh = row["创作媒介"] or old["materials"].get("zh-Hans", "")
-    note_zh = row["一句话介绍"] or old["notes"].get("zh-Hans", "")
-    process_zh = row["创作过程说明"]
+SERIES_RULES = {
+    "地球 I": ("earth-duo", "I / II"),
+    "地球 II": ("earth-duo", "II / II"),
+    "人物 I": ("portrait-duo", "I / II"),
+    "人物 II": ("portrait-duo", "II / II"),
+    "感谢信 I": ("thank-you-teachers", "I / III"),
+    "感谢信 II": ("thank-you-teachers", "II / III"),
+    "感谢信 III": ("thank-you-teachers", "III / III"),
+}
 
-    title_en = row["名称（英文）"] or old["titles"].get("en", "")
-    material_en = row["创作媒介（英文）"] or old["materials"].get("en", "")
-    note_en = row["一句话介绍（英文）"] or old["notes"].get("en", "")
-    process_en = row["创作过程说明（英文）"] or old["processCaptions"].get("en", "")
 
-    year = row["年份"] or old["year"]
-    image_file = row["图片文件"] or old["image_file"]
+def rebuild_work_object(old: dict | None, row: dict) -> str:
+    title_zh = row["title"]
+    material_zh = row["medium"]
+    note_zh = row["note"]
+    process_zh = row["process"] or note_zh
+    title_en = (old or {}).get("titles", {}).get("en") or title_zh
+    material_en = (old or {}).get("materials", {}).get("en") or material_zh
+    note_en = (old or {}).get("notes", {}).get("en") or note_zh
+    process_en = (old or {}).get("processCaptions", {}).get("en") or process_zh
+    year = row["year"] or ((old or {}).get("year") or "")
+    image_file = find_asset(row["stem"])
+    size = map_size_label(row["paper"]) or ((old or {}).get("size") or "a4")
+    series_info = SERIES_RULES.get(title_zh)
+    if not series_info and old:
+        if old.get("series"):
+            series_info = (old["series"], old.get("panel") or "")
 
     lines = [
         "        {",
@@ -267,26 +303,21 @@ def rebuild_work_object(old: dict, row: dict) -> str:
         f'          year: "{_escape_js(year)}",',
         f"          materials: {_i18n_literal(material_zh, s2t(material_zh), material_en)},",
         f'          image: art("{_escape_js(image_file)}"),',
-        f'          size: "{_escape_js(old["size"])}",',
+        f'          size: "{_escape_js(size)}",',
     ]
-    if old.get("series"):
-        lines.append(f'          series: "{_escape_js(old["series"])}",')
-    if old.get("panel"):
-        lines.append(f'          panel: "{_escape_js(old["panel"])}",')
-    if old.get("process_file"):
-        lines.append(f'          processImage: art("{_escape_js(old["process_file"])}"),')
-        # Prefer Excel process caption; fall back to previous zh-Hans then convert.
-        process_src = process_zh or old["processCaptions"].get("zh-Hans", "")
-        if process_src or process_en or old["processCaptions"]:
-            lines.append("          processCaptions: {")
-            lines.append(
-                f'            "zh-Hans": "{_escape_js(process_src)}",'
-            )
-            lines.append(
-                f'            "zh-Hant": "{_escape_js(s2t(process_src))}",'
-            )
-            lines.append(f'            en: "{_escape_js(process_en)}"')
-            lines.append("          },")
+    if series_info:
+        sid, panel = series_info
+        lines.append(f'          series: "{_escape_js(sid)}",')
+        if panel:
+            lines.append(f'          panel: "{_escape_js(panel)}",')
+    proc_file = find_process(row["stem"]) or (old or {}).get("process_file") or ""
+    if proc_file:
+        lines.append(f'          processImage: art("{_escape_js(proc_file)}"),')
+        lines.append("          processCaptions: {")
+        lines.append(f'            "zh-Hans": "{_escape_js(process_zh)}",')
+        lines.append(f'            "zh-Hant": "{_escape_js(s2t(process_zh))}",')
+        lines.append(f'            en: "{_escape_js(process_en)}"')
+        lines.append("          },")
     lines.append(f"          notes: {_i18n_literal(note_zh, s2t(note_zh), note_en)}")
     lines.append("        }")
     return "\n".join(lines)
@@ -294,48 +325,35 @@ def rebuild_work_object(old: dict, row: dict) -> str:
 
 def import_xlsx() -> None:
     html = HTML_PATH.read_text(encoding="utf-8")
-    works = parse_works(html)
-    by_file = {w["image_file"]: w for w in works}
+    old_works = parse_works(html)
+    by_stem = {Path(w["image_file"]).stem: w for w in old_works}
+    # also map by current titles for rematch after renames
+    by_title = {w["titles"].get("zh-Hans", ""): w for w in old_works}
     rows = load_excel_rows()
-
-    if len(rows) != len(works):
-        print(
-            f"警告：Excel 有 {len(rows)} 行，网页有 {len(works)} 件作品。将按图片文件名匹配。",
-            file=sys.stderr,
-        )
-
     rebuilt = []
-    seen = set()
     for row in rows:
-        key = row["图片文件"]
-        if key not in by_file:
-            raise RuntimeError(f"Excel 中的图片文件无法匹配网页作品: {key}")
-        rebuilt.append(rebuild_work_object(by_file[key], row))
-        seen.add(key)
+        old = by_stem.get(row["stem"]) or by_title.get(row["title"])
+        rebuilt.append(rebuild_work_object(old, row))
 
-    missing = [w["image_file"] for w in works if w["image_file"] not in seen]
-    if missing:
-        raise RuntimeError("Excel 缺少这些作品行: " + ", ".join(missing))
-
-    prefix, _, suffix = extract_works_block(html)
-    new_block = "const works = [\n" + ",\n".join(rebuilt) + "\n      ];"
-    HTML_PATH.write_text(prefix + new_block + suffix, encoding="utf-8")
+    start, end = extract_works_span(html)
+    new_block = (
+        "const art = (file) => encodeURI(`assets/${file}`);\n\n      const works = [\n"
+        + ",\n".join(rebuilt)
+        + "\n      ];"
+    )
+    HTML_PATH.write_text(html[:start] + new_block + html[end:], encoding="utf-8")
     print(f"已从 {XLSX_PATH} 同步 {len(rebuilt)} 件作品到 {HTML_PATH}")
-    print("简体内容已写入；繁体已按简体自动转换；英文优先使用 Excel 英文列，否则保留原英文。")
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Sync gallery works between Excel and index.html")
-    parser.add_argument("command", choices=["export", "import"], help="export=网页导出Excel；import=Excel写回网页")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("command", choices=["export", "import"])
     args = parser.parse_args()
-
     html = HTML_PATH.read_text(encoding="utf-8")
-    works = parse_works(html)
     if args.command == "export":
-        export_xlsx(works)
+        export_xlsx(parse_works(html))
     else:
         import_xlsx()
-        # Round-trip sanity: parse again
         parse_works(HTML_PATH.read_text(encoding="utf-8"))
         print("二次解析通过。")
 

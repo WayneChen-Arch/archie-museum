@@ -784,7 +784,8 @@
         gap: clamp(1.6rem, 3.5vw, 3rem);
       }
 
-      .cover-frame.frame.size-a5 {
+      .cover-frame.frame.size-a5,
+      .cover-frame.frame.size-a4 {
         flex: 0 0 auto;
         align-self: center;
       }
@@ -792,6 +793,11 @@
       .cover-frame.frame.size-a5 img {
         max-height: min(28vh, 200px);
         max-width: min(20vw, 140px);
+      }
+
+      .cover-frame.frame.size-a4 img {
+        max-height: min(30vh, 220px);
+        max-width: min(34vw, 260px);
       }
 
       .cover-meta {
@@ -1128,6 +1134,11 @@
         .cover-frame.frame.size-a5 img {
           max-height: min(22vh, 160px);
           max-width: min(36vw, 118px);
+        }
+
+        .cover-frame.frame.size-a4 img {
+          max-height: min(24vh, 180px);
+          max-width: min(56vw, 220px);
         }
 
         .cover-meta {
@@ -1618,9 +1629,9 @@
         <div class="cover-stage">
           <h1 id="introTitle" class="visually-hidden" data-i18n="museumName">安遲美術館</h1>
           <article class="cover-piece">
-            <div class="frame size-a5 cover-frame" aria-hidden="false">
+            <div class="frame size-a4 cover-frame" aria-hidden="false">
               <div class="shadowbox">
-                <img src="drawings/03-A5.jpg" alt="2024，綜合媒材" data-i18n-alt="coverPieceAlt" />
+                <img src="assets/第一幅蜡笔.png" alt="2025.3.17，彩色铅笔" data-i18n-alt="coverPieceAlt" />
               </div>
             </div>
             <div class="cover-meta">
@@ -1671,11 +1682,11 @@
                   muted
                   loop
                   playsinline
-                  poster="drawings/%E8%BF%BD%E9%80%90%20A4.jpg"
+                  poster="assets/追逐.jpg"
                 >
                   <source src="assets/backstage-landscape.mp4" type="video/mp4" />
                 </video>
-                <img src="drawings/%E8%BF%BD%E9%80%90%20A4.jpg" alt="橫向投影：追逐" data-i18n-alt="projLandscapeAlt" />
+                <img src="assets/追逐.jpg" alt="橫向投影：追逐" data-i18n-alt="projLandscapeAlt" />
               </div>
             </figure>
             <figure class="wall-projection portrait" data-proj="1" tabindex="0" aria-label="豎向投影" data-i18n-aria="projPortrait">
@@ -1685,11 +1696,11 @@
                   muted
                   loop
                   playsinline
-                  poster="drawings/%E6%B0%B4%E6%9E%9C%20A5%E5%8A%A0%E9%95%BF.jpg"
+                  poster="assets/一串长葡萄.jpg"
                 >
                   <source src="assets/backstage-portrait.mp4" type="video/mp4" />
                 </video>
-                <img src="drawings/%E6%B0%B4%E6%9E%9C%20A5%E5%8A%A0%E9%95%BF.jpg" alt="豎向投影：水果" data-i18n-alt="projPortraitAlt" />
+                <img src="assets/一串长葡萄.jpg" alt="豎向投影：一串長葡萄" data-i18n-alt="projPortraitAlt" />
               </div>
             </figure>
           </div>
@@ -1775,184 +1786,172 @@
     </main>
 
     <script>
-      const art = (file) => encodeURI(`drawings/${file}`);
+      const art = (file) => encodeURI(`assets/${file}`);
 
       const works = [
         {
-          titles: { "zh-Hans": "方格构图", "zh-Hant": "方格構圖", en: "Composition on Grid" },
-          year: "2024",
+          titles: { "zh-Hans": "第一幅蜡笔", "zh-Hant": "第一幅蠟筆", en: "First Crayon Drawing" },
+          year: "2025.3.17",
           materials: { "zh-Hans": "彩色铅笔", "zh-Hant": "彩色鉛筆", en: "Colored pencil" },
-          image: art("01-A4.jpg"),
+          image: art("第一幅蜡笔.png"),
           size: "a4",
           notes: { "zh-Hans": "方格纸上交织的彩色线条，像是一场尚未落地的梦。", "zh-Hant": "方格紙上交織的彩色線條，像是一場尚未落地的夢。", en: "Colored lines weave across graph paper like a dream not yet landed." }
         },
         {
-          titles: { "zh-Hans": "回环练习", "zh-Hant": "迴圈練習", en: "Loop Study" },
-          year: "2024",
-          materials: { "zh-Hans": "蜡笔", "zh-Hant": "蠟筆", en: "Crayon" },
-          image: art("02-A4.jpg"),
-          size: "a4",
-          notes: { "zh-Hans": "层层叠叠的环状笔触，把玩耍的节奏留在了纸面。", "zh-Hant": "層層疊疊的環狀筆觸，把玩耍的節奏留在了紙面。", en: "Layered looping strokes keep the rhythm of play on the page." }
-        },
-        {
-          titles: { "zh-Hans": "散落的形", "zh-Hant": "散落的形", en: "Scattered Forms" },
-          year: "2024",
-          materials: { "zh-Hans": "综合媒材", "zh-Hant": "綜合媒材", en: "Mixed media" },
-          image: art("03-A5.jpg"),
-          size: "a5",
-          notes: { "zh-Hans": "少数几个色点就撑开了整张纸的空气。", "zh-Hant": "少數幾個色點就撐開了整張紙的空氣。", en: "A few color spots open up the air of the whole sheet." }
-        },
-        {
-          titles: { "zh-Hans": "绿色立柱", "zh-Hant": "綠色立柱", en: "Green Column" },
-          year: "2024",
-          materials: { "zh-Hans": "水彩", "zh-Hant": "水彩", en: "Watercolor" },
-          image: art("04-A5.jpg"),
-          size: "a5",
-          notes: { "zh-Hans": "绿与黄叠印成一条竖直的路径，安静却有力。", "zh-Hant": "綠與黃疊印成一條豎直的路徑，安靜卻有力。", en: "Green and yellow stack into a quiet, vertical path." }
-        },
-        {
-          titles: { "zh-Hans": "烛火拼贴", "zh-Hant": "燭火拼貼", en: "Candle Collage" },
-          year: "2024",
-          materials: { "zh-Hans": "粘土与颜料", "zh-Hant": "黏土與顏料", en: "Clay and paint" },
-          image: art("05-A3.jpg"),
-          size: "a3",
-          notes: { "zh-Hans": "粘土、箔片与颜料堆叠出烛火般的温度。", "zh-Hant": "黏土、箔片與顏料堆疊出燭火般的溫度。", en: "Clay, foil, and paint build a candle-like warmth." }
-        },
-        {
-          titles: { "zh-Hans": "人物 I", "zh-Hant": "人物 I", en: "Portrait I" },
-          year: "2025",
-          materials: { "zh-Hans": "马克笔", "zh-Hant": "馬克筆", en: "Marker" },
-          image: art("人物 A5.jpg"),
-          size: "series",
-          series: "portrait-duo",
-          panel: "I / II",
-          notes: { "zh-Hans": "蓝色笔迹上下贯穿，像是第一次为「人」留下轮廓。", "zh-Hant": "藍色筆跡上下貫穿，像是第一次為「人」留下輪廓。", en: "Blue marks run through the page, as if outlining “person” for the first time." }
-        },
-        {
-          titles: { "zh-Hans": "人物 II", "zh-Hant": "人物 II", en: "Portrait II" },
-          year: "2025",
-          materials: { "zh-Hans": "蜡笔", "zh-Hant": "蠟筆", en: "Crayon" },
-          image: art("人物2 A5.jpg"),
-          size: "series",
-          series: "portrait-duo",
-          panel: "II / II",
-          notes: { "zh-Hans": "同样以蓝线展开，笔触更密、更奔放。", "zh-Hant": "同樣以藍線展開，筆觸更密、更奔放。", en: "Blue lines again, denser and more free." }
-        },
-        {
           titles: { "zh-Hans": "地球 I", "zh-Hant": "地球 I", en: "Earth I" },
-          year: "2025",
+          year: "2025.4.5",
           materials: { "zh-Hans": "蜡笔", "zh-Hant": "蠟筆", en: "Crayon" },
-          image: art("地球 A4.jpg"),
-          size: "series",
+          image: art("地球 I.jpg"),
+          size: "a5",
           series: "earth-duo",
           panel: "I / II",
           notes: { "zh-Hans": "黄与灰绿交缠的圆形笔触，像是他眼中旋转的地球。", "zh-Hant": "黃與灰綠交纏的圓形筆觸，像是他眼中旋轉的地球。", en: "Yellow and gray-green circles spin like Earth in his eyes." }
         },
         {
           titles: { "zh-Hans": "地球 II", "zh-Hant": "地球 II", en: "Earth II" },
-          year: "2025",
+          year: "2025.4.5",
           materials: { "zh-Hans": "铅笔", "zh-Hant": "鉛筆", en: "Pencil" },
-          image: art("地球2 A4.jpg"),
-          size: "series",
+          image: art("地球 II.jpg"),
+          size: "a5",
           series: "earth-duo",
           panel: "II / II",
           notes: { "zh-Hans": "石墨线条层层绕行，把地球的动量留在纸上。", "zh-Hant": "石墨線條層層繞行，把地球的動量留在紙上。", en: "Graphite lines coil round, keeping Earth’s momentum on paper." }
         },
         {
-          titles: { "zh-Hans": "彩虹", "zh-Hant": "彩虹", en: "Rainbow" },
-          year: "2025",
+          titles: { "zh-Hans": "建筑草稿", "zh-Hant": "建築草稿", en: "Architecture Sketch" },
+          year: "2025.5.5",
           materials: { "zh-Hans": "蜡笔", "zh-Hant": "蠟筆", en: "Crayon" },
-          image: art("彩虹 A4.jpg"),
+          image: art("建筑草稿.png"),
           size: "a4",
-          notes: { "zh-Hans": "橙、蓝、绿交叠的弧线，是他最爱的彩虹主题之一。", "zh-Hant": "橙、藍、綠交疊的弧線，是他最愛的彩虹主題之一。", en: "Overlapping arcs of orange, blue, and green—one of his favorite rainbows." }
+          notes: { "zh-Hans": "流畅的线条，似一个曲线建筑的草图", "zh-Hant": "流暢的線條，似一個曲線建築的草圖", en: "Fluid lines, like a sketch of a curving building." }
         },
         {
-          titles: { "zh-Hans": "风，水，海，沙", "zh-Hant": "風，水，海，沙", en: "Wind, Water, Sea, Sand" },
-          year: "2025",
-          materials: { "zh-Hans": "彩色铅笔", "zh-Hant": "彩色鉛筆", en: "Colored pencil" },
-          image: art("风，水，海，沙 A4.jpg"),
+          titles: { "zh-Hans": "To infinity and beyond!", "zh-Hant": "To infinity and beyond!", en: "To infinity and beyond!" },
+          year: "2025.5.17",
+          materials: { "zh-Hans": "蜡笔画", "zh-Hant": "蠟筆畫", en: "Crayon drawing" },
+          image: art("To infinity and beyond!.png"),
           size: "a4",
-          notes: { "zh-Hans": "风、水、海、沙同时出现，淡彩线条在纸面流动、冲撞。", "zh-Hant": "風、水、海、沙同時出現，淡彩線條在紙面流動、衝撞。", en: "Wind, water, sea, and sand appear at once; soft lines stream and collide." }
-        },
-        {
-          titles: { "zh-Hans": "米奇", "zh-Hant": "米奇", en: "Mickey" },
-          year: "2025",
-          materials: { "zh-Hans": "水彩", "zh-Hant": "水彩", en: "Watercolor" },
-          image: art("米奇 A5.jpg"),
-          size: "a5",
-          notes: { "zh-Hans": "粉、红、蓝、黄的色块聚成一团，是他对米奇的抽象想象。", "zh-Hant": "粉、紅、藍、黃的色塊聚成一團，是他對米奇的抽象想像。", en: "Pink, red, blue, and yellow gather into an abstract Mickey." }
-        },
-        {
-          titles: { "zh-Hans": "水果", "zh-Hant": "水果", en: "Fruit" },
-          year: "2025",
-          materials: { "zh-Hans": "水彩", "zh-Hant": "水彩", en: "Watercolor" },
-          image: art("水果 A5加长.jpg"),
-          size: "tall",
-          notes: { "zh-Hans": "细长纸面上串起红、粉、绿的圆点，像一排新鲜水果。", "zh-Hant": "細長紙面上串起紅、粉、綠的圓點，像一排新鮮水果。", en: "Red, pink, and green dots line up like fresh fruit on a tall page." }
+          notes: { "zh-Hans": "安迟左右手同时开弓，创作了这幅作品。", "zh-Hant": "安遲左右手同時開弓，創作了這幅作品。", en: "Archie drew this with both hands at once." }
         },
         {
           titles: { "zh-Hans": "追逐", "zh-Hant": "追逐", en: "Chase" },
-          year: "2020",
+          year: "2026.1.1",
           materials: { "zh-Hans": "蜡笔", "zh-Hant": "蠟筆", en: "Crayon" },
-          image: art("追逐 A4.jpg"),
-          size: "wide",
-          notes: { "zh-Hans": "红与蓝的线条互相追逐，在纸面上留下奔跑的痕迹。", "zh-Hant": "紅與藍的線條互相追逐，在紙面上留下奔跑的痕跡。", en: "Red and blue lines chase each other, leaving a running trail." }
+          image: art("追逐.jpg"),
+          size: "a4",
+          notes: { "zh-Hans": "安迟和父亲轮流创作的作品。每人画一笔，红色是安迟画出的线条，蓝色是父亲跟随安迟线条的轨迹。", "zh-Hant": "安遲和父親輪流創作的作品。每人畫一筆，紅色是安遲畫出的線條，藍色是父親跟隨安遲線條的軌跡。", en: "A turn-taking work with his father: red lines by Archie, blue lines tracing his path." }
         },
         {
-          titles: { "zh-Hans": "未知", "zh-Hant": "未知", en: "Untitled" },
-          year: "2025",
-          materials: { "zh-Hans": "蜡笔", "zh-Hant": "蠟筆", en: "Crayon" },
-          image: art("未知.jpg"),
-          size: "a4",
-          notes: { "zh-Hans": "粉红线条自上方垂落，留下开敞的想象空间。", "zh-Hant": "粉紅線條自上方垂落，留下開敞的想像空間。", en: "Pink lines fall from above, leaving room to imagine." }
+          titles: { "zh-Hans": "风，水，海，沙，鸭，与人", "zh-Hant": "風，水，海，沙，鴨，與人", en: "Wind, Water, Sea, Sand, Duck, and People" },
+          year: "2026.1.24",
+          materials: { "zh-Hans": "彩色铅笔", "zh-Hant": "彩色鉛筆", en: "Colored pencil" },
+          image: art("风，水，海，沙，鸭，与人.jpg"),
+          size: "a3",
+          notes: { "zh-Hans": "每种颜色代表了一个", "zh-Hant": "每種顏色代表了一個", en: "Each color stands for one thing." }
+        },
+        {
+          titles: { "zh-Hans": "人物 I", "zh-Hant": "人物 I", en: "Portrait I" },
+          year: "2026.2.26",
+          materials: { "zh-Hans": "水彩笔", "zh-Hant": "水彩筆", en: "Water-based marker" },
+          image: art("人物 I.jpg"),
+          size: "a5",
+          series: "portrait-duo",
+          panel: "I / II",
+          notes: { "zh-Hans": "安迟最早的人物速写", "zh-Hant": "安遲最早的人物速寫", en: "Archie’s earliest figure sketches." }
+        },
+        {
+          titles: { "zh-Hans": "人物 II", "zh-Hant": "人物 II", en: "Portrait II" },
+          year: "2026.2.26",
+          materials: { "zh-Hans": "水彩笔", "zh-Hant": "水彩筆", en: "Water-based marker" },
+          image: art("人物 II.jpg"),
+          size: "a5",
+          series: "portrait-duo",
+          panel: "II / II",
+          notes: { "zh-Hans": "安迟最早的人物速写", "zh-Hant": "安遲最早的人物速寫", en: "Archie’s earliest figure sketches." }
+        },
+        {
+          titles: { "zh-Hans": "人物速写", "zh-Hant": "人物速寫", en: "Figure Sketch" },
+          year: "2026.3.15",
+          materials: { "zh-Hans": "水画布", "zh-Hant": "水畫布", en: "Water drawing canvas" },
+          image: art("人物速写.png"),
+          size: "tall",
+          notes: { "zh-Hans": "", "zh-Hant": "", en: "" }
+        },
+        {
+          titles: { "zh-Hans": "蛋糕", "zh-Hant": "蛋糕", en: "Cake" },
+          year: "2026.5.1",
+          materials: { "zh-Hans": "粘土与颜料", "zh-Hant": "粘土與顏料", en: "Clay and paint" },
+          image: art("蛋糕.jpg"),
+          size: "a3",
+          notes: { "zh-Hans": "幼儿园课堂的创作。", "zh-Hant": "幼兒園課堂的創作。", en: "Made in a kindergarten class." }
+        },
+        {
+          titles: { "zh-Hans": "流动", "zh-Hant": "流動", en: "Flow" },
+          year: "2026.7.9",
+          materials: { "zh-Hans": "马克笔", "zh-Hant": "馬克筆", en: "Marker" },
+          image: art("流动.jpg"),
+          size: "a3",
+          notes: { "zh-Hans": "", "zh-Hant": "", en: "" }
+        },
+        {
+          titles: { "zh-Hans": "米奇", "zh-Hant": "米奇", en: "Mickey" },
+          year: "2026.7.9",
+          materials: { "zh-Hans": "马克笔", "zh-Hant": "馬克筆", en: "Marker" },
+          image: art("米奇.jpg"),
+          size: "a5",
+          notes: { "zh-Hans": "一幅送给母亲画，粉色的头，混色的身体，蓝色的腿", "zh-Hant": "一幅送給母親畫，粉色的頭，混色的身體，藍色的腿", en: "A gift for Mom: pink head, mixed-color body, blue legs." }
+        },
+        {
+          titles: { "zh-Hans": "一串长葡萄", "zh-Hant": "一串長葡萄", en: "A Long Bunch of Grapes" },
+          year: "2026.7.9",
+          materials: { "zh-Hans": "马克笔", "zh-Hant": "馬克筆", en: "Marker" },
+          image: art("一串长葡萄.jpg"),
+          size: "tall",
+          notes: { "zh-Hans": "", "zh-Hant": "", en: "" }
         },
         {
           titles: { "zh-Hans": "感谢信 I", "zh-Hant": "感謝信 I", en: "Thank You Letter I" },
-          year: "2026",
-          materials: { "zh-Hans": "颜料拼贴", "zh-Hant": "顏料拼貼", en: "Paint collage" },
-          image: art("06-thank-you-apricot.jpg"),
-          size: "series",
+          year: "2026.7.11",
+          materials: { "zh-Hans": "马克笔", "zh-Hant": "馬克筆", en: "Marker" },
+          image: art("感谢信 I.jpg"),
+          size: "a5",
           series: "thank-you-teachers",
           panel: "I / III",
-          notes: { "zh-Hans": "送给幼儿园老师的感谢信，大字由两岁九个月的手亲手写下。", "zh-Hant": "送給幼兒園老師的感謝信，大字由兩歲九個月的手親手寫下。", en: "A thank-you letter for kindergarten teachers, letters written by a hand of two years and nine months." }
+          notes: { "zh-Hans": "幼儿园N班结束，送给三位幼儿园老师的感谢信，字母由安迟写成，其母拼贴，其父调色。", "zh-Hant": "幼兒園N班結束，送給三位幼兒園老師的感謝信，字母由安遲寫成，其母拼貼，其父調色。", en: "Thank-you letters for three N-class teachers: Archie wrote the letters, Mom collaged, Dad mixed the colors." }
         },
         {
           titles: { "zh-Hans": "感谢信 II", "zh-Hant": "感謝信 II", en: "Thank You Letter II" },
-          year: "2026",
-          materials: { "zh-Hans": "颜料拼贴", "zh-Hant": "顏料拼貼", en: "Paint collage" },
-          image: art("07-thank-you-blue.jpg"),
-          size: "series",
+          year: "2026.7.11",
+          materials: { "zh-Hans": "马克笔", "zh-Hant": "馬克筆", en: "Marker" },
+          image: art("感谢信 II.jpg"),
+          size: "a5",
           series: "thank-you-teachers",
           panel: "II / III",
-          notes: { "zh-Hans": "天蓝与柠檬黄呼应学期里明朗的日子。", "zh-Hant": "天藍與檸檬黃呼應學期裡明朗的日子。", en: "Sky blue and lemon yellow echo the bright days of the term." }
+          notes: { "zh-Hans": "幼儿园N班结束，送给三位幼儿园老师的感谢信，字母由安迟写成，其母拼贴，其父调色。", "zh-Hant": "幼兒園N班結束，送給三位幼兒園老師的感謝信，字母由安遲寫成，其母拼貼，其父調色。", en: "Thank-you letters for three N-class teachers: Archie wrote the letters, Mom collaged, Dad mixed the colors." }
         },
         {
           titles: { "zh-Hans": "感谢信 III", "zh-Hant": "感謝信 III", en: "Thank You Letter III" },
-          year: "2026",
-          materials: { "zh-Hans": "颜料拼贴", "zh-Hant": "顏料拼貼", en: "Paint collage" },
-          image: art("08-thank-you-magenta.jpg"),
-          size: "series",
+          year: "2026.7.11",
+          materials: { "zh-Hans": "马克笔", "zh-Hant": "馬克筆", en: "Marker" },
+          image: art("感谢信 III.jpg"),
+          size: "a5",
           series: "thank-you-teachers",
           panel: "III / III",
-          notes: { "zh-Hans": "玫红与荧光绿撞色，把毕业那天的谢谢留在墙上。", "zh-Hant": "玫紅與熒光綠撞色，把畢業那天的謝謝留在牆上。", en: "Magenta and neon green keep the thank-you of graduation day on the wall." }
+          notes: { "zh-Hans": "幼儿园N班结束，送给三位幼儿园老师的感谢信，字母由安迟写成，其母拼贴，其父调色。", "zh-Hant": "幼兒園N班結束，送給三位幼兒園老師的感謝信，字母由安遲寫成，其母拼貼，其父調色。", en: "Thank-you letters for three N-class teachers: Archie wrote the letters, Mom collaged, Dad mixed the colors." }
         },
         {
-          titles: { "zh-Hans": "我的妈妈", "zh-Hant": "我的媽媽", en: "My Mom" },
-          year: "2026",
+          titles: { "zh-Hans": "母亲速写", "zh-Hant": "母親速寫", en: "Mother Sketch" },
+          year: "2026.7.24",
           materials: { "zh-Hans": "液晶画板", "zh-Hant": "液晶畫板", en: "LCD drawing board" },
-          image: art("我的妈妈 A5.png"),
-          size: "a5",
-          processImage: art("我的妈妈 (创作过程，将半透明液晶画板贴在妈妈脸上的速写).jpg"),
+          image: art("母亲速写.png"),
+          size: "a4",
+          processImage: art("母亲速写 (创作过程，将半透明液晶画板贴在妈妈脸上的速写).jpg"),
           processCaptions: {
-            "zh-Hans": "创作过程：将半透明液晶画板贴在妈妈脸上的速写",
-            "zh-Hant": "創作過程：將半透明液晶畫板貼在媽媽臉上的速寫",
-            en: "Process: sketching with a translucent LCD board against Mom’s face"
+            "zh-Hans": "速写，将半透明液晶画板，贴在母亲脸上",
+            "zh-Hant": "速寫，將半透明液晶畫板，貼在母親臉上",
+            en: "A sketch made with a translucent LCD board held against Mom’s face."
           },
-          notes: {
-            "zh-Hans": "绿与黄的线条勾出笑脸与眼镜，是画给妈妈的肖像。",
-            "zh-Hant": "綠與黃的線條勾出笑臉與眼鏡，是畫給媽媽的肖像。",
-            en: "Green and yellow lines sketch a smile and glasses—a portrait for Mom."
-          }
+          notes: { "zh-Hans": "速写，将半透明液晶画板，贴在母亲脸上", "zh-Hant": "速寫，將半透明液晶畫板，貼在母親臉上", en: "A sketch made with a translucent LCD board held against Mom’s face." }
         }
       ];
 
@@ -1997,11 +1996,11 @@
           pause: "暂停",
           materialSpeech: "材质",
           logoAlt: "安迟美术馆 Archie Art Museum",
-          coverPieceAlt: "2024，综合媒材",
+          coverPieceAlt: "2025.3.17，彩色铅笔",
           projLandscape: "横向投影",
           projPortrait: "竖向投影",
           projLandscapeAlt: "横向投影：追逐",
-          projPortraitAlt: "竖向投影：水果"
+          projPortraitAlt: "竖向投影：一串长葡萄"
         },
         "zh-Hant": {
           museumName: "安遲美術館",
@@ -2031,11 +2030,11 @@
           pause: "暫停",
           materialSpeech: "材質",
           logoAlt: "安遲美術館 Archie Art Museum",
-          coverPieceAlt: "2024，綜合媒材",
+          coverPieceAlt: "2025.3.17，彩色鉛筆",
           projLandscape: "橫向投影",
           projPortrait: "豎向投影",
           projLandscapeAlt: "橫向投影：追逐",
-          projPortraitAlt: "豎向投影：水果"
+          projPortraitAlt: "豎向投影：一串長葡萄"
         },
         en: {
           museumName: "Archie Art Museum",
@@ -2065,11 +2064,11 @@
           pause: "Pause",
           materialSpeech: "Medium",
           logoAlt: "Archie Art Museum",
-          coverPieceAlt: "2024, mixed media",
+          coverPieceAlt: "2025.3.17, Colored pencil",
           projLandscape: "Landscape projection",
           projPortrait: "Portrait projection",
           projLandscapeAlt: "Landscape projection: Chase",
-          projPortraitAlt: "Portrait projection: Fruit"
+          projPortraitAlt: "Portrait projection: A Long Bunch of Grapes"
         }
       };
       let lang = localStorage.getItem("archie-museum-lang") || "zh-Hant";
