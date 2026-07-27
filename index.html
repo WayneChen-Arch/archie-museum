@@ -378,7 +378,12 @@
 
       .title {
         color: var(--text-strong);
-        margin-bottom: 0.12rem;
+        margin-bottom: 0.08rem;
+      }
+
+      .date {
+        opacity: 0.88;
+        margin-bottom: 0.22rem;
       }
 
       .material {
@@ -1284,7 +1289,12 @@
       .preview-meta .title {
         color: var(--text-strong);
         font-size: 13px;
-        margin-bottom: 0.2rem;
+        margin-bottom: 0.1rem;
+      }
+
+      .preview-meta .date {
+        opacity: 0.9;
+        margin-bottom: 0.35rem;
       }
 
       .preview-meta .material {
@@ -2190,8 +2200,50 @@
       let guideSpeakingIndex = null;
       let guideAudio = null;
 
+      const ARCHIE_BIRTH = new Date(2023, 8, 27); // 2023-09-27
+
+      function workTitle(work) {
+        return pick(work.titles);
+      }
+
+      function parseWorkDate(yearStr) {
+        const match = /^(\d{4})\.(\d{1,2})\.(\d{1,2})$/.exec(String(yearStr || "").trim());
+        if (!match) return null;
+        return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+      }
+
+      function ageAtDate(created) {
+        let years = created.getFullYear() - ARCHIE_BIRTH.getFullYear();
+        let months = created.getMonth() - ARCHIE_BIRTH.getMonth();
+        const days = created.getDate() - ARCHIE_BIRTH.getDate();
+        if (days < 0) months -= 1;
+        if (months < 0) {
+          years -= 1;
+          months += 12;
+        }
+        if (years < 0) {
+          years = 0;
+          months = 0;
+        }
+        return { years, months };
+      }
+
+      function ageLabel(created) {
+        const { years, months } = ageAtDate(created);
+        if (lang === "en") return `(${years}y ${months}m)`;
+        if (lang === "zh-Hans") return `（${years}岁${months}个月）`;
+        return `（${years}歲${months}個月）`;
+      }
+
+      function workDateLine(work) {
+        const created = parseWorkDate(work.year);
+        if (!created || Number.isNaN(created.getTime())) return work.year || "";
+        return `${work.year}${ageLabel(created)}`;
+      }
+
       function workHeadline(work) {
-        return `${pick(work.titles)}, ${work.year}`;
+        const dateLine = workDateLine(work);
+        return dateLine ? `${workTitle(work)}, ${dateLine}` : workTitle(work);
       }
 
       function workMaterial(work) {
@@ -2275,9 +2327,11 @@
           const work = works[Number(index)];
           if (!work) return;
           const titleNode = meta.querySelector("[data-series-title], .title");
+          const dateNode = meta.querySelector("[data-series-date], .date");
           const materialNode = meta.querySelector("[data-series-material], .material");
           const noteNode = meta.querySelector("[data-series-note], .note");
-          if (titleNode) titleNode.textContent = workHeadline(work);
+          if (titleNode) titleNode.textContent = workTitle(work);
+          if (dateNode) dateNode.textContent = workDateLine(work);
           if (materialNode) materialNode.textContent = workMaterial(work);
           if (noteNode) noteNode.textContent = workNote(work);
         });
@@ -2296,9 +2350,11 @@
           const work = works[previewIndex];
           if (work) {
             const titleNode = previewMeta.querySelector(".title");
+            const dateNode = previewMeta.querySelector(".date");
             const materialNode = previewMeta.querySelector(".material");
             const noteNode = previewMeta.querySelector(".note");
-            if (titleNode) titleNode.textContent = workHeadline(work);
+            if (titleNode) titleNode.textContent = workTitle(work);
+            if (dateNode) dateNode.textContent = workDateLine(work);
             if (materialNode) materialNode.textContent = workMaterial(work);
             if (noteNode) noteNode.textContent = workNote(work);
             previewImage.alt = workHeadline(work);
@@ -2403,7 +2459,8 @@
           <button type="button" class="audio-guide${guideSpeakingIndex === index ? " is-playing" : ""}" data-guide-index="${index}" aria-label="${t("audioGuide")}" aria-pressed="${guideSpeakingIndex === index ? "true" : "false"}" title="${t("audioGuide")}">
             ${speakerIcon}
           </button>
-          <div class="title">${workHeadline(work)}</div>
+          <div class="title">${workTitle(work)}</div>
+          <div class="date">${workDateLine(work)}</div>
           <div class="material">${workMaterial(work)}</div>
           <p class="note">${workNote(work)}</p>
         `;
@@ -2447,7 +2504,8 @@
           : `<span class="audio-guide" aria-hidden="true">${speakerIcon}</span>`;
         return `
           ${guideMarkup}
-          <div class="title" data-series-title>${workHeadline(work)}</div>
+          <div class="title" data-series-title>${workTitle(work)}</div>
+          <div class="date" data-series-date>${workDateLine(work)}</div>
           <div class="material" data-series-material>${workMaterial(work)}</div>
           <div class="note" data-series-note>${workNote(work)}</div>
         `;
@@ -2790,7 +2848,10 @@
 
         if (work.series) {
           item.querySelectorAll("[data-series-title]").forEach((node) => {
-            node.textContent = workHeadline(work);
+            node.textContent = workTitle(work);
+          });
+          item.querySelectorAll("[data-series-date]").forEach((node) => {
+            node.textContent = workDateLine(work);
           });
           item.querySelectorAll("[data-series-material]").forEach((node) => {
             node.textContent = workMaterial(work);
