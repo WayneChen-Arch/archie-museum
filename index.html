@@ -2999,15 +2999,7 @@
       function scheduleViewRefresh() {
         if (museum.classList.contains("is-intro") || museum.classList.contains("is-backstage")) return;
         window.clearTimeout(refreshTimer);
-        refreshTimer = window.setTimeout(() => {
-          // Avoid recentering while phones are free-scrolling the track.
-          if (prefersFreeGallerySwipe() && isGalleryBrowseMode()) {
-            const range = getGalleryOffsetRange();
-            syncGalleryIndexFromOffset(readTranslateX(mainTrack), range.offsets);
-            return;
-          }
-          updateView();
-        }, 48);
+        refreshTimer = window.setTimeout(() => updateView(), 48);
       }
 
       function updateView() {
