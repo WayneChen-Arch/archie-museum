@@ -2191,8 +2191,20 @@
         dragged: false,
         range: null,
         surface: null,
-        listening: false
+        listening: false,
+        coastRaf: 0
       };
+
+      function prefersFreeGallerySwipe() {
+        return window.matchMedia("(max-width: 700px), (hover: none) and (pointer: coarse)").matches;
+      }
+
+      function cancelGalleryCoast() {
+        if (galleryDrag.coastRaf) {
+          window.cancelAnimationFrame(galleryDrag.coastRaf);
+          galleryDrag.coastRaf = 0;
+        }
+      }
 
       function syncNav(view) {
         const buttons = {
@@ -2754,6 +2766,88 @@
         return offset;
       }
 
+      function syncGalleryIndexFromOffset(offset, offsets) {
+        const nextIndex = nearestWorkIndexForOffset(offset, offsets);
+        if (nextIndex === current) {
+          pageInfo.textContent = `${current + 1}/${works.length}`;
+          return;
+        }
+        current = nextIndex;
+        const work = works[current];
+        const item = indexToUnit.get(current);
+        pageInfo.textContent = `${current + 1}/${works.length}`;
+        artLabel.textContent = galleryTitle();
+        mainTrack.querySelectorAll(".series-frames .frame").forEach((frame) => {
+          frame.classList.toggle("is-active", Number(frame.dataset.workIndex) === current);
+        });
+        reflectionTrack.querySelectorAll(".series-frames .frame").forEach((frame) => {
+          frame.classList.toggle("is-active", Number(frame.dataset.workIndex) === current);
+        });
+        if (work && work.series && item) {
+          item.querySelectorAll("[data-series-title]").forEach((node) => {
+            node.textContent = workTitle(work);
+          });
+          item.querySelectorAll("[data-series-date]").forEach((node) => {
+            node.textContent = workDateLine(work);
+          });
+          item.querySelectorAll("[data-series-material]").forEach((node) => {
+            node.textContent = workMaterial(work);
+          });
+          item.querySelectorAll("[data-series-note]").forEach((node) => {
+            node.textContent = workNote(work);
+          });
+          item.querySelectorAll(".audio-guide[data-guide-index]").forEach((node) => {
+            node.dataset.guideIndex = String(current);
+          });
+        }
+        syncGuideButtons();
+      }
+
+      function finishFreeSwipe(offset, range) {
+        const clamped = Math.max(range.min, Math.min(range.max, offset));
+        setTracksOffset(clamped, false);
+        mainTrack.classList.remove("is-dragging");
+        reflectionTrack.classList.remove("is-dragging");
+        syncGalleryIndexFromOffset(clamped, range.offsets);
+        galleryDrag.coastRaf = 0;
+      }
+
+      function coastFreeSwipe(initialVelocity, range) {
+        cancelGalleryCoast();
+        let offset = readTranslateX(mainTrack);
+        let velocity = initialVelocity; // px per ms
+        let last = performance.now();
+        mainTrack.classList.add("is-dragging");
+        reflectionTrack.classList.add("is-dragging");
+
+        const step = (now) => {
+          const dt = Math.min(34, Math.max(0, now - last));
+          last = now;
+          const decel = 0.0038; // px/ms^2
+          if (Math.abs(velocity) <= decel * dt) {
+            finishFreeSwipe(offset, range);
+            return;
+          }
+          velocity -= Math.sign(velocity) * decel * dt;
+          offset += velocity * dt;
+          if (offset > range.max) {
+            offset = range.max;
+            velocity = 0;
+          } else if (offset < range.min) {
+            offset = range.min;
+            velocity = 0;
+          }
+          setTracksOffset(offset, false);
+          syncGalleryIndexFromOffset(offset, range.offsets);
+          if (velocity === 0) {
+            finishFreeSwipe(offset, range);
+            return;
+          }
+          galleryDrag.coastRaf = window.requestAnimationFrame(step);
+        };
+        galleryDrag.coastRaf = window.requestAnimationFrame(step);
+      }
+
       function stopGalleryDragListening() {
         if (!galleryDrag.listening) return;
         window.removeEventListener("pointermove", onGalleryPointerMove, true);
@@ -2796,19 +2890,34 @@
         suppressClickUntil = Date.now() + 450;
         const range = galleryDrag.range || getGalleryOffsetRange();
         galleryDrag.range = null;
-        let projected = readTranslateX(mainTrack) + velocity * 260;
-        projected = Math.max(range.min, Math.min(range.max, projected));
-        const nextIndex = nearestWorkIndexForOffset(projected, range.offsets);
+        const liveOffset = readTranslateX(mainTrack);
 
         // Pulling the first work far to the right returns to the cover.
-        if (current === 0 && nextIndex === 0 && (velocity > 0.75 || overscrolledRight > 120)) {
-          setTracksOffset(readTranslateX(mainTrack), true);
+        if (current === 0 && (velocity > 0.75 || overscrolledRight > 120) && liveOffset >= range.max - 8) {
+          setTracksOffset(liveOffset, true);
           showCover();
           return;
         }
 
         stopGuide();
-        current = nextIndex;
+
+        // Phones: free-scroll with inertia, no snap-to-center pause.
+        if (prefersFreeGallerySwipe()) {
+          const clamped = Math.max(range.min, Math.min(range.max, liveOffset));
+          setTracksOffset(clamped, false);
+          syncGalleryIndexFromOffset(clamped, range.offsets);
+          if (Math.abs(velocity) > 0.05) {
+            coastFreeSwipe(velocity, range);
+          } else {
+            mainTrack.classList.remove("is-dragging");
+            reflectionTrack.classList.remove("is-dragging");
+          }
+          return;
+        }
+
+        let projected = liveOffset + velocity * 260;
+        projected = Math.max(range.min, Math.min(range.max, projected));
+        current = nearestWorkIndexForOffset(projected, range.offsets);
         pagingLockedUntil = Date.now() + 320;
         updateView();
       }
@@ -2818,6 +2927,7 @@
         if (event.pointerType === "mouse" && event.button !== 0) return;
         if (event.target.closest("button, a, input, textarea, .audio-guide")) return;
 
+        cancelGalleryCoast();
         galleryDrag.pointerId = event.pointerId;
         galleryDrag.startX = event.clientX;
         galleryDrag.startY = event.clientY;
