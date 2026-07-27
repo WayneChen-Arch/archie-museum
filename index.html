@@ -1049,7 +1049,7 @@
           --art-w-tall: min(26vw, 110px);
           --art-w-wide: min(72vw, 280px);
           --art-w-series: min(18vw, 90px);
-          --box-pad: 16px;
+          --box-pad: 26px;
           --frame-rail: 2px;
           --stage-top: 10%;
           --stage-bottom: 36%;
@@ -1484,9 +1484,18 @@
           0 3px 8px rgba(40, 38, 34, 0.12);
       }
 
+      .preview-art .frame .shadowbox {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
       .preview-art .frame img {
         max-height: min(72vh, 680px);
         max-width: min(56vw, 540px);
+        margin: 0 auto;
+        object-fit: contain;
+        object-position: center;
       }
 
       .preview-art .frame.size-a5 img {
