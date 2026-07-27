@@ -380,6 +380,20 @@
         --local-pad: clamp(34px, 16%, 72px);
       }
 
+      .frame.flush-mat {
+        --local-pad: 0px;
+      }
+
+      .frame.flush-mat .shadowbox {
+        background: transparent;
+        box-shadow: none;
+        padding: 0;
+      }
+
+      .frame.flush-mat .shadowbox img {
+        box-shadow: none;
+      }
+
       .work-item:hover .frame {
         transform: translateY(-2px);
         box-shadow:
@@ -1956,6 +1970,7 @@
           materials: { "zh-Hans": "马克笔", "zh-Hant": "馬克筆", en: "Marker" },
           image: art("感谢信 I.jpg"),
           size: "a5",
+          flushMat: true,
           series: "thank-you-teachers",
           panel: "I / III",
           notes: { "zh-Hans": "幼儿园N班结束，送给三位幼儿园老师的感谢信，字母由安迟写成，其母拼贴，其父调色。", "zh-Hant": "幼兒園N班結束，送給三位幼兒園老師的感謝信，字母由安遲寫成，其母拼貼，其父調色。", en: "Thank-you letters for three N-class teachers: Archie wrote the letters, Mom collaged, Dad mixed the colors." }
@@ -1966,6 +1981,7 @@
           materials: { "zh-Hans": "马克笔", "zh-Hant": "馬克筆", en: "Marker" },
           image: art("感谢信 II.jpg"),
           size: "a5",
+          flushMat: true,
           series: "thank-you-teachers",
           panel: "II / III",
           notes: { "zh-Hans": "幼儿园N班结束，送给三位幼儿园老师的感谢信，字母由安迟写成，其母拼贴，其父调色。", "zh-Hant": "幼兒園N班結束，送給三位幼兒園老師的感謝信，字母由安遲寫成，其母拼貼，其父調色。", en: "Thank-you letters for three N-class teachers: Archie wrote the letters, Mom collaged, Dad mixed the colors." }
@@ -1976,6 +1992,7 @@
           materials: { "zh-Hans": "马克笔", "zh-Hant": "馬克筆", en: "Marker" },
           image: art("感谢信 III.jpg"),
           size: "a5",
+          flushMat: true,
           series: "thank-you-teachers",
           panel: "III / III",
           notes: { "zh-Hans": "幼儿园N班结束，送给三位幼儿园老师的感谢信，字母由安迟写成，其母拼贴，其父调色。", "zh-Hant": "幼兒園N班結束，送給三位幼兒園老師的感謝信，字母由安遲寫成，其母拼貼，其父調色。", en: "Thank-you letters for three N-class teachers: Archie wrote the letters, Mom collaged, Dad mixed the colors." }
@@ -1986,6 +2003,7 @@
           materials: { "zh-Hans": "液晶画板", "zh-Hant": "液晶畫板", en: "LCD drawing board" },
           image: art("母亲速写.png"),
           size: "a4",
+          flushMat: true,
           processImage: art("母亲速写 (创作过程，将半透明液晶画板贴在妈妈脸上的速写).jpg"),
           processCaptions: {
             "zh-Hans": "速写，将半透明液晶画板，贴在母亲脸上",
@@ -2495,7 +2513,7 @@
           <div class="material">${workMaterial(work)}</div>
           <p class="note">${workNote(work)}</p>
         `;
-        previewFrame.className = `frame size-${work.size}`;
+        previewFrame.className = `frame size-${work.size}${work.flushMat ? " flush-mat" : ""}`;
         previewImage.src = work.image;
         previewImage.alt = workHeadline(work);
         syncPreviewProcess(work);
@@ -2518,10 +2536,11 @@
         suppressClickUntil = Date.now() + 450;
       }
 
-      function frameMarkup({ size, image, alt, attrs = "", workIndex = "" }) {
+      function frameMarkup({ size, image, alt, attrs = "", workIndex = "", flushMat = false }) {
         const workAttr = workIndex === "" ? "" : `data-work-index="${workIndex}"`;
+        const flushClass = flushMat ? " flush-mat" : "";
         return `
-          <div class="frame size-${size}" ${workAttr} ${attrs}>
+          <div class="frame size-${size}${flushClass}" ${workAttr} ${attrs}>
             <div class="shadowbox">
               <img src="${image}" alt="${alt}" loading="lazy" />
             </div>
@@ -2551,6 +2570,7 @@
             size: work.size,
             image: work.image,
             alt: workHeadline(work),
+            flushMat: Boolean(work.flushMat),
             attrs: clickable ? `data-preview-index="${index}"` : ""
           })}
           <div class="meta">
@@ -2573,6 +2593,7 @@
               image: work.image,
               alt: workHeadline(work),
               workIndex: String(index),
+              flushMat: Boolean(work.flushMat),
               attrs: clickable ? `data-preview-index="${index}"` : ""
             })
           )
