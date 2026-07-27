@@ -821,11 +821,12 @@
         align-items: flex-start;
         justify-content: center;
         gap: clamp(1.6rem, 3.5vw, 3rem);
+        width: 100%;
       }
 
       .cover-portrait {
         flex: 0 0 auto;
-        align-self: center;
+        align-self: flex-start;
         margin: 0;
         padding: 0;
         border: 0;
@@ -835,10 +836,10 @@
 
       .cover-portrait img {
         display: block;
-        width: auto;
+        width: min(38vw, 300px);
         height: auto;
-        max-height: min(42vh, 320px);
-        max-width: min(38vw, 300px);
+        max-height: min(48vh, 360px);
+        aspect-ratio: 1 / 1;
         object-fit: cover;
         object-position: center;
       }
@@ -851,6 +852,7 @@
         align-items: flex-start;
         gap: 1.15rem;
         text-align: left;
+        min-width: 0;
       }
 
       .cover-preface {
@@ -1175,19 +1177,29 @@
 
         .cover-piece {
           flex-direction: column;
-          align-items: center;
-          gap: 1.4rem;
+          align-items: stretch;
+          gap: 1.25rem;
+          width: 100%;
+        }
+
+        .cover-portrait {
+          width: 100%;
+          align-self: stretch;
         }
 
         .cover-portrait img {
-          max-height: min(34vh, 260px);
-          max-width: min(72vw, 280px);
+          width: 100%;
+          max-width: none;
+          max-height: none;
+          aspect-ratio: 1 / 1;
+          object-fit: cover;
         }
 
         .cover-meta {
-          max-width: 100%;
+          max-width: none;
           width: 100%;
           gap: 1rem;
+          align-items: flex-start;
         }
 
         .cover-preface [data-lang-panel] p {
@@ -1201,11 +1213,11 @@
 
         .cover-logo {
           width: min(100px, 34vw);
-          align-self: center;
+          align-self: flex-start;
         }
 
         .enter-exhibition {
-          align-self: center;
+          align-self: flex-start;
         }
 
         .museum.is-backstage .site-nav {
