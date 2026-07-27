@@ -17,7 +17,7 @@
         --frame-bg: #cdb9a0;
         --frame-border: #b7a08a;
         --mat-color: #f7f4ee;
-        --box-pad: clamp(28px, 14%, 64px);
+        --box-pad: clamp(40px, 18%, 88px);
         --ui-muted: #8a8178;
         --ui-line: rgba(70, 52, 36, 0.16);
         --art-h-a3: min(42vh, 420px);
@@ -271,11 +271,15 @@
         cursor: zoom-in;
       }
 
-      /* Pale mat cavity; margins keep art at ~60–70% of the opening. */
+      /* Pale mat cavity; generous even margins keep the work centered. */
       .frame .shadowbox {
         position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         background: var(--mat-color);
         padding: var(--local-pad);
+        box-sizing: border-box;
         box-shadow:
           inset -14px 0 24px -12px rgba(70, 55, 40, 0.08),
           inset 0 -16px 26px -12px rgba(70, 55, 40, 0.1),
@@ -288,6 +292,11 @@
         display: block;
         width: auto;
         height: auto;
+        max-width: 100%;
+        max-height: 100%;
+        margin: 0 auto;
+        object-fit: contain;
+        object-position: center;
         background: #ffffff;
         box-shadow: 0 1px 3px rgba(60, 50, 40, 0.06);
       }
@@ -300,12 +309,12 @@
       }
 
       .frame.size-a3 {
-        --local-pad: clamp(32px, 15%, 72px);
+        --local-pad: clamp(44px, 19%, 96px);
       }
 
       .frame.size-a5,
       .frame.size-series {
-        --local-pad: clamp(16px, 12%, 36px);
+        --local-pad: clamp(30px, 17%, 60px);
         --local-rail: 2px;
       }
 
@@ -344,20 +353,21 @@
       }
 
       .frame.size-series img {
-        max-width: 100%;
-        max-height: 100%;
+        max-height: calc(100% - 0.01px);
+        max-width: calc(100% - 0.01px);
         width: auto;
         height: auto;
         object-fit: contain;
+        object-position: center;
       }
 
       .frame.size-tall {
-        --local-pad: clamp(18px, 11%, 40px);
+        --local-pad: clamp(32px, 16%, 64px);
         --local-rail: 2px;
       }
 
       .frame.size-wide {
-        --local-pad: clamp(22px, 12%, 48px);
+        --local-pad: clamp(34px, 16%, 72px);
       }
 
       .work-item:hover .frame {
@@ -1011,7 +1021,7 @@
           --art-w-tall: min(28vw, 150px);
           --art-w-wide: min(58vw, 320px);
           --art-w-series: min(18vw, 120px);
-          --box-pad: clamp(22px, 12%, 48px);
+          --box-pad: clamp(32px, 16%, 68px);
           --stage-top: 8%;
           --stage-bottom: 33%;
           --track-gap: 8vw;
