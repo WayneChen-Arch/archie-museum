@@ -809,20 +809,24 @@
         gap: clamp(1.6rem, 3.5vw, 3rem);
       }
 
-      .cover-frame.frame.size-a5,
-      .cover-frame.frame.size-a4 {
+      .cover-portrait {
         flex: 0 0 auto;
         align-self: center;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        line-height: 0;
       }
 
-      .cover-frame.frame.size-a5 img {
-        max-height: min(28vh, 200px);
-        max-width: min(20vw, 140px);
-      }
-
-      .cover-frame.frame.size-a4 img {
-        max-height: min(30vh, 220px);
-        max-width: min(34vw, 260px);
+      .cover-portrait img {
+        display: block;
+        width: auto;
+        height: auto;
+        max-height: min(42vh, 320px);
+        max-width: min(38vw, 300px);
+        object-fit: cover;
+        object-position: center;
       }
 
       .cover-meta {
@@ -1161,14 +1165,9 @@
           gap: 1.4rem;
         }
 
-        .cover-frame.frame.size-a5 img {
-          max-height: min(22vh, 160px);
-          max-width: min(36vw, 118px);
-        }
-
-        .cover-frame.frame.size-a4 img {
-          max-height: min(24vh, 180px);
-          max-width: min(56vw, 220px);
+        .cover-portrait img {
+          max-height: min(34vh, 260px);
+          max-width: min(72vw, 280px);
         }
 
         .cover-meta {
@@ -1673,11 +1672,9 @@
         <div class="cover-stage">
           <h1 id="introTitle" class="visually-hidden" data-i18n="museumName">安遲美術館</h1>
           <article class="cover-piece">
-            <div class="frame size-a4 cover-frame" aria-hidden="false">
-              <div class="shadowbox">
-                <img src="assets/第一幅蜡笔.png" alt="2025.3.17，彩色铅笔" data-i18n-alt="coverPieceAlt" />
-              </div>
-            </div>
+            <figure class="cover-portrait">
+              <img src="assets/作者.jpg" alt="作者安迟" data-i18n-alt="coverPieceAlt" />
+            </figure>
             <div class="cover-meta">
               <div class="cover-preface">
                 <div data-lang-panel="zh-Hans" lang="zh-Hans">
@@ -2040,7 +2037,7 @@
           pause: "暂停",
           materialSpeech: "材质",
           logoAlt: "安迟美术馆 Archie Art Museum",
-          coverPieceAlt: "2025.3.17，彩色铅笔",
+          coverPieceAlt: "作者安迟",
           projLandscape: "横向投影",
           projPortrait: "竖向投影",
           projLandscapeAlt: "横向投影：追逐",
@@ -2074,7 +2071,7 @@
           pause: "暫停",
           materialSpeech: "材質",
           logoAlt: "安遲美術館 Archie Art Museum",
-          coverPieceAlt: "2025.3.17，彩色鉛筆",
+          coverPieceAlt: "作者安遲",
           projLandscape: "橫向投影",
           projPortrait: "豎向投影",
           projLandscapeAlt: "橫向投影：追逐",
@@ -2108,7 +2105,7 @@
           pause: "Pause",
           materialSpeech: "Medium",
           logoAlt: "Archie Art Museum",
-          coverPieceAlt: "2025.3.17, Colored pencil",
+          coverPieceAlt: "The artist, Archie",
           projLandscape: "Landscape projection",
           projPortrait: "Portrait projection",
           projLandscapeAlt: "Landscape projection: Chase",
