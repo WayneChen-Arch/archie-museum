@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>安遲美術館 · Editorial Edition</title>
+    <title>安遲美術館 · Anchi Art Museum</title>
     <style>
       :root {
         --bg: #f3f0e8;
@@ -59,18 +59,6 @@
         text-decoration: none;
       }
 
-      .visually-hidden {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        margin: -1px;
-        padding: 0;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
-        border: 0;
-      }
-
       .page-shell {
         width: var(--content-width);
         margin: 0 auto;
@@ -93,23 +81,6 @@
         align-items: center;
         justify-content: space-between;
         gap: 20px;
-      }
-
-      .brand-lockup {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-      }
-
-      .brand-lockup__eyebrow,
-      .section__eyebrow,
-      .hero-quote__eyebrow,
-      .story-card__eyebrow,
-      .backstage-heading__eyebrow {
-        font-size: 11px;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: var(--muted);
       }
 
       .brand-lockup__title {
@@ -184,11 +155,12 @@
         letter-spacing: -0.035em;
       }
 
-      .hero-copy p {
-        margin: 0;
-        max-width: 58ch;
-        font-size: clamp(15px, 1.45vw, 18px);
-        line-height: 1.8;
+      .hero-eyebrow {
+        margin-bottom: 10px;
+        font-size: 11px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--muted);
       }
 
       .cover-preface [data-lang-panel] {
@@ -199,19 +171,15 @@
         display: block;
       }
 
-      .hero-quote {
-        padding-top: 10px;
-        max-width: 30ch;
+      .cover-preface p {
+        margin: 0 0 1em;
+        max-width: 58ch;
+        font-size: clamp(15px, 1.45vw, 18px);
+        line-height: 1.8;
       }
 
-      .hero-quote blockquote,
-      .story-card blockquote {
-        margin: 10px 0 0;
-        font-family: Georgia, "Times New Roman", serif;
-        font-size: clamp(28px, 4vw, 54px);
-        line-height: 1.04;
-        letter-spacing: -0.02em;
-        color: var(--text-strong);
+      .cover-preface p:last-child {
+        margin-bottom: 0;
       }
 
       .hero-actions {
@@ -238,17 +206,9 @@
         background: rgba(255, 255, 255, 0.55);
       }
 
-      .hero-aside {
-        display: grid;
-        gap: 18px;
-      }
-
       .portrait-card,
-      .hero-note,
-      .story-card,
       .backstage-panel,
       .work-card,
-      .stats-card,
       .preview-panel,
       .preview-meta,
       .preview-process,
@@ -259,9 +219,6 @@
       }
 
       .portrait-card,
-      .hero-note,
-      .story-card,
-      .stats-card,
       .backstage-panel,
       .preview-panel {
         border-radius: var(--radius);
@@ -278,9 +235,6 @@
       }
 
       .portrait-card figcaption,
-      .hero-note,
-      .story-card,
-      .backstage-caption,
       .preview-meta,
       .preview-process,
       .comment-panel {
@@ -288,10 +242,8 @@
       }
 
       .portrait-card figcaption {
-        display: flex;
-        justify-content: space-between;
-        gap: 12px;
         font-size: 13px;
+        color: var(--muted);
       }
 
       .section {
@@ -299,9 +251,6 @@
       }
 
       .section-heading {
-        display: grid;
-        grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
-        gap: 28px;
         padding-bottom: 28px;
         border-bottom: 1px solid rgba(53, 43, 34, 0.1);
         margin-bottom: 28px;
@@ -309,43 +258,13 @@
 
       .section-heading h2,
       .backstage-heading h2 {
-        margin: 10px 0 0;
+        margin: 0;
         font-family: Georgia, "Times New Roman", serif;
         font-weight: 400;
-        font-size: clamp(32px, 4vw, 60px);
-        line-height: 1;
-        letter-spacing: -0.025em;
+        font-size: clamp(28px, 3.6vw, 48px);
+        line-height: 1.1;
+        letter-spacing: -0.02em;
         color: var(--text-strong);
-      }
-
-      .section-heading p,
-      .backstage-heading p,
-      .hero-note p,
-      .stats-card p,
-      .story-card p {
-        margin: 0;
-        line-height: 1.75;
-      }
-
-      .story-grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 18px;
-      }
-
-      .story-card {
-        min-height: 100%;
-      }
-
-      .story-card p {
-        margin-top: 14px;
-      }
-
-      .gallery-layout {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) 280px;
-        gap: 28px;
-        align-items: start;
       }
 
       .works-grid {
@@ -387,8 +306,10 @@
 
       .work-card__media img {
         max-height: 420px;
+        width: auto;
+        height: auto;
+        max-width: 100%;
         object-fit: contain;
-        box-shadow: 0 12px 36px rgba(43, 31, 20, 0.14);
       }
 
       .work-card__meta {
@@ -414,7 +335,6 @@
         color: var(--muted);
         font-size: 12px;
         letter-spacing: 0.08em;
-        text-transform: uppercase;
       }
 
       .meta-actions {
@@ -435,7 +355,6 @@
         color: var(--muted);
         font-size: 12px;
         letter-spacing: 0.08em;
-        text-transform: uppercase;
       }
 
       .audio-guide svg {
@@ -450,44 +369,6 @@
 
       .audio-guide:hover,
       .audio-guide.is-playing {
-        color: var(--text-strong);
-      }
-
-      .open-label {
-        font-size: 12px;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--accent);
-      }
-
-      .gallery-side {
-        position: sticky;
-        top: 96px;
-        display: grid;
-        gap: 18px;
-      }
-
-      .stats-card {
-        padding: 22px;
-      }
-
-      .stats-list {
-        margin: 16px 0 0;
-        padding: 0;
-        list-style: none;
-        display: grid;
-        gap: 12px;
-      }
-
-      .stats-list li {
-        display: grid;
-        gap: 4px;
-      }
-
-      .stats-list strong {
-        font-family: Georgia, "Times New Roman", serif;
-        font-size: 30px;
-        font-weight: 400;
         color: var(--text-strong);
       }
 
@@ -568,6 +449,11 @@
         color: var(--text-strong);
       }
 
+      .backstage-caption {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
       .preview-layer {
         position: fixed;
         inset: 0;
@@ -625,35 +511,12 @@
         padding: 28px;
       }
 
-      .preview-art .frame {
-        max-width: 100%;
-      }
-
-      .preview-art .shadowbox {
-        background: #f5f1e8;
-        padding: clamp(18px, 5vw, 54px);
-      }
-
       .preview-art img {
         max-height: min(72vh, 760px);
+        width: auto;
+        height: auto;
+        max-width: 100%;
         object-fit: contain;
-        box-shadow: 0 12px 36px rgba(43, 31, 20, 0.12);
-      }
-
-      .frame {
-        display: inline-flex;
-        padding: 4px;
-        background: linear-gradient(145deg, #d7c6af 0%, #bfa68b 100%);
-        border: 1px solid rgba(105, 78, 57, 0.22);
-      }
-
-      .frame.flush-mat {
-        padding: 0;
-      }
-
-      .frame.flush-mat .shadowbox {
-        padding: 0;
-        background: transparent;
       }
 
       .preview-side {
@@ -680,7 +543,6 @@
         color: var(--muted);
         font-size: 13px;
         letter-spacing: 0.08em;
-        text-transform: uppercase;
       }
 
       .preview-meta .note,
@@ -769,34 +631,17 @@
         color: var(--text-strong);
       }
 
-      .compare-links {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-      }
-
       .footer {
         padding: 24px 0 64px;
         color: var(--muted);
         font-size: 12px;
         letter-spacing: 0.08em;
-        text-transform: uppercase;
       }
 
       @media (max-width: 1080px) {
         .hero-grid,
-        .section-heading,
-        .gallery-layout,
         .backstage-layout,
         .preview-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .gallery-side {
-          position: static;
-        }
-
-        .story-grid {
           grid-template-columns: 1fr;
         }
       }
@@ -841,14 +686,12 @@
     <header class="site-header">
       <div class="site-header__inner">
         <div class="brand-lockup">
-          <span class="brand-lockup__eyebrow">Editorial Edition</span>
           <div class="brand-lockup__title" id="brandTitle">安遲美術館</div>
         </div>
-        <nav class="site-nav" aria-label="Site navigation">
+        <nav class="site-nav" aria-label="Site navigation" data-i18n-aria="siteNav">
           <a href="#intro" data-i18n="navCover">封面</a>
           <a href="#gallery" data-i18n="navGallery">展廊</a>
           <a href="#backstage" data-i18n="navBackstage">幕後</a>
-          <a href="index.html">Original</a>
           <div class="lang-switch" role="group" aria-label="Language">
             <button type="button" data-lang="zh-Hans">简</button>
             <button type="button" data-lang="zh-Hant" class="is-active">繁</button>
@@ -863,14 +706,8 @@
         <div class="hero-grid">
           <div class="hero-copy">
             <div>
-              <div class="brand-lockup__eyebrow" data-i18n="museumLabel">線上美術館展廳</div>
-              <h1 id="heroTitle">ARCHIE<br />ART MUSEUM</h1>
-            </div>
-            <div class="hero-quote">
-              <div class="hero-quote__eyebrow">Editorial reinterpretation</div>
-              <blockquote id="heroQuote">
-                “Follow the shape that the material wants to become.”
-              </blockquote>
+              <div class="hero-eyebrow" data-i18n="museumLabel">線上美術館展廳</div>
+              <h1 id="heroTitle" data-i18n="museumName">安遲美術館</h1>
             </div>
             <div class="cover-preface">
               <div data-lang-panel="zh-Hans" lang="zh-Hans">
@@ -897,107 +734,29 @@
             </div>
             <div class="hero-actions">
               <a class="button-link" href="#gallery" data-i18n="enter">進入展覽</a>
-              <a class="button-link" href="index.html">Open original</a>
             </div>
           </div>
 
           <div class="hero-aside">
             <figure class="portrait-card">
               <img src="assets/作者.jpg" alt="作者安遲" data-i18n-alt="coverPieceAlt" />
-              <figcaption>
-                <span data-i18n="museumName">安遲美術館</span>
-                <span>2025–2026</span>
-              </figcaption>
+              <figcaption data-i18n="museumName">安遲美術館</figcaption>
             </figure>
-            <div class="hero-note">
-              <p id="heroNote">
-                一個保留原站內容結構、但重新排成雜誌式閱讀節奏的版本：更大的留白、更強的字體對比、以及像藝術家官網一樣的首頁敘事。
-              </p>
-            </div>
           </div>
-        </div>
-      </section>
-
-      <section class="section" aria-labelledby="storyTitle">
-        <div class="section-heading">
-          <div>
-            <div class="section__eyebrow">Framing the exhibition</div>
-            <h2 id="storyTitle">A quieter rhythm for the same collection.</h2>
-          </div>
-          <p id="storySummary">
-            新版不是替换原站，而是为同一组作品提供第二种观看方式：从展厅式切换为编辑式、叙事式、偏艺术品牌官网的阅读体验。
-          </p>
-        </div>
-        <div class="story-grid">
-          <article class="story-card">
-            <div class="story-card__eyebrow">Cover</div>
-            <blockquote id="storyQuote1">“A first drawing can feel like a first room.”</blockquote>
-            <p id="storyText1">封面仍然承担“介绍这是谁、作品从何而来”的角色，但叙事更缓、更留白。</p>
-          </article>
-          <article class="story-card">
-            <div class="story-card__eyebrow">Gallery</div>
-            <blockquote id="storyQuote2">“The archive stays intact; the pace changes.”</blockquote>
-            <p id="storyText2">展廊继续保留全部作品、标题、年份、材质与一句话介绍，同时支持打开详情、语音导览与留言。</p>
-          </article>
-          <article class="story-card">
-            <div class="story-card__eyebrow">Backstage</div>
-            <blockquote id="storyQuote3">“Process is not an appendix; it is part of the exhibition.”</blockquote>
-            <p id="storyText3">幕后依旧保留照片与视频，只是从沉浸式放映间改为更易比较、更适合桌面与手机浏览的切换式面板。</p>
-          </article>
         </div>
       </section>
 
       <section class="section" id="gallery" aria-labelledby="galleryTitleHeading">
         <div class="section-heading">
-          <div>
-            <div class="section__eyebrow">Gallery</div>
-            <h2 id="galleryTitleHeading">All original works, reset in a new editorial grid.</h2>
-          </div>
-          <p id="galleryIntro">
-            这里完整保留原美术馆需要呈现的作品内容与顺序关系，只重新组织视觉节奏：横向序列改为纵向编排，系列作品仍会被标注与连续阅读。
-          </p>
+          <h2 id="galleryTitleHeading" data-i18n="galleryTitle">安遲美術館，ARCHIE ART MUSEUM</h2>
         </div>
-        <div class="gallery-layout">
-          <div class="works-grid" id="worksGrid"></div>
-          <aside class="gallery-side">
-            <section class="stats-card">
-              <div class="section__eyebrow">Collection</div>
-              <p id="collectionText">从第一幅蜡笔到后来的速写、感谢信与混合媒介练习，这里保留整条创作成长线。</p>
-              <ul class="stats-list">
-                <li>
-                  <strong id="workCount">0</strong>
-                  <span id="workCountLabel">作品</span>
-                </li>
-                <li>
-                  <strong>3</strong>
-                  <span id="langCountLabel">语言版本</span>
-                </li>
-                <li>
-                  <strong>2</strong>
-                  <span id="sectionCountLabel">展览板块</span>
-                </li>
-              </ul>
-            </section>
-            <section class="stats-card">
-              <div class="section__eyebrow">Compare</div>
-              <p id="compareText">为了方便对比，新版与原站并行存在，原首页链接不变，新页面单独开放。</p>
-              <div class="compare-links">
-                <a class="button-link" href="index.html">Original</a>
-                <a class="button-link" href="#backstage">Backstage</a>
-              </div>
-            </section>
-          </aside>
-        </div>
+        <div class="works-grid" id="worksGrid"></div>
       </section>
 
       <section class="section" id="backstage" aria-labelledby="backstageTitleHeading">
         <div class="backstage-layout">
           <div class="backstage-heading">
-            <div class="backstage-heading__eyebrow" data-i18n="backstageTitle">幕後 · BEHIND THE SCENES</div>
-            <h2 id="backstageTitleHeading">Process remains part of the exhibition.</h2>
-            <p id="backstageIntro">
-              原站“幕后”的视频与图像依旧保留，只换成更接近编辑页面的观看方式：在一个主画幅里切换横向与竖向投影。
-            </p>
+            <h2 id="backstageTitleHeading" data-i18n="backstageTitle">幕後 · BEHIND THE SCENES</h2>
           </div>
           <div class="backstage-panel">
             <div class="projection-switcher">
@@ -1019,10 +778,7 @@
       </section>
 
       <footer class="footer">
-        <div class="compare-links">
-          <a href="index.html">Original museum / index.html</a>
-          <a href="editorial.html">Editorial museum / editorial.html</a>
-        </div>
+        <span data-i18n="museumName">安遲美術館</span>
       </footer>
     </main>
 
@@ -1032,11 +788,7 @@
         <div class="preview-panel">
           <div class="preview-grid">
             <div class="preview-art">
-              <div class="frame" id="previewFrame">
-                <div class="shadowbox">
-                  <img id="previewImage" src="" alt="" />
-                </div>
-              </div>
+              <img id="previewImage" src="" alt="" />
             </div>
             <div class="preview-side">
               <div class="preview-meta" id="previewMeta"></div>
@@ -1087,7 +839,9 @@
         "zh-Hans": {
           museumName: "安迟美术馆",
           museumLabel: "线上美术馆展厅",
-          pageTitle: "安迟美术馆 · Editorial Edition",
+          siteNav: "站点导航",
+          pageTitle: "安迟美术馆 · Archie Art Museum",
+          galleryTitle: "安迟美术馆，ARCHIE ART MUSEUM",
           navCover: "封面",
           navGallery: "展廊",
           navBackstage: "幕后",
@@ -1105,7 +859,6 @@
           visitor: "一位参观者",
           audioGuide: "语音导览",
           materialSpeech: "材质",
-          logoAlt: "安迟美术馆 Archie Art Museum",
           coverPieceAlt: "作者安迟",
           projLandscape: "横向投影",
           projPortrait: "竖向投影",
@@ -1115,7 +868,9 @@
         "zh-Hant": {
           museumName: "安遲美術館",
           museumLabel: "線上美術館展廳",
-          pageTitle: "安遲美術館 · Editorial Edition",
+          siteNav: "站點導航",
+          pageTitle: "安遲美術館 · Archie Art Museum",
+          galleryTitle: "安遲美術館，ARCHIE ART MUSEUM",
           navCover: "封面",
           navGallery: "展廊",
           navBackstage: "幕後",
@@ -1133,7 +888,6 @@
           visitor: "一位參觀者",
           audioGuide: "語音導覽",
           materialSpeech: "材質",
-          logoAlt: "安遲美術館 Archie Art Museum",
           coverPieceAlt: "作者安遲",
           projLandscape: "橫向投影",
           projPortrait: "豎向投影",
@@ -1143,7 +897,9 @@
         en: {
           museumName: "Archie Art Museum",
           museumLabel: "Online art museum gallery",
-          pageTitle: "Archie Art Museum · Editorial Edition",
+          siteNav: "Site navigation",
+          pageTitle: "Archie Art Museum",
+          galleryTitle: "ARCHIE ART MUSEUM",
           navCover: "Cover",
           navGallery: "Gallery",
           navBackstage: "Backstage",
@@ -1161,75 +917,11 @@
           visitor: "A visitor",
           audioGuide: "Audio guide",
           materialSpeech: "Medium",
-          logoAlt: "Archie Art Museum",
           coverPieceAlt: "The artist, Archie",
           projLandscape: "Landscape projection",
           projPortrait: "Portrait projection",
           projLandscapeAlt: "Landscape projection: Chase",
           projPortraitAlt: "Portrait projection: A Long Bunch of Grapes"
-        }
-      };
-
-      const TEXT = {
-        "zh-Hans": {
-          heroQuote: "“顺着材料想要成为的形状，让作品自己开口。”",
-          heroNote: "这是一个保留原站内容结构、但重新排成杂志式阅读节奏的版本：更大的留白、更强的字体对比、以及更像艺术家官网的首页叙事。",
-          storySummary: "新版不是替换原站，而是为同一组作品提供第二种观看方式：从展厅式切换为编辑式、叙事式、偏艺术品牌官网的阅读体验。",
-          storyQuote1: "“第一幅画，也可以像第一间展厅。”",
-          storyText1: "封面仍然承担“介绍这是谁、作品从何而来”的角色，但叙事更缓、更留白。",
-          storyQuote2: "“档案没有改变，改变的是浏览节奏。”",
-          storyText2: "展廊继续保留全部作品、标题、年份、材质与一句话介绍，同时支持打开详情、语音导览与留言。",
-          storyQuote3: "“创作过程不是附录，它本身就是展览的一部分。”",
-          storyText3: "幕后依旧保留照片与视频，只是从沉浸式放映间改为更易比较、更适合桌面与手机浏览的切换式面板。",
-          galleryHeading: "全部原始作品，换成一套新的编辑式网格。",
-          galleryIntro: "这里完整保留原美术馆需要呈现的作品内容与顺序关系，只重新组织视觉节奏：横向序列改为纵向编排，系列作品仍会被标注与连续阅读。",
-          collectionText: "从第一幅蜡笔到后来的速写、感谢信与混合媒介练习，这里保留整条创作成长线。",
-          workCountLabel: "作品",
-          langCountLabel: "语言版本",
-          sectionCountLabel: "展览板块",
-          compareText: "为了方便对比，新版与原站并行存在，原首页链接不变，新页面单独开放。",
-          backstageHeading: "创作过程仍然属于展览的一部分。",
-          backstageIntro: "原站“幕后”的视频与图像依旧保留，只换成更接近编辑页面的观看方式：在一个主画幅里切换横向与竖向投影。"
-        },
-        "zh-Hant": {
-          heroQuote: "“順著材料想要成為的形狀，讓作品自己開口。”",
-          heroNote: "這是一個保留原站內容結構、但重新排成雜誌式閱讀節奏的版本：更大的留白、更強的字體對比、以及更像藝術家官網的首頁敘事。",
-          storySummary: "新版不是替換原站，而是為同一組作品提供第二種觀看方式：從展廳式切換為編輯式、敘事式、偏藝術品牌官網的閱讀體驗。",
-          storyQuote1: "“第一幅畫，也可以像第一間展廳。”",
-          storyText1: "封面仍然承擔「介紹這是誰、作品從何而來」的角色，但敘事更緩、更留白。",
-          storyQuote2: "“檔案沒有改變，改變的是瀏覽節奏。”",
-          storyText2: "展廊繼續保留全部作品、標題、年份、材質與一句話介紹，同時支援打開詳情、語音導覽與留言。",
-          storyQuote3: "“創作過程不是附錄，它本身就是展覽的一部分。”",
-          storyText3: "幕後依舊保留照片與影片，只是從沉浸式放映間改為更易比較、更適合桌面與手機瀏覽的切換式面板。",
-          galleryHeading: "全部原始作品，換成一套新的編輯式網格。",
-          galleryIntro: "這裡完整保留原美術館需要呈現的作品內容與順序關係，只重新組織視覺節奏：橫向序列改為縱向編排，系列作品仍會被標註與連續閱讀。",
-          collectionText: "從第一幅蠟筆到後來的速寫、感謝信與混合媒材練習，這裡保留整條創作成長線。",
-          workCountLabel: "作品",
-          langCountLabel: "語言版本",
-          sectionCountLabel: "展覽板塊",
-          compareText: "為了方便對比，新版與原站並行存在，原首頁連結不變，新頁面單獨開放。",
-          backstageHeading: "創作過程仍然屬於展覽的一部分。",
-          backstageIntro: "原站「幕後」的影片與圖像依舊保留，只換成更接近編輯頁面的觀看方式：在一個主畫幅裡切換橫向與豎向投影。"
-        },
-        en: {
-          heroQuote: "“Follow the shape that the material wants to become.”",
-          heroNote: "This version keeps the original content structure, but resets it into an editorial rhythm with more whitespace, sharper typographic contrast, and a homepage closer to an artist’s website.",
-          storySummary: "This does not replace the original site. It offers a second way to view the same collection: less gallery corridor, more editorial narrative and artist-site pacing.",
-          storyQuote1: "“A first drawing can feel like a first room.”",
-          storyText1: "The cover still introduces who this is and where the works come from, but now with a slower and airier rhythm.",
-          storyQuote2: "“The archive stays intact; the pace changes.”",
-          storyText2: "The gallery still preserves every work, title, year, medium, and note, while keeping preview, audio guide, and visitor notes.",
-          storyQuote3: "“Process is not an appendix; it is part of the exhibition.”",
-          storyText3: "Behind the Scenes remains in place, only recast from an immersive screening room into a switchable editorial panel better suited to desktop and mobile.",
-          galleryHeading: "All original works, reset in a new editorial grid.",
-          galleryIntro: "The same museum content and ordering logic remain intact here; only the visual rhythm changes, from a horizontal corridor to a vertical editorial composition.",
-          collectionText: "From the first crayon drawing to later sketches, thank-you letters, and mixed-media studies, the full growth line remains here.",
-          workCountLabel: "works",
-          langCountLabel: "languages",
-          sectionCountLabel: "sections",
-          compareText: "For comparison, the new edition and the original site now coexist. The original homepage URL stays unchanged while this page opens separately.",
-          backstageHeading: "Process remains part of the exhibition.",
-          backstageIntro: "The original Behind the Scenes videos and images remain here, only translated into an editorial viewing mode that switches between landscape and portrait projections."
         }
       };
 
@@ -1249,7 +941,6 @@
       const previewLayer = document.getElementById("previewLayer");
       const previewClose = document.getElementById("previewClose");
       const previewMeta = document.getElementById("previewMeta");
-      const previewFrame = document.getElementById("previewFrame");
       const previewImage = document.getElementById("previewImage");
       const previewProcess = document.getElementById("previewProcess");
       const previewProcessImage = document.getElementById("previewProcessImage");
@@ -1285,7 +976,6 @@
 
       const ARCHIE_BIRTH = new Date(2023, 8, 27);
       const t = (key) => (UI[lang] && UI[lang][key]) || UI["zh-Hant"][key] || key;
-      const text = (key) => (TEXT[lang] && TEXT[lang][key]) || TEXT["zh-Hant"][key] || key;
       const pick = (map) => (map && (map[lang] || map["zh-Hant"] || map.en)) || "";
 
       function parseWorkDate(yearStr) {
@@ -1455,10 +1145,6 @@
         speakGuide(work, index);
       }
 
-      function frameClass(work) {
-        return `frame${work.flushMat ? " flush-mat" : ""}`;
-      }
-
       function cardSizeClass(work, index) {
         if (work.size === "a3" || index === 0 || index === 6 || index === works.length - 1) return "is-wide";
         if (work.size === "tall") return "is-tall";
@@ -1468,28 +1154,23 @@
       function renderWorks() {
         worksGrid.innerHTML = works
           .map((work, index) => {
-            const panel = work.panel ? `<span>${escapeHtml(work.panel)}</span>` : "";
+            const note = workNote(work);
             return `
               <article class="work-card ${cardSizeClass(work, index)}">
                 <div class="work-card__button" data-preview-index="${index}" role="button" tabindex="0" aria-label="${escapeHtml(workHeadline(work))}">
                   <div class="work-card__media">
-                    <div class="${frameClass(work)}">
-                      <div class="shadowbox">
-                        <img src="${work.image}" alt="${escapeHtml(workHeadline(work))}" loading="lazy" />
-                      </div>
-                    </div>
+                    <img src="${work.image}" alt="${escapeHtml(workHeadline(work))}" loading="lazy" />
                   </div>
                   <div class="work-card__meta">
-                    <div class="meta-row">${escapeHtml(workDateLine(work))}${panel ? ` · ${panel}` : ""}</div>
+                    <div class="meta-row">${escapeHtml(workDateLine(work))}</div>
                     <h3>${escapeHtml(workTitle(work))}</h3>
                     <p>${escapeHtml(workMaterial(work))}</p>
-                    <p>${escapeHtml(workNote(work))}</p>
+                    ${note ? `<p>${escapeHtml(note)}</p>` : ""}
                     <div class="meta-actions">
                       <button type="button" class="audio-guide" data-guide-index="${index}" aria-label="${t("audioGuide")}" aria-pressed="false" title="${t("audioGuide")}">
                         ${speakerIcon}
                         <span>${t("audioGuide")}</span>
                       </button>
-                      <span class="open-label">Open</span>
                     </div>
                   </div>
                 </div>
@@ -1527,7 +1208,6 @@
           <div class="material">${escapeHtml(workMaterial(work))}</div>
           <p class="note">${escapeHtml(workNote(work))}</p>
         `;
-        previewFrame.className = frameClass(work);
         previewImage.src = work.image;
         previewImage.alt = workHeadline(work);
         syncPreviewProcess(work);
@@ -1627,32 +1307,6 @@
         });
         document.querySelectorAll("[data-lang-panel]").forEach((panel) => {
           panel.classList.toggle("is-active", panel.dataset.langPanel === lang);
-          panel.style.display = panel.dataset.langPanel === lang ? "block" : "none";
-        });
-
-        const textMap = {
-          heroQuote: "heroQuote",
-          heroNote: "heroNote",
-          storySummary: "storySummary",
-          storyQuote1: "storyQuote1",
-          storyText1: "storyText1",
-          storyQuote2: "storyQuote2",
-          storyText2: "storyText2",
-          storyQuote3: "storyQuote3",
-          storyText3: "storyText3",
-          galleryTitleHeading: "galleryHeading",
-          galleryIntro: "galleryIntro",
-          collectionText: "collectionText",
-          workCountLabel: "workCountLabel",
-          langCountLabel: "langCountLabel",
-          sectionCountLabel: "sectionCountLabel",
-          compareText: "compareText",
-          backstageTitleHeading: "backstageHeading",
-          backstageIntro: "backstageIntro"
-        };
-        Object.entries(textMap).forEach(([id, key]) => {
-          const node = document.getElementById(id);
-          if (node) node.textContent = text(key);
         });
 
         renderWorks();
@@ -1730,7 +1384,6 @@
         if (event.key === "Escape" && previewIndex !== null) closePreview();
       });
 
-      document.getElementById("workCount").textContent = String(works.length);
       applyLanguage(lang);
     </script>
   </body>
