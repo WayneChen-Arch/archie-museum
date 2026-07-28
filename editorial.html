@@ -1,0 +1,1390 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>安遲美術館 · Anchi Art Museum</title>
+    <style>
+      :root {
+        --bg: #f3f0e8;
+        --bg-soft: #ece7dc;
+        --panel: rgba(255, 251, 244, 0.72);
+        --panel-strong: rgba(255, 251, 244, 0.9);
+        --line: rgba(53, 43, 34, 0.14);
+        --text: #4f453a;
+        --text-strong: #201914;
+        --muted: #786d61;
+        --accent: #8f634a;
+        --shadow: 0 22px 60px rgba(52, 40, 29, 0.12);
+        --radius: 28px;
+        --page-pad: clamp(20px, 3.6vw, 52px);
+        --content-width: min(1240px, calc(100vw - 2 * var(--page-pad)));
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Helvetica Neue", "PingFang SC", "Noto Sans SC", Arial, sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top left, rgba(255, 255, 255, 0.64), transparent 30%),
+          linear-gradient(180deg, #f6f3ec 0%, var(--bg) 45%, #e8e1d5 100%);
+      }
+
+      img,
+      video {
+        display: block;
+        max-width: 100%;
+      }
+
+      button,
+      input,
+      textarea {
+        font: inherit;
+      }
+
+      button {
+        cursor: pointer;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .page-shell {
+        width: var(--content-width);
+        margin: 0 auto;
+      }
+
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        backdrop-filter: blur(18px);
+        background: rgba(243, 240, 232, 0.62);
+        border-bottom: 1px solid rgba(53, 43, 34, 0.08);
+      }
+
+      .site-header__inner {
+        width: var(--content-width);
+        margin: 0 auto;
+        min-height: 72px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .brand-lockup__title {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(22px, 2.2vw, 30px);
+        color: var(--text-strong);
+      }
+
+      .site-nav {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        flex-wrap: wrap;
+      }
+
+      .site-nav a,
+      .site-nav button {
+        border: 0;
+        background: transparent;
+        padding: 0;
+        color: var(--muted);
+        font-size: 12px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .site-nav a:hover,
+      .site-nav button:hover,
+      .lang-switch button.is-active {
+        color: var(--text-strong);
+      }
+
+      .lang-switch {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .lang-switch button {
+        border: 0;
+        background: transparent;
+        padding: 0;
+        color: var(--muted);
+        font-size: 12px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .hero {
+        padding: 54px 0 72px;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.88fr);
+        gap: clamp(28px, 4vw, 64px);
+        align-items: start;
+      }
+
+      .hero-copy {
+        display: grid;
+        gap: 28px;
+      }
+
+      .hero-copy h1 {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-weight: 400;
+        font-size: clamp(44px, 7vw, 100px);
+        line-height: 0.96;
+        color: var(--text-strong);
+        letter-spacing: -0.035em;
+      }
+
+      .hero-eyebrow {
+        margin-bottom: 10px;
+        font-size: 11px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .cover-preface [data-lang-panel] {
+        display: none;
+      }
+
+      .cover-preface [data-lang-panel].is-active {
+        display: block;
+      }
+
+      .cover-preface p {
+        margin: 0 0 1em;
+        max-width: 58ch;
+        font-size: clamp(15px, 1.45vw, 18px);
+        line-height: 1.8;
+      }
+
+      .cover-preface p:last-child {
+        margin-bottom: 0;
+      }
+
+      .hero-actions {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+
+      .button-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 46px;
+        padding: 0 20px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.34);
+        color: var(--text-strong);
+        transition: transform 160ms ease, background 160ms ease;
+      }
+
+      .button-link:hover {
+        transform: translateY(-1px);
+        background: rgba(255, 255, 255, 0.55);
+      }
+
+      .portrait-card,
+      .backstage-panel,
+      .work-card,
+      .preview-panel,
+      .preview-meta,
+      .preview-process,
+      .comment-panel {
+        background: var(--panel);
+        border: 1px solid rgba(53, 43, 34, 0.08);
+        box-shadow: var(--shadow);
+      }
+
+      .portrait-card,
+      .backstage-panel,
+      .preview-panel {
+        border-radius: var(--radius);
+      }
+
+      .portrait-card {
+        overflow: hidden;
+      }
+
+      .portrait-card img {
+        width: 100%;
+        aspect-ratio: 0.92;
+        object-fit: cover;
+      }
+
+      .portrait-card figcaption,
+      .preview-meta,
+      .preview-process,
+      .comment-panel {
+        padding: 20px;
+      }
+
+      .portrait-card figcaption {
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .section {
+        padding: 24px 0 72px;
+      }
+
+      .section-heading {
+        padding-bottom: 28px;
+        border-bottom: 1px solid rgba(53, 43, 34, 0.1);
+        margin-bottom: 28px;
+      }
+
+      .section-heading h2,
+      .backstage-heading h2 {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-weight: 400;
+        font-size: clamp(28px, 3.6vw, 48px);
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        color: var(--text-strong);
+      }
+
+      .works-grid {
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .work-card {
+        grid-column: span 4;
+        border-radius: 24px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .work-card.is-wide {
+        grid-column: span 8;
+      }
+
+      .work-card.is-tall {
+        grid-column: span 4;
+      }
+
+      .work-card__button {
+        width: 100%;
+        text-align: left;
+        color: inherit;
+        cursor: pointer;
+      }
+
+      .work-card__media {
+        background: rgba(245, 239, 231, 0.92);
+        padding: 18px;
+        min-height: 280px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .work-card__media img {
+        max-height: 420px;
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        object-fit: contain;
+      }
+
+      .work-card__meta {
+        padding: 18px 18px 20px;
+        display: grid;
+        gap: 7px;
+      }
+
+      .work-card__meta h3 {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 500;
+        color: var(--text-strong);
+      }
+
+      .work-card__meta p {
+        margin: 0;
+        line-height: 1.6;
+        font-size: 14px;
+      }
+
+      .meta-row {
+        color: var(--muted);
+        font-size: 12px;
+        letter-spacing: 0.08em;
+      }
+
+      .meta-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        padding-top: 6px;
+      }
+
+      .audio-guide {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 0;
+        padding: 0;
+        background: transparent;
+        color: var(--muted);
+        font-size: 12px;
+        letter-spacing: 0.08em;
+      }
+
+      .audio-guide svg {
+        width: 16px;
+        height: 16px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.55;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .audio-guide:hover,
+      .audio-guide.is-playing {
+        color: var(--text-strong);
+      }
+
+      .backstage-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+        gap: 28px;
+        align-items: start;
+      }
+
+      .backstage-heading {
+        display: grid;
+        gap: 16px;
+      }
+
+      .backstage-panel {
+        padding: 18px;
+      }
+
+      .projection-switcher {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 14px;
+      }
+
+      .projection-switcher button {
+        min-height: 40px;
+        padding: 0 16px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.42);
+        color: var(--muted);
+      }
+
+      .projection-switcher button.is-active {
+        color: var(--text-strong);
+        background: rgba(255, 255, 255, 0.75);
+      }
+
+      .projection-frame {
+        position: relative;
+        border-radius: 24px;
+        overflow: hidden;
+        aspect-ratio: 16 / 10;
+        background: #dbd4c9;
+      }
+
+      .projection-frame.is-portrait {
+        aspect-ratio: 9 / 12;
+        max-width: 360px;
+      }
+
+      .projection-frame img,
+      .projection-frame video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .projection-frame video.is-hidden {
+        display: none;
+      }
+
+      .backstage-controls {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 14px;
+      }
+
+      .play-toggle {
+        min-height: 42px;
+        padding: 0 16px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.58);
+        color: var(--text-strong);
+      }
+
+      .backstage-caption {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .preview-layer {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        display: none;
+        padding: 24px;
+        background: rgba(24, 19, 16, 0.5);
+        backdrop-filter: blur(14px);
+      }
+
+      .preview-layer.is-open {
+        display: block;
+      }
+
+      .preview-shell {
+        width: min(1180px, 100%);
+        max-height: calc(100vh - 48px);
+        margin: 0 auto;
+        overflow: auto;
+      }
+
+      .preview-close {
+        position: sticky;
+        top: 0;
+        margin-left: auto;
+        width: 44px;
+        height: 44px;
+        border: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.75);
+        color: var(--text-strong);
+        font-size: 28px;
+        line-height: 1;
+        z-index: 3;
+      }
+
+      .preview-panel {
+        padding: 22px;
+      }
+
+      .preview-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+        gap: 22px;
+      }
+
+      .preview-art {
+        background: var(--panel-strong);
+        border-radius: 24px;
+        border: 1px solid rgba(53, 43, 34, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 560px;
+        padding: 28px;
+      }
+
+      .preview-art img {
+        max-height: min(72vh, 760px);
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        object-fit: contain;
+      }
+
+      .preview-side {
+        display: grid;
+        gap: 16px;
+      }
+
+      .preview-meta {
+        border-radius: 24px;
+        display: grid;
+        gap: 10px;
+      }
+
+      .preview-meta .title {
+        margin: 0;
+        font-size: 30px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-weight: 400;
+        color: var(--text-strong);
+      }
+
+      .preview-meta .date,
+      .preview-meta .material {
+        color: var(--muted);
+        font-size: 13px;
+        letter-spacing: 0.08em;
+      }
+
+      .preview-meta .note,
+      .preview-process figcaption,
+      .comment-empty,
+      .comment-item .body {
+        margin: 0;
+        line-height: 1.7;
+      }
+
+      .preview-process {
+        border-radius: 24px;
+        display: none;
+      }
+
+      .preview-process.is-visible {
+        display: block;
+      }
+
+      .preview-process img {
+        border-radius: 16px;
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+        margin-bottom: 12px;
+      }
+
+      .comment-panel {
+        border-radius: 24px;
+      }
+
+      .comment-title {
+        margin: 0 0 12px;
+        font-size: 12px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .comment-list {
+        display: grid;
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+
+      .comment-item {
+        padding: 12px 14px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.42);
+        border: 1px solid rgba(53, 43, 34, 0.08);
+      }
+
+      .comment-item .who {
+        margin-bottom: 6px;
+        color: var(--text-strong);
+        font-size: 13px;
+      }
+
+      .comment-form {
+        display: grid;
+        gap: 10px;
+      }
+
+      .comment-form input,
+      .comment-form textarea {
+        width: 100%;
+        border: 1px solid rgba(53, 43, 34, 0.12);
+        border-radius: 16px;
+        padding: 12px 14px;
+        background: rgba(255, 255, 255, 0.66);
+        color: var(--text-strong);
+      }
+
+      .comment-form textarea {
+        min-height: 96px;
+        resize: vertical;
+      }
+
+      .comment-submit {
+        justify-self: start;
+        min-height: 42px;
+        padding: 0 16px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.7);
+        color: var(--text-strong);
+      }
+
+      .footer {
+        padding: 24px 0 64px;
+        color: var(--muted);
+        font-size: 12px;
+        letter-spacing: 0.08em;
+      }
+
+      @media (max-width: 1080px) {
+        .hero-grid,
+        .backstage-layout,
+        .preview-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 760px) {
+        .site-header__inner {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 16px 0;
+        }
+
+        .works-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .work-card,
+        .work-card.is-wide,
+        .work-card.is-tall {
+          grid-column: auto;
+        }
+
+        .hero {
+          padding-top: 28px;
+        }
+
+        .preview-layer {
+          padding: 12px;
+        }
+
+        .preview-panel,
+        .preview-art {
+          padding: 16px;
+        }
+
+        .preview-art {
+          min-height: 360px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <div class="brand-lockup">
+          <div class="brand-lockup__title" id="brandTitle">安遲美術館</div>
+        </div>
+        <nav class="site-nav" aria-label="Site navigation" data-i18n-aria="siteNav">
+          <a href="#intro" data-i18n="navCover">封面</a>
+          <a href="#gallery" data-i18n="navGallery">展廊</a>
+          <a href="#backstage" data-i18n="navBackstage">幕後</a>
+          <div class="lang-switch" role="group" aria-label="Language">
+            <button type="button" data-lang="zh-Hans">简</button>
+            <button type="button" data-lang="zh-Hant" class="is-active">繁</button>
+            <button type="button" data-lang="en">EN</button>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page-shell">
+      <section class="hero" id="intro" aria-labelledby="heroTitle">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <div>
+              <div class="hero-eyebrow" data-i18n="museumLabel">線上美術館展廳</div>
+              <h1 id="heroTitle" data-i18n="museumName">安遲美術館</h1>
+            </div>
+            <div class="cover-preface">
+              <div data-lang-panel="zh-Hans" lang="zh-Hans">
+                <p>欢迎来到安迟美术馆，这是一位三岁小朋友创作集合。</p>
+                <p>展览分为展廊与幕后两个部分。</p>
+                <p>展廊，呈现安迟日常的绘画与雕塑创作，这里有他画下的第一幅画。他最爱的创作主题：下雨、刮风、彩虹。除了这些系列作品，还有他的第一幅人物肖像画。</p>
+                <p>幕后，以照片与影片的方式，记录这些作品从无到有的过程。分享创作背后的故事。</p>
+                <p>在这里，希望你能感受到他创作的自由和热情。若有想说的，欢迎在每幅画的留言区写下感想。愿你有个好心情。</p>
+              </div>
+              <div data-lang-panel="zh-Hant" lang="zh-Hant" class="is-active">
+                <p>歡迎來到安遲美術館，這是一位三歲小朋友創作集合。</p>
+                <p>展覽分為展廊與幕後兩個部分。</p>
+                <p>展廊，呈現安遲日常的繪畫與雕塑創作，這裡有他畫下的第一幅畫。他最愛的創作主題：下雨、颳風、彩虹。除了這些系列作品，還有他的第一幅人物肖像畫。</p>
+                <p>幕後，以照片與影片的方式，記錄這些作品從無到有的過程。分享創作背後的故事。</p>
+                <p>在這裡，希望你能感受到他創作的自由和熱情。若有想說的，歡迎在每幅畫的留言區寫下感想。願你有個好心情。</p>
+              </div>
+              <div data-lang-panel="en" lang="en">
+                <p>Welcome to Archie Art Museum, a collection of works by a three-year-old.</p>
+                <p>The exhibition has two parts: the Gallery and Behind the Scenes.</p>
+                <p>The Gallery presents Archie’s everyday paintings and sculptures, including his first drawing. His favorite subjects—rain, wind, and rainbows—run through these series, along with his first portrait.</p>
+                <p>Behind the Scenes records, through photos and video, how these works came into being, and shares the stories behind them.</p>
+                <p>We hope you feel the freedom and enthusiasm in his making. If you have something to say, leave a note under each work. Wishing you a good day.</p>
+              </div>
+            </div>
+            <div class="hero-actions">
+              <a class="button-link" href="#gallery" data-i18n="enter">進入展覽</a>
+            </div>
+          </div>
+
+          <div class="hero-aside">
+            <figure class="portrait-card">
+              <img src="assets/作者.jpg" alt="作者安遲" data-i18n-alt="coverPieceAlt" />
+              <figcaption data-i18n="museumName">安遲美術館</figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="gallery" aria-labelledby="galleryTitleHeading">
+        <div class="section-heading">
+          <h2 id="galleryTitleHeading" data-i18n="galleryTitle">安遲美術館，ARCHIE ART MUSEUM</h2>
+        </div>
+        <div class="works-grid" id="worksGrid"></div>
+      </section>
+
+      <section class="section" id="backstage" aria-labelledby="backstageTitleHeading">
+        <div class="backstage-layout">
+          <div class="backstage-heading">
+            <h2 id="backstageTitleHeading" data-i18n="backstageTitle">幕後 · BEHIND THE SCENES</h2>
+          </div>
+          <div class="backstage-panel">
+            <div class="projection-switcher">
+              <button type="button" class="is-active" data-backstage-proj="0" data-i18n="projLandscape">橫向投影</button>
+              <button type="button" data-backstage-proj="1" data-i18n="projPortrait">豎向投影</button>
+            </div>
+            <div class="projection-frame" id="projectionFrame">
+              <video id="backstageVideo0" muted loop playsinline poster="assets/追逐.jpg">
+                <source src="assets/backstage-landscape.mp4" type="video/mp4" />
+              </video>
+              <img src="assets/追逐.jpg" alt="橫向投影：追逐" data-i18n-alt="projLandscapeAlt" id="backstageFallback0" hidden />
+            </div>
+            <div class="backstage-controls">
+              <button type="button" class="play-toggle" id="backstagePlayBtn" data-i18n="play">播放</button>
+              <div class="backstage-caption" data-i18n="backstageCaption">幕後 · Behind the Scenes</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <span data-i18n="museumName">安遲美術館</span>
+      </footer>
+    </main>
+
+    <section class="preview-layer" id="previewLayer" aria-hidden="true">
+      <div class="preview-shell">
+        <button class="preview-close" id="previewClose" type="button" aria-label="關閉預覽" data-i18n-aria="closePreview">×</button>
+        <div class="preview-panel">
+          <div class="preview-grid">
+            <div class="preview-art">
+              <img id="previewImage" src="" alt="" />
+            </div>
+            <div class="preview-side">
+              <div class="preview-meta" id="previewMeta"></div>
+              <figure class="preview-process" id="previewProcess">
+                <img id="previewProcessImage" src="" alt="" />
+                <figcaption id="previewProcessCaption"></figcaption>
+              </figure>
+              <div class="comment-panel">
+                <h3 class="comment-title" data-i18n="comments">參觀評價</h3>
+                <div class="comment-list" id="commentList"></div>
+                <form class="comment-form" id="commentForm">
+                  <input id="commentName" type="text" maxlength="24" placeholder="名字（可選）" data-i18n-placeholder="namePlaceholder" autocomplete="nickname" />
+                  <textarea id="commentText" maxlength="180" placeholder="寫下感受…" data-i18n-placeholder="commentPlaceholder" required></textarea>
+                  <button class="comment-submit" type="submit" data-i18n="leaveComment">留下 →</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      const art = (file) => encodeURI(`assets/${file}`);
+
+      const works = [
+        { titles: { "zh-Hans": "第一幅蜡笔", "zh-Hant": "第一幅蠟筆", en: "First Crayon Drawing" }, year: "2025.3.17", materials: { "zh-Hans": "彩色铅笔", "zh-Hant": "彩色鉛筆", en: "Colored pencil" }, image: art("第一幅蜡笔.png"), size: "a4", notes: { "zh-Hans": "方格纸上交织的彩色线条，像是一场尚未落地的梦。", "zh-Hant": "方格紙上交織的彩色線條，像是一場尚未落地的夢。", en: "Colored lines weave across graph paper like a dream not yet landed." } },
+        { titles: { "zh-Hans": "地球 I", "zh-Hant": "地球 I", en: "Earth I" }, year: "2025.4.5", materials: { "zh-Hans": "蜡笔", "zh-Hant": "蠟筆", en: "Crayon" }, image: art("地球 I.jpg"), size: "a5", series: "earth-duo", panel: "I / II", notes: { "zh-Hans": "黄与灰绿交缠的圆形笔触，像是他眼中旋转的地球。", "zh-Hant": "黃與灰綠交纏的圓形筆觸，像是他眼中旋轉的地球。", en: "Yellow and gray-green circles spin like Earth in his eyes." } },
+        { titles: { "zh-Hans": "地球 II", "zh-Hant": "地球 II", en: "Earth II" }, year: "2025.4.5", materials: { "zh-Hans": "铅笔", "zh-Hant": "鉛筆", en: "Pencil" }, image: art("地球 II.jpg"), size: "a5", series: "earth-duo", panel: "II / II", notes: { "zh-Hans": "石墨线条层层绕行，把地球的动量留在纸上。", "zh-Hant": "石墨線條層層繞行，把地球的動量留在紙上。", en: "Graphite lines coil round, keeping Earth’s momentum on paper." } },
+        { titles: { "zh-Hans": "建筑草稿", "zh-Hant": "建築草稿", en: "Architecture Sketch" }, year: "2025.5.5", materials: { "zh-Hans": "蜡笔", "zh-Hant": "蠟筆", en: "Crayon" }, image: art("建筑草稿.png"), size: "a4", notes: { "zh-Hans": "流畅的线条，似一个曲线建筑的草图", "zh-Hant": "流暢的線條，似一個曲線建築的草圖", en: "Fluid lines, like a sketch of a curving building." } },
+        { titles: { "zh-Hans": "To infinity and beyond!", "zh-Hant": "To infinity and beyond!", en: "To infinity and beyond!" }, year: "2025.5.17", materials: { "zh-Hans": "蜡笔画", "zh-Hant": "蠟筆畫", en: "Crayon drawing" }, image: art("To infinity and beyond!.png"), size: "a4", notes: { "zh-Hans": "安迟左右手同时开弓，创作了这幅作品。", "zh-Hant": "安遲左右手同時開弓，創作了這幅作品。", en: "Archie drew this with both hands at once." } },
+        { titles: { "zh-Hans": "追逐", "zh-Hant": "追逐", en: "Chase" }, year: "2026.1.1", materials: { "zh-Hans": "蜡笔", "zh-Hant": "蠟筆", en: "Crayon" }, image: art("追逐.jpg"), size: "a4", notes: { "zh-Hans": "安迟和父亲轮流创作的作品。每人画一笔，红色是安迟画出的线条，蓝色是父亲跟随安迟线条的轨迹。", "zh-Hant": "安遲和父親輪流創作的作品。每人畫一筆，紅色是安遲畫出的線條，藍色是父親跟隨安遲線條的軌跡。", en: "A turn-taking work with his father: red lines by Archie, blue lines tracing his path." } },
+        { titles: { "zh-Hans": "风，水，海，沙，鸭，与人", "zh-Hant": "風，水，海，沙，鴨，與人", en: "Wind, Water, Sea, Sand, Duck, and People" }, year: "2026.1.24", materials: { "zh-Hans": "彩色铅笔", "zh-Hant": "彩色鉛筆", en: "Colored pencil" }, image: art("风，水，海，沙，鸭，与人.jpg"), size: "a3", notes: { "zh-Hans": "每种颜色代表了一个", "zh-Hant": "每種顏色代表了一個", en: "Each color stands for one thing." } },
+        { titles: { "zh-Hans": "人物 I", "zh-Hant": "人物 I", en: "Portrait I" }, year: "2026.2.26", materials: { "zh-Hans": "水彩笔", "zh-Hant": "水彩筆", en: "Water-based marker" }, image: art("人物 I.jpg"), size: "a5", series: "portrait-duo", panel: "I / II", notes: { "zh-Hans": "安迟最早的人物速写", "zh-Hant": "安遲最早的人物速寫", en: "Archie’s earliest figure sketches." } },
+        { titles: { "zh-Hans": "人物 II", "zh-Hant": "人物 II", en: "Portrait II" }, year: "2026.2.26", materials: { "zh-Hans": "水彩笔", "zh-Hant": "水彩筆", en: "Water-based marker" }, image: art("人物 II.jpg"), size: "a5", series: "portrait-duo", panel: "II / II", notes: { "zh-Hans": "安迟最早的人物速写", "zh-Hant": "安遲最早的人物速寫", en: "Archie’s earliest figure sketches." } },
+        { titles: { "zh-Hans": "人物速写", "zh-Hant": "人物速寫", en: "Figure Sketch" }, year: "2026.3.15", materials: { "zh-Hans": "水画布", "zh-Hant": "水畫布", en: "Water drawing canvas" }, image: art("人物速写.png"), size: "tall", notes: { "zh-Hans": "", "zh-Hant": "", en: "" } },
+        { titles: { "zh-Hans": "蛋糕", "zh-Hant": "蛋糕", en: "Cake" }, year: "2026.5.1", materials: { "zh-Hans": "粘土与颜料", "zh-Hant": "粘土與顏料", en: "Clay and paint" }, image: art("蛋糕.jpg"), size: "a3", notes: { "zh-Hans": "幼儿园课堂的创作。", "zh-Hant": "幼兒園課堂的創作。", en: "Made in a kindergarten class." } },
+        { titles: { "zh-Hans": "流动", "zh-Hant": "流動", en: "Flow" }, year: "2026.7.9", materials: { "zh-Hans": "马克笔", "zh-Hant": "馬克筆", en: "Marker" }, image: art("流动.jpg"), size: "a3", notes: { "zh-Hans": "", "zh-Hant": "", en: "" } },
+        { titles: { "zh-Hans": "米奇", "zh-Hant": "米奇", en: "Mickey" }, year: "2026.7.9", materials: { "zh-Hans": "马克笔", "zh-Hant": "馬克筆", en: "Marker" }, image: art("米奇.jpg"), size: "a5", notes: { "zh-Hans": "一幅送给母亲画，粉色的头，混色的身体，蓝色的腿", "zh-Hant": "一幅送給母親畫，粉色的頭，混色的身體，藍色的腿", en: "A gift for Mom: pink head, mixed-color body, blue legs." } },
+        { titles: { "zh-Hans": "一串长葡萄", "zh-Hant": "一串長葡萄", en: "A Long Bunch of Grapes" }, year: "2026.7.9", materials: { "zh-Hans": "马克笔", "zh-Hant": "馬克筆", en: "Marker" }, image: art("一串长葡萄.jpg"), size: "tall", notes: { "zh-Hans": "", "zh-Hant": "", en: "" } },
+        { titles: { "zh-Hans": "感谢信 I", "zh-Hant": "感謝信 I", en: "Thank You Letter I" }, year: "2026.7.11", materials: { "zh-Hans": "马克笔", "zh-Hant": "馬克筆", en: "Marker" }, image: art("感谢信 I.jpg"), size: "a5", flushMat: true, series: "thank-you-teachers", panel: "I / III", notes: { "zh-Hans": "幼儿园N班结束，送给三位幼儿园老师的感谢信，字母由安迟写成，其母拼贴，其父调色。", "zh-Hant": "幼兒園N班結束，送給三位幼兒園老師的感謝信，字母由安遲寫成，其母拼貼，其父調色。", en: "Thank-you letters for three N-class teachers: Archie wrote the letters, Mom collaged, Dad mixed the colors." } },
+        { titles: { "zh-Hans": "感谢信 II", "zh-Hant": "感謝信 II", en: "Thank You Letter II" }, year: "2026.7.11", materials: { "zh-Hans": "马克笔", "zh-Hant": "馬克筆", en: "Marker" }, image: art("感谢信 II.jpg"), size: "a5", flushMat: true, series: "thank-you-teachers", panel: "II / III", notes: { "zh-Hans": "幼儿园N班结束，送给三位幼儿园老师的感谢信，字母由安迟写成，其母拼贴，其父调色。", "zh-Hant": "幼兒園N班結束，送給三位幼兒園老師的感謝信，字母由安遲寫成，其母拼貼，其父調色。", en: "Thank-you letters for three N-class teachers: Archie wrote the letters, Mom collaged, Dad mixed the colors." } },
+        { titles: { "zh-Hans": "感谢信 III", "zh-Hant": "感謝信 III", en: "Thank You Letter III" }, year: "2026.7.11", materials: { "zh-Hans": "马克笔", "zh-Hant": "馬克筆", en: "Marker" }, image: art("感谢信 III.jpg"), size: "a5", flushMat: true, series: "thank-you-teachers", panel: "III / III", notes: { "zh-Hans": "幼儿园N班结束，送给三位幼儿园老师的感谢信，字母由安迟写成，其母拼贴，其父调色。", "zh-Hant": "幼兒園N班結束，送給三位幼兒園老師的感謝信，字母由安遲寫成，其母拼貼，其父調色。", en: "Thank-you letters for three N-class teachers: Archie wrote the letters, Mom collaged, Dad mixed the colors." } },
+        { titles: { "zh-Hans": "母亲速写", "zh-Hant": "母親速寫", en: "Mother Sketch" }, year: "2026.7.24", materials: { "zh-Hans": "液晶画板", "zh-Hant": "液晶畫板", en: "LCD drawing board" }, image: art("母亲速写.png"), size: "a4", flushMat: true, processImage: art("母亲速写 (创作过程，将半透明液晶画板贴在妈妈脸上的速写).jpg"), processCaptions: { "zh-Hans": "速写，将半透明液晶画板，贴在母亲脸上", "zh-Hant": "速寫，將半透明液晶畫板，貼在母親臉上", en: "A sketch made with a translucent LCD board held against Mom’s face." }, notes: { "zh-Hans": "速写，将半透明液晶画板，贴在母亲脸上", "zh-Hant": "速寫，將半透明液晶畫板，貼在母親臉上", en: "A sketch made with a translucent LCD board held against Mom’s face." } }
+      ];
+
+      const UI = {
+        "zh-Hans": {
+          museumName: "安迟美术馆",
+          museumLabel: "线上美术馆展厅",
+          siteNav: "站点导航",
+          pageTitle: "安迟美术馆 · Archie Art Museum",
+          galleryTitle: "安迟美术馆，ARCHIE ART MUSEUM",
+          navCover: "封面",
+          navGallery: "展廊",
+          navBackstage: "幕后",
+          enter: "进入展览",
+          backstageTitle: "幕后 · BEHIND THE SCENES",
+          backstageCaption: "幕后 · Behind the Scenes",
+          play: "播放",
+          pause: "暂停",
+          comments: "参观评价",
+          closePreview: "关闭预览",
+          namePlaceholder: "名字（可选）",
+          commentPlaceholder: "写下感受…",
+          leaveComment: "留下 →",
+          commentEmpty: "还没有评价",
+          visitor: "一位参观者",
+          audioGuide: "语音导览",
+          materialSpeech: "材质",
+          coverPieceAlt: "作者安迟",
+          projLandscape: "横向投影",
+          projPortrait: "竖向投影",
+          projLandscapeAlt: "横向投影：追逐",
+          projPortraitAlt: "竖向投影：一串长葡萄"
+        },
+        "zh-Hant": {
+          museumName: "安遲美術館",
+          museumLabel: "線上美術館展廳",
+          siteNav: "站點導航",
+          pageTitle: "安遲美術館 · Archie Art Museum",
+          galleryTitle: "安遲美術館，ARCHIE ART MUSEUM",
+          navCover: "封面",
+          navGallery: "展廊",
+          navBackstage: "幕後",
+          enter: "進入展覽",
+          backstageTitle: "幕後 · BEHIND THE SCENES",
+          backstageCaption: "幕後 · Behind the Scenes",
+          play: "播放",
+          pause: "暫停",
+          comments: "參觀評價",
+          closePreview: "關閉預覽",
+          namePlaceholder: "名字（可選）",
+          commentPlaceholder: "寫下感受…",
+          leaveComment: "留下 →",
+          commentEmpty: "還沒有評價",
+          visitor: "一位參觀者",
+          audioGuide: "語音導覽",
+          materialSpeech: "材質",
+          coverPieceAlt: "作者安遲",
+          projLandscape: "橫向投影",
+          projPortrait: "豎向投影",
+          projLandscapeAlt: "橫向投影：追逐",
+          projPortraitAlt: "豎向投影：一串長葡萄"
+        },
+        en: {
+          museumName: "Archie Art Museum",
+          museumLabel: "Online art museum gallery",
+          siteNav: "Site navigation",
+          pageTitle: "Archie Art Museum",
+          galleryTitle: "ARCHIE ART MUSEUM",
+          navCover: "Cover",
+          navGallery: "Gallery",
+          navBackstage: "Backstage",
+          enter: "Enter Exhibition",
+          backstageTitle: "BEHIND THE SCENES",
+          backstageCaption: "Behind the Scenes",
+          play: "Play",
+          pause: "Pause",
+          comments: "Visitor notes",
+          closePreview: "Close preview",
+          namePlaceholder: "Name (optional)",
+          commentPlaceholder: "Write a note…",
+          leaveComment: "Leave →",
+          commentEmpty: "No notes yet",
+          visitor: "A visitor",
+          audioGuide: "Audio guide",
+          materialSpeech: "Medium",
+          coverPieceAlt: "The artist, Archie",
+          projLandscape: "Landscape projection",
+          projPortrait: "Portrait projection",
+          projLandscapeAlt: "Landscape projection: Chase",
+          projPortraitAlt: "Portrait projection: A Long Bunch of Grapes"
+        }
+      };
+
+      const speakerIcon = `
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4.5 9.2v5.6h2.7l4.3 3.4V5.8L7.2 9.2H4.5z"></path>
+          <path d="M15.2 9c1.05.8 1.7 1.85 1.7 3s-.65 2.2-1.7 3"></path>
+          <path d="M17.4 6.6c1.9 1.45 3 3.3 3 5.4s-1.1 3.95-3 5.4"></path>
+        </svg>
+      `;
+
+      const LANGS = ["zh-Hans", "zh-Hant", "en"];
+      let lang = localStorage.getItem("archie-museum-lang") || "zh-Hant";
+      if (!LANGS.includes(lang)) lang = "zh-Hant";
+
+      const worksGrid = document.getElementById("worksGrid");
+      const previewLayer = document.getElementById("previewLayer");
+      const previewClose = document.getElementById("previewClose");
+      const previewMeta = document.getElementById("previewMeta");
+      const previewImage = document.getElementById("previewImage");
+      const previewProcess = document.getElementById("previewProcess");
+      const previewProcessImage = document.getElementById("previewProcessImage");
+      const previewProcessCaption = document.getElementById("previewProcessCaption");
+      const commentList = document.getElementById("commentList");
+      const commentForm = document.getElementById("commentForm");
+      const commentName = document.getElementById("commentName");
+      const commentText = document.getElementById("commentText");
+      const projectionFrame = document.getElementById("projectionFrame");
+      const backstagePlayBtn = document.getElementById("backstagePlayBtn");
+      const brandTitle = document.getElementById("brandTitle");
+
+      const projectionStates = [
+        {
+          type: "landscape",
+          videoSrc: "assets/backstage-landscape.mp4",
+          poster: "assets/追逐.jpg",
+          fallbackAltKey: "projLandscapeAlt"
+        },
+        {
+          type: "portrait",
+          videoSrc: "assets/backstage-portrait.mp4",
+          poster: "assets/一串长葡萄.jpg",
+          fallbackAltKey: "projPortraitAlt"
+        }
+      ];
+
+      let previewIndex = null;
+      let projectionIndex = 0;
+      let backstagePlaying = false;
+      let guideSpeakingIndex = null;
+      let guideAudio = null;
+
+      const ARCHIE_BIRTH = new Date(2023, 8, 27);
+      const t = (key) => (UI[lang] && UI[lang][key]) || UI["zh-Hant"][key] || key;
+      const pick = (map) => (map && (map[lang] || map["zh-Hant"] || map.en)) || "";
+
+      function parseWorkDate(yearStr) {
+        const match = /^(\d{4})\.(\d{1,2})\.(\d{1,2})$/.exec(String(yearStr || "").trim());
+        if (!match) return null;
+        return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+      }
+
+      function ageAtDate(created) {
+        let years = created.getFullYear() - ARCHIE_BIRTH.getFullYear();
+        let months = created.getMonth() - ARCHIE_BIRTH.getMonth();
+        const days = created.getDate() - ARCHIE_BIRTH.getDate();
+        if (days < 0) months -= 1;
+        if (months < 0) {
+          years -= 1;
+          months += 12;
+        }
+        if (years < 0) {
+          years = 0;
+          months = 0;
+        }
+        return { years, months };
+      }
+
+      function ageLabel(created) {
+        const { years, months } = ageAtDate(created);
+        if (lang === "en") return `(${years}y ${months}m)`;
+        if (lang === "zh-Hans") return `（${years}岁${months}个月）`;
+        return `（${years}歲${months}個月）`;
+      }
+
+      function workTitle(work) {
+        return pick(work.titles);
+      }
+
+      function workMaterial(work) {
+        return pick(work.materials);
+      }
+
+      function workNote(work) {
+        return pick(work.notes);
+      }
+
+      function workProcessCaption(work) {
+        return pick(work.processCaptions);
+      }
+
+      function workDateLine(work) {
+        const created = parseWorkDate(work.year);
+        if (!created || Number.isNaN(created.getTime())) return work.year || "";
+        return `${work.year}${ageLabel(created)}`;
+      }
+
+      function workHeadline(work) {
+        const dateLine = workDateLine(work);
+        return dateLine ? `${workTitle(work)}, ${dateLine}` : workTitle(work);
+      }
+
+      function guideScript(work) {
+        if (lang === "en") {
+          return `${workHeadline(work)}. ${t("materialSpeech")}, ${workMaterial(work)}. ${workNote(work)}`;
+        }
+        return `${workHeadline(work)}。${t("materialSpeech")}，${workMaterial(work)}。${workNote(work)}`;
+      }
+
+      function commentKey(index) {
+        return `archie-museum-comments-${works[index].image}`;
+      }
+
+      function loadComments(index) {
+        try {
+          return JSON.parse(localStorage.getItem(commentKey(index))) || [];
+        } catch (error) {
+          return [];
+        }
+      }
+
+      function saveComments(index, comments) {
+        localStorage.setItem(commentKey(index), JSON.stringify(comments));
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#39;");
+      }
+
+      function renderComments(index) {
+        const comments = loadComments(index);
+        if (!comments.length) {
+          commentList.innerHTML = `<p class="comment-empty">${t("commentEmpty")}</p>`;
+          return;
+        }
+        commentList.innerHTML = comments
+          .map(
+            (item) => `
+              <article class="comment-item">
+                <div class="who">${escapeHtml(item.name || t("visitor"))}</div>
+                <p class="body">${escapeHtml(item.text)}</p>
+              </article>
+            `
+          )
+          .join("");
+      }
+
+      function stopGuide() {
+        if (window.speechSynthesis) window.speechSynthesis.cancel();
+        if (guideAudio) {
+          guideAudio.pause();
+          guideAudio = null;
+        }
+        guideSpeakingIndex = null;
+        syncGuideButtons();
+      }
+
+      function syncGuideButtons() {
+        document.querySelectorAll(".audio-guide[data-guide-index]").forEach((btn) => {
+          const index = Number(btn.dataset.guideIndex);
+          btn.classList.toggle("is-playing", guideSpeakingIndex === index);
+          btn.setAttribute("aria-pressed", guideSpeakingIndex === index ? "true" : "false");
+        });
+      }
+
+      function speakGuide(work, index) {
+        if (!window.speechSynthesis) {
+          stopGuide();
+          return;
+        }
+        const utterance = new SpeechSynthesisUtterance(guideScript(work));
+        utterance.lang = lang === "en" ? "en-US" : lang === "zh-Hans" ? "zh-CN" : "zh-TW";
+        utterance.rate = 0.92;
+        utterance.onend = () => {
+          if (guideSpeakingIndex === index) stopGuide();
+        };
+        utterance.onerror = () => {
+          if (guideSpeakingIndex === index) stopGuide();
+        };
+        window.speechSynthesis.speak(utterance);
+      }
+
+      function playGuide(index) {
+        const work = works[index];
+        if (!work) return;
+        if (guideSpeakingIndex === index) {
+          stopGuide();
+          return;
+        }
+        stopGuide();
+        guideSpeakingIndex = index;
+        syncGuideButtons();
+        if (work.audio) {
+          guideAudio = new Audio(work.audio);
+          guideAudio.addEventListener("ended", () => {
+            if (guideSpeakingIndex === index) stopGuide();
+          });
+          guideAudio.addEventListener("error", () => {
+            if (guideSpeakingIndex === index) speakGuide(work, index);
+          });
+          guideAudio.play().catch(() => {
+            if (guideSpeakingIndex === index) speakGuide(work, index);
+          });
+          return;
+        }
+        speakGuide(work, index);
+      }
+
+      function cardSizeClass(work, index) {
+        if (work.size === "a3" || index === 0 || index === 6 || index === works.length - 1) return "is-wide";
+        if (work.size === "tall") return "is-tall";
+        return "";
+      }
+
+      function renderWorks() {
+        worksGrid.innerHTML = works
+          .map((work, index) => {
+            const note = workNote(work);
+            return `
+              <article class="work-card ${cardSizeClass(work, index)}">
+                <div class="work-card__button" data-preview-index="${index}" role="button" tabindex="0" aria-label="${escapeHtml(workHeadline(work))}">
+                  <div class="work-card__media">
+                    <img src="${work.image}" alt="${escapeHtml(workHeadline(work))}" loading="lazy" />
+                  </div>
+                  <div class="work-card__meta">
+                    <div class="meta-row">${escapeHtml(workDateLine(work))}</div>
+                    <h3>${escapeHtml(workTitle(work))}</h3>
+                    <p>${escapeHtml(workMaterial(work))}</p>
+                    ${note ? `<p>${escapeHtml(note)}</p>` : ""}
+                    <div class="meta-actions">
+                      <button type="button" class="audio-guide" data-guide-index="${index}" aria-label="${t("audioGuide")}" aria-pressed="false" title="${t("audioGuide")}">
+                        ${speakerIcon}
+                        <span>${t("audioGuide")}</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            `;
+          })
+          .join("");
+      }
+
+      function syncPreviewProcess(work) {
+        if (!work || !work.processImage) {
+          previewProcess.classList.remove("is-visible");
+          previewProcessImage.removeAttribute("src");
+          previewProcessImage.alt = "";
+          previewProcessCaption.textContent = "";
+          return;
+        }
+        previewProcessImage.src = work.processImage;
+        previewProcessImage.alt = workProcessCaption(work) || workHeadline(work);
+        previewProcessCaption.textContent = workProcessCaption(work);
+        previewProcess.classList.add("is-visible");
+      }
+
+      function openPreview(index) {
+        const work = works[index];
+        if (!work) return;
+        previewIndex = index;
+        previewMeta.innerHTML = `
+          <button type="button" class="audio-guide${guideSpeakingIndex === index ? " is-playing" : ""}" data-guide-index="${index}" aria-label="${t("audioGuide")}" aria-pressed="${guideSpeakingIndex === index ? "true" : "false"}" title="${t("audioGuide")}">
+            ${speakerIcon}
+            <span>${t("audioGuide")}</span>
+          </button>
+          <h3 class="title">${escapeHtml(workTitle(work))}</h3>
+          <div class="date">${escapeHtml(workDateLine(work))}</div>
+          <div class="material">${escapeHtml(workMaterial(work))}</div>
+          <p class="note">${escapeHtml(workNote(work))}</p>
+        `;
+        previewImage.src = work.image;
+        previewImage.alt = workHeadline(work);
+        syncPreviewProcess(work);
+        renderComments(index);
+        previewLayer.classList.add("is-open");
+        previewLayer.setAttribute("aria-hidden", "false");
+      }
+
+      function closePreview() {
+        stopGuide();
+        previewIndex = null;
+        previewLayer.classList.remove("is-open");
+        previewLayer.setAttribute("aria-hidden", "true");
+      }
+
+      function syncProjection() {
+        const state = projectionStates[projectionIndex];
+        projectionFrame.classList.toggle("is-portrait", state.type === "portrait");
+        projectionFrame.innerHTML = `
+          <video id="activeBackstageVideo" muted loop playsinline poster="${state.poster}">
+            <source src="${state.videoSrc}" type="video/mp4" />
+          </video>
+          <img src="${state.poster}" alt="${t(state.fallbackAltKey)}" id="activeBackstageFallback" hidden />
+        `;
+
+        const video = document.getElementById("activeBackstageVideo");
+        const fallback = document.getElementById("activeBackstageFallback");
+        video.addEventListener("error", () => {
+          video.classList.add("is-hidden");
+          fallback.hidden = false;
+        });
+        video.addEventListener("stalled", () => {
+          if (!video.currentSrc) {
+            video.classList.add("is-hidden");
+            fallback.hidden = false;
+          }
+        });
+
+        document.querySelectorAll("[data-backstage-proj]").forEach((btn) => {
+          btn.classList.toggle("is-active", Number(btn.dataset.backstageProj) === projectionIndex);
+        });
+
+        if (backstagePlaying) {
+          video.play().catch(() => {
+            video.classList.add("is-hidden");
+            fallback.hidden = false;
+          });
+        }
+      }
+
+      function setProjection(index) {
+        projectionIndex = index;
+        syncProjection();
+      }
+
+      function toggleBackstagePlayback() {
+        backstagePlaying = !backstagePlaying;
+        backstagePlayBtn.textContent = backstagePlaying ? t("pause") : t("play");
+        const video = document.getElementById("activeBackstageVideo");
+        if (!video) return;
+        if (backstagePlaying) {
+          video.play().catch(() => {
+            const fallback = document.getElementById("activeBackstageFallback");
+            video.classList.add("is-hidden");
+            if (fallback) fallback.hidden = false;
+          });
+        } else {
+          video.pause();
+        }
+      }
+
+      function applyLanguage(nextLang) {
+        if (!LANGS.includes(nextLang)) return;
+        lang = nextLang;
+        localStorage.setItem("archie-museum-lang", lang);
+        document.documentElement.lang = lang;
+        document.title = t("pageTitle");
+        brandTitle.textContent = t("museumName");
+
+        document.querySelectorAll(".lang-switch [data-lang]").forEach((btn) => {
+          const active = btn.dataset.lang === lang;
+          btn.classList.toggle("is-active", active);
+          btn.setAttribute("aria-pressed", active ? "true" : "false");
+        });
+
+        document.querySelectorAll("[data-i18n]").forEach((node) => {
+          node.textContent = t(node.dataset.i18n);
+        });
+        document.querySelectorAll("[data-i18n-aria]").forEach((node) => {
+          node.setAttribute("aria-label", t(node.dataset.i18nAria));
+        });
+        document.querySelectorAll("[data-i18n-alt]").forEach((node) => {
+          node.setAttribute("alt", t(node.dataset.i18nAlt));
+        });
+        document.querySelectorAll("[data-i18n-placeholder]").forEach((node) => {
+          node.setAttribute("placeholder", t(node.dataset.i18nPlaceholder));
+        });
+        document.querySelectorAll("[data-lang-panel]").forEach((panel) => {
+          panel.classList.toggle("is-active", panel.dataset.langPanel === lang);
+        });
+
+        renderWorks();
+        syncGuideButtons();
+        syncProjection();
+        backstagePlayBtn.textContent = backstagePlaying ? t("pause") : t("play");
+
+        if (previewIndex !== null) {
+          openPreview(previewIndex);
+        }
+      }
+
+      worksGrid.addEventListener("click", (event) => {
+        const guideBtn = event.target.closest(".audio-guide[data-guide-index]");
+        if (guideBtn) {
+          event.preventDefault();
+          event.stopPropagation();
+          playGuide(Number(guideBtn.dataset.guideIndex));
+          return;
+        }
+        const previewBtn = event.target.closest("[data-preview-index]");
+        if (previewBtn) {
+          openPreview(Number(previewBtn.dataset.previewIndex));
+        }
+      });
+
+      previewMeta.addEventListener("click", (event) => {
+        const guideBtn = event.target.closest(".audio-guide[data-guide-index]");
+        if (!guideBtn) return;
+        event.preventDefault();
+        playGuide(Number(guideBtn.dataset.guideIndex));
+      });
+
+      previewClose.addEventListener("click", closePreview);
+      previewLayer.addEventListener("click", (event) => {
+        if (event.target === previewLayer) closePreview();
+      });
+
+      commentForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        if (previewIndex === null) return;
+        const textValue = commentText.value.trim();
+        if (!textValue) return;
+        const comments = loadComments(previewIndex);
+        comments.unshift({
+          name: commentName.value.trim(),
+          text: textValue,
+          at: Date.now()
+        });
+        saveComments(previewIndex, comments.slice(0, 40));
+        commentText.value = "";
+        renderComments(previewIndex);
+      });
+
+      document.querySelectorAll(".lang-switch [data-lang]").forEach((btn) => {
+        btn.addEventListener("click", () => applyLanguage(btn.dataset.lang));
+      });
+
+      document.querySelectorAll("[data-backstage-proj]").forEach((btn) => {
+        btn.addEventListener("click", () => setProjection(Number(btn.dataset.backstageProj)));
+      });
+
+      worksGrid.addEventListener("keydown", (event) => {
+        const previewBtn = event.target.closest("[data-preview-index]");
+        if (!previewBtn) return;
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          openPreview(Number(previewBtn.dataset.previewIndex));
+        }
+      });
+
+      backstagePlayBtn.addEventListener("click", toggleBackstagePlayback);
+
+      window.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && previewIndex !== null) closePreview();
+      });
+
+      applyLanguage(lang);
+    </script>
+  </body>
+</html>
